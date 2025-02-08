@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<userOverrides>
+    <override>
+        <path>D:\Code\SmartCarProgram_RT1064\RT1064_Library\SeekFree_RT1064_Opensource_Library\libraries\zf_components\seekfree_assistant.c</path>
+        <encoding>System</encoding>
+    </override>
+    <override>
+        <path>D:\Code\SmartCarProgram_RT1064\RT1064_Library\SeekFree_RT1064_Opensource_Library\project\user\src\main.c</path>
+        <encoding>System</encoding>
+    </override>
+</userOverrides>
