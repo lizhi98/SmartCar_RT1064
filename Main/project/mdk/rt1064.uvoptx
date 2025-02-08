@@ -22,7 +22,7 @@
   </DaveTm>
 
   <Target>
-    <TargetName>nor_sdram_zf_dtcm</TargetName>
+    <TargetName>Main</TargetName>
     <ToolsetNumber>0x4</ToolsetNumber>
     <ToolsetName>ARM-ADS</ToolsetName>
     <TargetOption>

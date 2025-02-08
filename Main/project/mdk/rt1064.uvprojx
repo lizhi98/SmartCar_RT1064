@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>nor_sdram_zf_dtcm</TargetName>
+      <TargetName>Main</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>6220000::V6.22::ARMCLANG</pCCUsed>
