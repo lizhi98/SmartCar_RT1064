@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "zf_common_headfile.h": "c",
-        "ff.h": "c",
-        "fsl_sd_disk.h": "c",
-        "float.h": "c",
-        "fsl_common.h": "c"
-    }
-}
