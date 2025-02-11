@@ -30,8 +30,6 @@ RT1064智能车推荐引脚分配.txt
 *JLinkLog.txt
 *.tmp
 *.log
-Main/project/mdk/.vscode/keil-assistant.log
-Main/project/mdk/.vscode/uv4.log
 Main/project/mdk/.vscode/uv4.log.lock
 Main/project/mdk/rt1064.uvprojx
 Main/project/mdk/rt1064.uvoptx
