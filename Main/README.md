@@ -1,3 +1,43 @@
+### 智能车项目注意事项和约定
+#### 串口通信相关
+###### 上位机－> 单片机RT1064
+    1. 控制命令
+    帧头 TRCS // TO RT1064 Command Start
+    命令内容 4字符一组
+    帧尾 TRCE // TO RT1064 Command End
+    2. 数据包
+    帧头 TRDS // TO RT1064 Data Start
+    命令内容 // TODO
+    帧尾 TRCE // TO RT1064 Data End
+###### 单片机RT1064－> 上位机
+    1. 控制命令
+    帧头 TCCS // TO Computer Command Start
+    命令内容 4字符一组
+    帧尾 TCCE // TO Computer Command End
+    2. 数据包
+    帧头 TCDS // TO Computer Data Start
+    命令内容 // TODO
+    帧尾 TCCE // TO Computer Data End
+###### 单片机RT1064 －> OpenART mini
+    1. 控制命令
+    帧头 TOCS // TO OpenART Command Start
+    命令内容 4字符一组
+    帧尾 TOCE // TO OpenART Command End
+    2. 数据包
+    帧头 TODS // TO OpenART Data Start
+    命令内容 // TODO
+    帧尾 TOCE // TO OpenART Data End
+###### OpenART mini －> 单片机RT1064
+    1. 控制命令
+    帧头 TRCS // TO RT1064 Command Start
+    命令内容 4字符一组
+    帧尾 TRCE // TO RT1064 Command End
+    2. 数据包
+    帧头 TRDS // TO RT1064 Data Start
+    命令内容 // TODO
+    帧尾 TRCE // TO RT1064 Data End
+
+
 ![逐飞LOGO](https://images.gitee.com/uploads/images/2019/0924/114256_eaf16bad_1699060.png "逐飞科技logo 中.png")
 # 逐飞科技I.MX-RT1064开源库
 #### 简介
