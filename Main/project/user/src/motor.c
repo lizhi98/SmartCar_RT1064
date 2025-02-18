@@ -40,7 +40,7 @@ void motor_run_with_speed(MotorIndex index, int32 speed){
     motors[index].set_speed = speed;
 }
 void motor_unpower(MotorIndex index){
-    pwm_set_duty(index,0);
+    motor_set_duty(index,0);
 }
 void motor_all_stop(void){
     for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
