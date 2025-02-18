@@ -11,13 +11,13 @@
     帧尾 TRCE // TO RT1064 Data End
 ###### 单片机RT1064－> 上位机
     1. 控制命令
-    帧头 TCCS // TO Computer Command Start
+    帧头 THCS // TO HOST Command Start
     命令内容 4字符一组
-    帧尾 TCCE // TO Computer Command End
+    帧尾 THCE // TO HOST Command End
     2. 数据包
-    帧头 TCDS // TO Computer Data Start
+    帧头 THDS // TO HOST Data Start
     命令内容 // TODO
-    帧尾 TCCE // TO Computer Data End
+    帧尾 THCE // TO HOST Data End
 ###### 单片机RT1064 －> OpenART mini
     1. 控制命令
     帧头 TOCS // TO OpenART Command Start
