@@ -7,9 +7,9 @@
 #define MOTOR_PWM_FREQUENCY 50
 #define MOTOR_PWM_DUTY_MAX  10000
 
-#define SUM_WRONG_MAX       1000 //TODO
-#define MOTOR_PID_PIT       PIT_CH0// TODO 需要根据实际修改
-#define MOTOR_PID_PIT_TIME  20 // TODO
+#define SUM_WRONG_MAX       1000 		//TODO
+#define MOTOR_PID_PIT       PIT_CH0	// TODO 需要根据实际修改
+#define MOTOR_PID_PIT_TIME  20 			// TODO
 
 typedef enum _MotorIndex{
     LEFT,   RIGHT,  FRONT,  MOTOR_INDEX_MAX_PLUS_ONE,

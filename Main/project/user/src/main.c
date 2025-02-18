@@ -6,7 +6,7 @@
 
 // 本例程是开源库移植用空工程
 
-
+#include "main.h"
 
 int main(void)
 {
