@@ -1,18 +1,7 @@
 #include "correspond.h"
 
-#define WIFI_SSID "AP_SmartCar"
-#define WIFI_PASS "SMARTCAR"
 
-uint8 * TO_HOST_CMD_HEAD = "THCS";
-uint8 * TO_HOST_CMD_TAIL = "THCE";
-uint8 * TO_ART_CMD_HEAD = "TOCS";
-uint8 * TO_ART_CMD_TAIL = "TOCE";
-
-uint8 * TO_HOST_DATA_HEAD = "THDS";
-uint8 * TO_HOST_DATA_TAIL = "THDE";
-uint8 * TO_ART_DATA_HEAD = "TODS";
-uint8 * TO_ART_DATA_TAIL = "TODE";
-
+// ================WIFI SPI====================
 // 函数简介     WiFi 模块初始化
 // 返回参数     uint8           模块初始化状态 0-成功 1-错误
 uint8 wifi_spi_init_(uint16 time_out_s){
@@ -29,6 +18,11 @@ uint8 wifi_spi_init_(uint16 time_out_s){
         }
     }
     return 0;
+}
+
+// ====================UART TO OpenART mini====================
+void uart_init_(void){
+    uart_init(UART_N,UART_BAUD,UART_TX_PIN,UART_RX_PIN);
 }
 
 

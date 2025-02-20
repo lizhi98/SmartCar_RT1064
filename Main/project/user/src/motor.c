@@ -48,35 +48,46 @@ void motor_all_stop(void){
     }
 }
 
-void motor_pid_init(void){
+void motor_pid_pit_init(void){
     pit_ms_init(MOTOR_PID_PIT,MOTOR_PID_PIT_TIME);
 }
 void motor_pid_calc_apply(MotorIndex index){
     double out = 0.;
     Motor * motor = &motors[index];
     // 比例
-    motor->PID.wrong = motor->set_speed - motor->current_speed;
-    out += (double) (motor->PID.KP * motor->PID.wrong);
+    motor->PID->wrong = motor->set_speed - motor->current_speed;
+    out += (double) (motor->PID->KP * motor->PID->wrong);
 
     // 积分
-    motor->PID.sum_wrong += motor->PID.wrong;
+    motor->PID->sum_wrong += motor->PID->wrong;
     // 积分限幅
-    if(abs(motor->PID.sum_wrong) > SUM_WRONG_MAX){
-        (motor->PID.sum_wrong > 0) ? (motor->PID.sum_wrong = SUM_WRONG_MAX) : (motor->PID.sum_wrong = -SUM_WRONG_MAX);
+    if(abs(motor->PID->sum_wrong) > SUM_WRONG_MAX){
+        (motor->PID->sum_wrong > 0) ? (motor->PID->sum_wrong = SUM_WRONG_MAX) : (motor->PID->sum_wrong = -SUM_WRONG_MAX);
     }
-    out += (double) (motor->PID.KI * motor->PID.sum_wrong);
+    out += (double) (motor->PID->KI * motor->PID->sum_wrong);
 
     // 微分
-    out += (double) (motor->PID.KD * (motor->PID.wrong - motor->PID.last_wrong));
+    out += (double) (motor->PID->KD * (motor->PID->wrong - motor->PID->last_wrong));
 
     // 记录wrong
-    motor->PID.last_wrong = motor->PID.wrong;
+    motor->PID->last_wrong = motor->PID->wrong;
 
     // 输出
     motor_set_duty(index, (int32)out);
 }
-void motor_pid_timer_call(void){
+void motor_pid_pit_call(void){
     for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
         motor_pid_calc_apply(index);
+    }
+}
+
+// Motor encoder
+void motor_encoder_pit_init(void){
+    pit_init(MOTOR_ENCODER_PIT,MOTOR_ENCODER_PIT_TIME);
+}
+void motor_encoder_pit_call(void){
+    for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
+        motors[index].current_speed = encoder_get_speed(motor[index].encoder->encoder_index);
+        
     }
 }
