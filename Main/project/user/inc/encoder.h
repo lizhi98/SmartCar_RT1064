@@ -2,6 +2,10 @@
 #define _CODE_ENCODER_H_
 
 #include "zf_driver_encoder.h"
+#include "zf_driver_pit.h"
+
+#define ENCODER_PIT         PIT_CH1
+#define ENCODER_PIT_TIME    20
 
 typedef struct _Encoder
 {
