@@ -3,7 +3,8 @@
 
 #include "zf_driver_pwm.h"
 #include "zf_driver_pit.h"
-#include "encoder.h"
+#include "zf_driver_encoder.h"
+#include "zf_driver_pit.h"
 
 #define MOTOR_PWM_FREQUENCY     50
 #define MOTOR_PWM_DUTY_MAX      10000
@@ -19,27 +20,44 @@ typedef enum _MotorIndex{
     LEFT,   RIGHT,  FRONT,  MOTOR_INDEX_MAX_PLUS_ONE,
 } MotorIndex;
 
+typedef struct _Encoder
+{
+    encoder_index_enum    encoder_index;
+    encoder_channel1_enum encoder_channel_1;
+    encoder_channel2_enum encoder_channel_2;
+}Encoder;
+
 typedef struct _MotorPID
 {
-    const float KP;
-    const float KI;
-    const float KD;
-          float wrong;
-          float last_wrong;
-          float sum_wrong;
+    float KP;
+    float KI;
+    float KD;
+    float wrong;
+    float last_wrong;
+    float sum_wrong;
 }MotorPID;
 
 typedef struct _Motor
 {
-    const MotorIndex              index;
-    const pwm_channel_enum        pwm_channel_forward;
-    const pwm_channel_enum        pwm_channel_backward;
-    const Encoder*                encoder;
-          int32                   pwm_duty;
-          int32                   current_speed;
-          int32                   set_speed;
-          MotorPID*               PID;
+    MotorIndex              index;
+    pwm_channel_enum        pwm_channel_forward;
+    pwm_channel_enum        pwm_channel_backward;
+    Encoder*                encoder;
+    int32                   pwm_duty;
+    int32                   current_speed;
+    int32                   set_speed;
+    MotorPID*               PID;
 } Motor;
+
+extern MotorPID motor_left_pid;
+extern MotorPID motor_right_pid;
+extern MotorPID motor_front_pid;
+
+extern Encoder encoder_left;
+extern Encoder encoder_right;
+extern Encoder encoder_front;
+
+extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 
 // Motor PWM Control
 void motor_all_init(void);
@@ -56,5 +74,9 @@ void motor_pid_pit_call(void);
 // Motor encoder
 void motor_encoder_pit_init(void);
 void motor_encoder_pit_call(void);
+void encoder_all_init(void);
+
+#define encoder_get_speed(encoder_index) encoder_get_count(index);
+
 
 #endif
