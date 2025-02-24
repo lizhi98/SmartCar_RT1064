@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "main.h": "c",
+        "mt_camera.h": "c",
+        "correspond.h": "c",
+        "zf_driver_uart.h": "c"
+    }
+}

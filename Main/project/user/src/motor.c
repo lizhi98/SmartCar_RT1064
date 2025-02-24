@@ -134,7 +134,7 @@ void motor_encoder_pit_init(void){
 void motor_encoder_pit_call(void){
     for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
         // 获取速度
-        motors[index].current_speed = encoder_get_speed(motor[index].encoder->encoder_index);
+        motors[index].current_speed = encoder_get_speed(motors[index].encoder->encoder_index);
         // 清除计数
         encoder_clear_count(motors[index].encoder->encoder_index);
     }

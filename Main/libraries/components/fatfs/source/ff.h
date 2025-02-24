@@ -34,8 +34,7 @@ extern "C" {
 
 
 /* Integer types used for FatFs API */
-// modified by lizhi on 2025-2-9
-#undef _WIN32
+
 #if defined(_WIN32)		/* Windows VC++ (for development only) */
 #define FF_INTDEF 2
 #include <windows.h>

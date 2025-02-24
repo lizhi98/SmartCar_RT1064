@@ -76,7 +76,7 @@ void motor_encoder_pit_init(void);
 void motor_encoder_pit_call(void);
 void encoder_all_init(void);
 
-#define encoder_get_speed(encoder_index) encoder_get_count(index);
+#define encoder_get_speed(encoder_index) encoder_get_count(encoder_index);
 
 
 #endif
