@@ -11,8 +11,8 @@ uint8 wifi_spi_init_(uint16 time_out_s){
         {
             system_delay_ms(2000);
             if(timer_get >= time_out_s * 1000){
-                timer_stop(GPT_TIM_1);
                 timer_clear(GPT_TIM_1);
+                timer_stop(GPT_TIM_1);
                 return 1;
             }
         }

@@ -30,6 +30,18 @@ RT1064智能车推荐引脚分配.txt
 *JLinkLog.txt
 *.tmp
 *.log
+*.xml
+*.iml
 Main/project/mdk/.vscode/uv4.log.lock
 Main/project/mdk/rt1064.uvprojx
 Main/project/mdk/rt1064.uvoptx
+
+
+# 默认忽略的文件
+/shelf/
+/workspace.xml
+# 基于编辑器的 HTTP 客户端请求
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
