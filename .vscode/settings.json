@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "zf_driver_pit.h": "c"
+        "zf_driver_pit.h": "c",
+        "encoder.h": "c"
     }
 }
