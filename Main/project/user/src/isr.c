@@ -50,11 +50,14 @@ void PIT_IRQHandler(void)
 {
     if(pit_flag_get(PIT_CH0))
     {
+        motor_encoder_pit_call();
         pit_flag_clear(PIT_CH0);
     }
     
     if(pit_flag_get(PIT_CH1))
     {
+        
+        
         pit_flag_clear(PIT_CH1);
     }
     

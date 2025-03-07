@@ -3,6 +3,20 @@
         "main.h": "c",
         "mt_camera.h": "c",
         "correspond.h": "c",
-        "zf_driver_uart.h": "c"
+        "zf_driver_uart.h": "c",
+        "zf_common_headfile.h": "c",
+        "zf_device_wifi_spi.h": "c",
+        "motor.h": "c",
+        "gyroscope.h": "c",
+        "zf_driver_delay.h": "c",
+        "zf_driver_timer.h": "c",
+        "ff.h": "c",
+        "isr.h": "c",
+        "zf_driver_pit.h": "c",
+        "stdio.h": "c",
+        "zf_device_ble6a20.h": "c",
+        "diskio.h": "c",
+        "zf_driver_encoder.h": "c",
+        "math.h": "c"
     }
 }

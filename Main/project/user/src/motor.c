@@ -13,7 +13,7 @@ Encoder encoder_right = {
 Encoder encoder_front = {
     .encoder_index      = QTIMER2_ENCODER1,
     .encoder_channel_1  = QTIMER2_ENCODER1_CH1_C3,
-    .encoder_channel_2  = QTIMER2_ENCODER1_CH2_C25,
+    .encoder_channel_2  = QTIMER2_ENCODER1_CH2_C4,
 };
 
 MotorPID motor_left_pid = {
@@ -42,11 +42,15 @@ Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
         .encoder = &encoder_right,  .PID = &motor_right_pid,
     },
     {
-        .index = FRONT,             .pwm_channel_forward = PWM2_MODULE2_CHA_C10, .pwm_channel_backward = PWM2_MODULE2_CHB_C11,
+        .index = REAR,             .pwm_channel_forward = PWM2_MODULE2_CHA_C10, .pwm_channel_backward = PWM2_MODULE2_CHB_C11,
         .pwm_duty = 0,              .current_speed = 0,                          .set_speed = 0,
         .encoder = &encoder_front,  .PID = &motor_front_pid,
     },
 };
+
+// 车总体
+int32    target_speed_magnitude;
+double   target_angle_arc;
 
 // 启动所有电机PWM通道输出，占空比为0
 void motor_all_init(void){
@@ -139,3 +143,22 @@ void motor_encoder_pit_call(void){
         encoder_clear_count(motors[index].encoder->encoder_index);
     }
 }
+
+// 车运动解算函数
+void target_motion_calc(void){
+    // 有正负，分别代表向前和向后
+    double speed_front_vector = 0.;
+    // 有正负，分别代表向左和向右
+    double speed_left_vector = 0.;
+
+    // 计算
+    // V前 = V要 * cos(目标角度弧度)
+    speed_front_vector  =   target_speed_magnitude * cos(target_angle_arc);
+    // V前 = V要 * sin(目标角度弧度)
+    speed_left_vector   =   target_speed_magnitude * sin(target_angle_arc);
+
+    // 计算到单电机的速度
+    
+}
+void target_motion_calc_result_apply(void);
+void target_motion_calc_pit_call(void);

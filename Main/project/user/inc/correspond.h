@@ -8,19 +8,18 @@
 #include "motor.h"
 #include "gyroscope.h"
 
-#define WIFI_SSID   "SmartCar"
-#define WIFI_PASS   "9894653xxk"
+#define WIFI_SSID               "SmartCar"
+#define WIFI_PASS               "9894653xxk"
+#define WIFI_SPI_CONNECT_MODE   "TCP"
 
 #define UART_N      UART_1
 #define UART_BAUD   115200
 #define UART_TX_PIN UART1_TX_B12
 #define UART_RX_PIN UART1_RX_B13
 
-typedef struct _RemoteControlItem{
-    char * marker_word;
+// ================WIFI SPI====================
+uint8 wifi_spi_init_(void);
+uint8 wifi_spi_read(void * dst,uint32 dst_size);
 
-}RemoteControl;
-
-uint8 wifi_spi_init_(uint16 time_out_s);
 
 #endif
