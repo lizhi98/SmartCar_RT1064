@@ -17,6 +17,9 @@
         "zf_device_ble6a20.h": "c",
         "diskio.h": "c",
         "zf_driver_encoder.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "float.h": "c",
+        "windows.h": "c",
+        "fsl_sd_disk.h": "c"
     }
 }

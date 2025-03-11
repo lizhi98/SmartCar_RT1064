@@ -32,11 +32,7 @@ RT1064智能车推荐引脚分配.txt
 *.log
 *.xml
 *.iml
-Main/project/mdk/.vscode/uv4.log.lock
-Main/project/mdk/rt1064.uvprojx
-Main/project/mdk/rt1064.uvoptx
-
-
+uv4.log.lock
 # 默认忽略的文件
 /shelf/
 /workspace.xml
