@@ -7,26 +7,30 @@
 #include "zf_driver_pit.h"
 #include "math.h"
 
-#define MOTOR_PWM_FREQUENCY     50
-#define MOTOR_PWM_DUTY_MAX      10000
+#define MOTOR_PWM_FREQUENCY 50
+#define MOTOR_PWM_DUTY_MAX 10000
 
-#define SUM_WRONG_MAX           1000 		//TODO
-#define MOTOR_PID_PIT           PIT_CH0	// TODO 需要根据实际修改
-#define MOTOR_PID_PIT_TIME      20 			// TODO
+#define SUM_WRONG_MAX 1000    // TODO
+#define MOTOR_PID_PIT PIT_CH0 // TODO 需要根据实际修改
+#define MOTOR_PID_PIT_TIME 20 // TODO
 
-#define MOTOR_ENCODER_PIT       PIT_CH0
-#define MOTOR_ENCODER_PIT_TIME  500
+#define MOTOR_ENCODER_PIT PIT_CH0
+#define MOTOR_ENCODER_PIT_TIME 500
 
-typedef enum _MotorIndex{
-    LEFT,   RIGHT,  REAR,  MOTOR_INDEX_MAX_PLUS_ONE,
+typedef enum _MotorIndex
+{
+    LEFT,
+    RIGHT,
+    REAR,
+    MOTOR_INDEX_MAX_PLUS_ONE,
 } MotorIndex;
 
 typedef struct _Encoder
 {
-    encoder_index_enum    encoder_index;
+    encoder_index_enum encoder_index;
     encoder_channel1_enum encoder_channel_1;
     encoder_channel2_enum encoder_channel_2;
-}Encoder;
+} Encoder;
 
 typedef struct _MotorPID
 {
@@ -36,33 +40,39 @@ typedef struct _MotorPID
     float wrong;
     float last_wrong;
     float sum_wrong;
-}MotorPID;
+} MotorPID;
 
 typedef struct _Motor
 {
-    MotorIndex              index;
-    pwm_channel_enum        pwm_channel_forward;
-    pwm_channel_enum        pwm_channel_backward;
-    Encoder*                encoder;
-    int32                   pwm_duty;
-    int32                   current_speed;
-    int32                   set_speed;
-    MotorPID*               PID;
+    MotorIndex index;
+    pwm_channel_enum pwm_channel_forward;
+    pwm_channel_enum pwm_channel_backward;
+    Encoder *encoder;
+    int32 pwm_duty;
+    int32 current_speed;
+    int32 set_speed;
+    MotorPID *PID;
 } Motor;
+
+// 车总体运动解算
+typedef struct _target_motion_speed_calc
+{
+    int32       target_speed_magnitude;
+    double      target_angle_arc;
+    double      speed_kp;
+    // double
+} TargetMotionSpeedCalc;
 
 extern MotorPID motor_left_pid;
 extern MotorPID motor_right_pid;
-extern MotorPID motor_front_pid;
+extern MotorPID motor_rear_pid;
 
 extern Encoder encoder_left;
 extern Encoder encoder_right;
-extern Encoder encoder_front;
+extern Encoder encoder_rear;
 
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 
-// 车总体
-extern int32    target_speed_magnitude;
-extern double   target_angle_arc;
 
 // Motor PWM Control
 void motor_all_init(void);
