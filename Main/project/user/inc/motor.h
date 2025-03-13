@@ -8,6 +8,8 @@
 #include "zf_driver_pit.h"
 #include "math.h"
 
+#define MOTOR_H_PI    3.14159
+
 // MOTOR PWM
 #define MOTOR_PWM_FREQUENCY     17000
 #define MOTOR_PWM_DUTY_MAX      5000
@@ -19,7 +21,10 @@
 
 // ENCODER
 #define MOTOR_ENCODER_PIT       PIT_CH0
-#define MOTOR_ENCODER_PIT_TIME  500
+#define MOTOR_ENCODER_PIT_TIME  20
+
+#define TARGET_MOTION_PIT       PIT_CH1
+#define TARGET_MOTION_PIT_TIME  20
 
 typedef enum _MotorIndex
 {
@@ -58,24 +63,20 @@ typedef struct _Motor
     MotorPID *          PID;
 } Motor;
 
-// 车总体运动解算
-typedef struct _target_motion_speed_calc
-{
-    int32       target_speed_magnitude;
-    double      target_angle_arc;
-    double      speed_kp;
-    // double
-} TargetMotionSpeedCalc;
-
+// MOTOR
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 
+// TARGET MOTION
+extern int32       target_speed_magnitude;
+extern double      target_angle;
+extern double      speed_kp;
 
 // Motor PWM Control
-void motor_all_init(void);
 void motor_set_duty(MotorIndex index, int32 duty);
 void motor_run_with_speed(MotorIndex index, int32 speed);
 void motor_unpower(MotorIndex index);
 void motor_all_stop(void);
+void motor_all_init(void);
 
 // Motor PID Control
 void motor_pid_pit_init(void);
@@ -91,7 +92,8 @@ void encoder_all_init(void);
 
 // 车运动解算函数
 void target_motion_calc(void);
-void target_motion_calc_result_apply(void);
+void target_motion_calc_result_apply(int32 motor_left_speed,int32 motor_right_speed,int32 motor_rear_speed);
 void target_motion_calc_pit_call(void);
+void target_motion_calc_pit_init(void);
 
 #endif

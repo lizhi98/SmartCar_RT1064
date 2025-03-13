@@ -17,57 +17,61 @@ Encoder encoder_rear = {
 };
 
 MotorPID motor_left_pid = {
-    .KP = 0,            .KI = 0,        .KD = 0,
+    .KP = 1.0,          .KI = 0,        .KD = 0,
     .last_wrong = 0,    .sum_wrong = 0, .wrong = 0,
 };
 MotorPID motor_right_pid = {
-    .KP = 0,            .KI = 0,        .KD = 0,
+    .KP = 1.0,          .KI = 0,        .KD = 0,
     .last_wrong = 0,    .sum_wrong = 0, .wrong = 0,
 };
 MotorPID motor_rear_pid = {
-    .KP = 0,            .KI = 0,        .KD = 0,
+    .KP = 1.0,          .KI = 0,        .KD = 0,
     .last_wrong = 0,    .sum_wrong = 0, .wrong = 0,
 };
 
 // TODO
 Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
     {
-        .index = LEFT,              .pwm_channel_pin = PWM2_MODULE0_CHB_C7, .gpio_dir_pin = C6,
-        .pwm_duty = 0,              .current_speed = 0,                         .set_speed = 0,
+        .index = LEFT,              .pwm_channel_pin = PWM2_MODULE0_CHB_C7,  .gpio_dir_pin = C6,
+        .pwm_duty = 0,              .current_speed = 0,                      .set_speed = 0,
         .encoder = &encoder_left,   .PID = &motor_left_pid,
     },
     {
         .index = RIGHT,             .pwm_channel_pin = PWM2_MODULE2_CHB_C11, .gpio_dir_pin = C10,
-        .pwm_duty = 0,              .current_speed = 0,                         .set_speed = 0,
+        .pwm_duty = 0,              .current_speed = 0,                      .set_speed = 0,
         .encoder = &encoder_right,  .PID = &motor_right_pid,
     },
     {
-        .index = REAR,             .pwm_channel_pin = PWM2_MODULE3_CHB_D3, .gpio_dir_pin = D2,
-        .pwm_duty = 0,              .current_speed = 0,                          .set_speed = 0,
-        .encoder = &encoder_rear,  .PID = &motor_rear_pid,
+        .index = REAR,              .pwm_channel_pin = PWM2_MODULE3_CHB_D3,  .gpio_dir_pin = D2,
+        .pwm_duty = 0,              .current_speed = 0,                      .set_speed = 0,
+        .encoder = &encoder_rear,   .PID = &motor_rear_pid,
     },
 };
 
+// TARGET MOTION
+int32       target_speed_magnitude;
+double      target_angle;
+double      speed_kp;
 
-
-// 启动所有电机PWM通道输出，占空比为0
+// 启动所有电机PWM通道输出，占空比为0，方向为逆时针
 void motor_all_init(void){
     for(int i = 0; i < MOTOR_INDEX_MAX_PLUS_ONE; i++){
-        pwm_init(motors[i].pwm_channel_pin,     MOTOR_PWM_FREQUENCY, 0);
-        gpio_init(motors[i].gpio_dir_pin,        GPO,                 0,     GPO_PUSH_PULL);
+        pwm_init(motors[i].pwm_channel_pin,     MOTOR_PWM_FREQUENCY,    0);
+        gpio_init(motors[i].gpio_dir_pin,       GPO,                    1,     GPO_PUSH_PULL);
     }
 }
 
 // 设置电机PWM通道输出占空比
 void motor_set_duty(MotorIndex index, int32 duty){
-    if(abs(duty) > PWM_DUTY_MAX){
-        (duty > 0) ? (duty = PWM_DUTY_MAX) : (duty = -PWM_DUTY_MAX);
+    // 占空比限幅
+    if(abs(duty) > MOTOR_PWM_DUTY_MAX){
+        (duty > 0) ? (duty = MOTOR_PWM_DUTY_MAX) : (duty = -MOTOR_PWM_DUTY_MAX);
     }
-    pwm_set_duty(motors[index].pwm_channel_pin,    duty);
+    pwm_set_duty(motors[index].pwm_channel_pin,    abs(duty));
     if(duty > 0){
-        gpio_set_level(motors[index].gpio_dir_pin, 0);
-    }else if(duty < 0){
         gpio_set_level(motors[index].gpio_dir_pin, 1);
+    }else if(duty < 0){
+        gpio_set_level(motors[index].gpio_dir_pin, 0);
     }
     // 记录占空比
     motors[index].pwm_duty = duty;
@@ -140,17 +144,32 @@ void target_motion_calc(void){
     // // 计算
     // // V前 = V要 * cos(目标角度弧度)
     // // 有正负，分别代表向前和向后
-    // double speed_front_vector  =   target_speed_magnitude * cos(target_angle_arc);
+    double speed_front  =   target_speed_magnitude * cos(target_angle);
     // // V前 = V要 * sin(目标角度弧度)
     // // 有正负，分别代表向左和向右
-    // double speed_left_vector   =   target_speed_magnitude * sin(target_angle_arc);
+    double speed_left   =   target_speed_magnitude * sin(target_angle);
 
     // // 计算移动速度
     // int32 motor_rear_speed = speed_left_vector;
     // // int32 motor_left_speed = 
+    int32 motor_left_speed  =      speed_front / 2 / cos(MOTOR_H_PI/3);
+    int32 motor_right_speed = -1 * speed_front / 2 / cos(MOTOR_H_PI/3);
     
+    motor_left_speed   += -1 * speed_left / 2 / cos(MOTOR_H_PI/6);
+    motor_right_speed  += -1 * speed_left / 2 / cos(MOTOR_H_PI/6);
+
+    int32 motor_rear_speed = speed_left;
+
+    target_motion_calc_result_apply(motor_left_speed,motor_right_speed,motor_rear_speed);
 }
-void target_motion_calc_result_apply(void){
+void target_motion_calc_result_apply(int32 motor_left_speed,int32 motor_right_speed,int32 motor_rear_speed){
+    motor_run_with_speed(LEFT,motor_left_speed);
+    motor_run_with_speed(RIGHT,motor_right_speed);
+    motor_run_with_speed(REAR,motor_rear_speed);
 }
 void target_motion_calc_pit_call(void){
+    target_motion_calc();
+}
+void target_motion_calc_pit_init(void){
+    pit_ms_init(TARGET_MOTION_PIT,TARGET_MOTION_PIT_TIME);
 }
