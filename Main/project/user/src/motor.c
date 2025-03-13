@@ -131,45 +131,36 @@ void motor_encoder_pit_init(void){
     pit_ms_init(MOTOR_ENCODER_PIT,MOTOR_ENCODER_PIT_TIME);
 }
 void motor_encoder_pit_call(void){
-    for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
+    for(MotorIndex index = 0;index < REAR;index ++){
         // 获取速度
         motors[index].current_speed = encoder_get_speed(motors[index].encoder->encoder_index);
         // 清除计数
         encoder_clear_count(motors[index].encoder->encoder_index);
     }
+    // 获取速度
+    motors[REAR].current_speed = encoder_get_speed(motors[REAR].encoder->encoder_index) / -4;
+    // 清除计数
+    encoder_clear_count(motors[REAR].encoder->encoder_index);
 }
 
 // 车运动解算函数
 void target_motion_calc(void){
-    // // 计算
-    // // V前 = V要 * cos(目标角度弧度)
-    // // 有正负，分别代表向前和向后
-    double speed_front  =   target_speed_magnitude * cos(target_angle);
-    // // V前 = V要 * sin(目标角度弧度)
-    // // 有正负，分别代表向左和向右
-    double speed_left   =   target_speed_magnitude * sin(target_angle);
+    // 目标速度正交分解
+    // V前 = V要 * cos(目标角度弧度)
+    // 有正负，分别代表向前和向后
+    double speed_front  =        target_speed_magnitude * cos(target_angle);
+    // V前 = V要 * sin(目标角度弧度)
+    // 有正负，分别代表向左和向右
+    double speed_left   =   -1 * target_speed_magnitude * sin(target_angle);
 
-    // // 计算移动速度
-    // int32 motor_rear_speed = speed_left_vector;
-    // // int32 motor_left_speed = 
-    int32 motor_left_speed  =      speed_front / 2 / cos(MOTOR_H_PI/3);
-    int32 motor_right_speed = -1 * speed_front / 2 / cos(MOTOR_H_PI/3);
+    // 计算各个轮子的移动速度
     
-    motor_left_speed   += -1 * speed_left / 2 / cos(MOTOR_H_PI/6);
-    motor_right_speed  += -1 * speed_left / 2 / cos(MOTOR_H_PI/6);
-
-    int32 motor_rear_speed = speed_left;
-
-    target_motion_calc_result_apply(motor_left_speed,motor_right_speed,motor_rear_speed);
-}
-void target_motion_calc_result_apply(int32 motor_left_speed,int32 motor_right_speed,int32 motor_rear_speed){
+    int32 motor_left_speed,motor_right_speed,motor_rear_speed;
+    motor_left_speed  = (int32) (speed_left * COS_PI_D_3 - speed_front * COS_PI_D_6);
+    motor_right_speed = (int32) (speed_left * COS_PI_D_3 + speed_front * COS_PI_D_6);
+    motor_rear_speed  = (int32) (speed_left * -1);
+    // 应用速度
     motor_run_with_speed(LEFT,motor_left_speed);
     motor_run_with_speed(RIGHT,motor_right_speed);
     motor_run_with_speed(REAR,motor_rear_speed);
-}
-void target_motion_calc_pit_call(void){
-    target_motion_calc();
-}
-void target_motion_calc_pit_init(void){
-    pit_ms_init(TARGET_MOTION_PIT,TARGET_MOTION_PIT_TIME);
 }

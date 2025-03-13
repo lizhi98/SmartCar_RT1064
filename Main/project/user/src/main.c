@@ -22,8 +22,8 @@ int main(void)
     screen_init();
     // WIFI SPI 初始化
     // hardware_init_flag = wifi_spi_init_(20);
-		// hardware_init_flag = wifi_spi_init_();
-
+		hardware_init_flag = wifi_spi_init_();
+    hardware_init_flag = wifi_spi_socket_connect("TCP","192.168.137.1","9894","6060");
     // UART TO OpenART mini 初始化
     // TODO
     // 摄像头初始化
@@ -40,20 +40,19 @@ int main(void)
     system_delay_ms(2000);
     screen_clear();
     // =====================外设初始化======================
-    //wifi_spi_socket_connect("TCP","192.168.137.1","9894","6060");
-
-    /*
-    顺时针 0
-    左电机 顺时针 0
-    */
-
-    // char temp[30];
+    // pwm_init(motors[0].pwm_channel_pin, MOTOR_PWM_FREQUENCY, 2000);
+    // pwm_init(motors[1].pwm_channel_pin, MOTOR_PWM_FREQUENCY, 2000);
+    // pwm_init(motors[2].pwm_channel_pin, MOTOR_PWM_FREQUENCY, 2000);
+    // gpio_init(motors[0].gpio_dir_pin, GPO, 1, GPO_PUSH_PULL);
+    // gpio_init(motors[1].gpio_dir_pin, GPO, 1, GPO_PUSH_PULL);
+    // gpio_init(motors[2].gpio_dir_pin, GPO, 1, GPO_PUSH_PULL);
+    char temp[30];
     while(1)
     {
         // ICM42688_Get_Data();
-        // system_delay_ms(200);
-        // sprintf(temp,"%.4f,%.4f,%.4f\n",ICM42688.gyro_x,ICM42688.gyro_y,ICM42688.gyro_z);
-        // wifi_spi_send_string(temp);
+        system_delay_ms(200);
+        sprintf(temp,"%d.0,%d.0,%d.0\n",motors[0].current_speed,motors[1].current_speed,motors[2].current_speed);
+        wifi_spi_send_string(temp);
         // 此处编写需要循环执行的代码
     }
 }
