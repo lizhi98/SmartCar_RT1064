@@ -20,6 +20,14 @@
         "math.h": "c",
         "float.h": "c",
         "windows.h": "c",
-        "fsl_sd_disk.h": "c"
+        "fsl_sd_disk.h": "c",
+        "fsl_iomuxc.h": "c",
+        "zf_common_clock.h": "c",
+        "zf_driver_gpio.h": "c",
+        "zf_driver_pwm.h": "c",
+        "zf_common_typedef.h": "c",
+        "cstddef": "c",
+        "limits": "c",
+        "zf_device_type.h": "c"
     }
 }

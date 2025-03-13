@@ -473,6 +473,18 @@
         </Group>
         <Group>
           <GroupName>code</GroupName>
+          <Files>
+            <File>
+              <FileName>icm42688.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\code\icm42688.h</FilePath>
+            </File>
+            <File>
+              <FileName>icm42688.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\code\icm42688.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>doc</GroupName>

@@ -2,20 +2,24 @@
 #define _CODE_MOTOR_H_
 
 #include "zf_driver_pwm.h"
+#include "zf_driver_gpio.h"
 #include "zf_driver_pit.h"
 #include "zf_driver_encoder.h"
 #include "zf_driver_pit.h"
 #include "math.h"
 
-#define MOTOR_PWM_FREQUENCY 50
-#define MOTOR_PWM_DUTY_MAX 10000
+// MOTOR PWM
+#define MOTOR_PWM_FREQUENCY     17000
+#define MOTOR_PWM_DUTY_MAX      5000
 
-#define SUM_WRONG_MAX 1000    // TODO
-#define MOTOR_PID_PIT PIT_CH0 // TODO 需要根据实际修改
-#define MOTOR_PID_PIT_TIME 20 // TODO
+// PID
+#define SUM_WRONG_MAX           1000    // TODO
+#define MOTOR_PID_PIT           PIT_CH0 // TODO 需要根据实际修改
+#define MOTOR_PID_PIT_TIME      20 // TODO
 
-#define MOTOR_ENCODER_PIT PIT_CH0
-#define MOTOR_ENCODER_PIT_TIME 500
+// ENCODER
+#define MOTOR_ENCODER_PIT       PIT_CH0
+#define MOTOR_ENCODER_PIT_TIME  500
 
 typedef enum _MotorIndex
 {
@@ -27,9 +31,9 @@ typedef enum _MotorIndex
 
 typedef struct _Encoder
 {
-    encoder_index_enum encoder_index;
-    encoder_channel1_enum encoder_channel_1;
-    encoder_channel2_enum encoder_channel_2;
+    encoder_index_enum      encoder_index;
+    encoder_channel1_enum   encoder_channel_1;
+    encoder_channel2_enum   encoder_channel_2;
 } Encoder;
 
 typedef struct _MotorPID
@@ -44,14 +48,14 @@ typedef struct _MotorPID
 
 typedef struct _Motor
 {
-    MotorIndex index;
-    pwm_channel_enum pwm_channel_forward;
-    pwm_channel_enum pwm_channel_backward;
-    Encoder *encoder;
-    int32 pwm_duty;
-    int32 current_speed;
-    int32 set_speed;
-    MotorPID *PID;
+    MotorIndex          index;
+    pwm_channel_enum    pwm_channel_pin;
+    gpio_pin_enum       gpio_dir_pin;
+    Encoder *           encoder;
+    int32               pwm_duty;
+    int32               current_speed;
+    int32               set_speed;
+    MotorPID *          PID;
 } Motor;
 
 // 车总体运动解算
@@ -62,14 +66,6 @@ typedef struct _target_motion_speed_calc
     double      speed_kp;
     // double
 } TargetMotionSpeedCalc;
-
-extern MotorPID motor_left_pid;
-extern MotorPID motor_right_pid;
-extern MotorPID motor_rear_pid;
-
-extern Encoder encoder_left;
-extern Encoder encoder_right;
-extern Encoder encoder_rear;
 
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 

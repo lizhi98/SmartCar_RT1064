@@ -6,7 +6,9 @@
 
 // 本例程是开源库移植用空工程
 #include "main.h"
-
+#include "zf_driver_pwm.h"
+#include "zf_driver_gpio.h"
+#include "icm42688.h"
 #include "stdio.h"
 
 int main(void)
@@ -20,34 +22,38 @@ int main(void)
     screen_init();
     // WIFI SPI 初始化
     // hardware_init_flag = wifi_spi_init_(20);
-		hardware_init_flag = wifi_spi_init_();
+		// hardware_init_flag = wifi_spi_init_();
 
     // UART TO OpenART mini 初始化
     // TODO
     // 摄像头初始化
-    hardware_init_flag = mt_camera_init();
+    // hardware_init_flag = mt_camera_init();
     // 陀螺仪初始化
-    // TODO
+    
     // 电机初始化
     // 编码器初始化
-    //encoder_all_init();
-    //motor_encoder_pit_init();
+    encoder_all_init();
+    motor_encoder_pit_init();
     // 初始化完成，屏幕输出初始化结果
     if(hardware_init_flag){screen_show_str(0,0,"HW Init Fail!!!"); while(1){};} // 程序停止
     else                  {screen_show_str(0,0,"HW Init Success");}
     system_delay_ms(2000);
     screen_clear();
     // =====================外设初始化======================
+    //wifi_spi_socket_connect("TCP","192.168.137.1","9894","6060");
 
-    char temp[30] = "\0";
+    /*
+    顺时针 0
+    左电机 顺时针 0
+    */
+
+    // char temp[30];
     while(1)
     {
-        // 此处编写需要循环执行的代码
-        system_delay_ms(500);
-        sprintf(temp,"encoder:%6ld",motors[LEFT].current_speed);
-        wifi_spi_send_string(temp);
-        ips200_show_string(0,0,temp);
-        
+        // ICM42688_Get_Data();
+        // system_delay_ms(200);
+        // sprintf(temp,"%.4f,%.4f,%.4f\n",ICM42688.gyro_x,ICM42688.gyro_y,ICM42688.gyro_z);
+        // wifi_spi_send_string(temp);
         // 此处编写需要循环执行的代码
     }
 }

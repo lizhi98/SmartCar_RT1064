@@ -32,17 +32,17 @@ MotorPID motor_rear_pid = {
 // TODO
 Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
     {
-        .index = LEFT,              .pwm_channel_forward = PWM2_MODULE0_CHA_C6, .pwm_channel_backward = PWM2_MODULE0_CHB_C7,
+        .index = LEFT,              .pwm_channel_pin = PWM2_MODULE0_CHB_C7, .gpio_dir_pin = C6,
         .pwm_duty = 0,              .current_speed = 0,                         .set_speed = 0,
         .encoder = &encoder_left,   .PID = &motor_left_pid,
     },
     {
-        .index = RIGHT,             .pwm_channel_forward = PWM2_MODULE1_CHA_C8, .pwm_channel_backward = PWM2_MODULE1_CHB_C9,
+        .index = RIGHT,             .pwm_channel_pin = PWM2_MODULE2_CHB_C11, .gpio_dir_pin = C10,
         .pwm_duty = 0,              .current_speed = 0,                         .set_speed = 0,
         .encoder = &encoder_right,  .PID = &motor_right_pid,
     },
     {
-        .index = REAR,             .pwm_channel_forward = PWM2_MODULE2_CHA_C10, .pwm_channel_backward = PWM2_MODULE2_CHB_C11,
+        .index = REAR,             .pwm_channel_pin = PWM2_MODULE3_CHB_D3, .gpio_dir_pin = D2,
         .pwm_duty = 0,              .current_speed = 0,                          .set_speed = 0,
         .encoder = &encoder_rear,  .PID = &motor_rear_pid,
     },
@@ -53,8 +53,8 @@ Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
 // 启动所有电机PWM通道输出，占空比为0
 void motor_all_init(void){
     for(int i = 0; i < MOTOR_INDEX_MAX_PLUS_ONE; i++){
-        pwm_init(motors[i].pwm_channel_forward,     MOTOR_PWM_FREQUENCY, 0);
-        pwm_init(motors[i].pwm_channel_backward,    MOTOR_PWM_FREQUENCY, 0);
+        pwm_init(motors[i].pwm_channel_pin,     MOTOR_PWM_FREQUENCY, 0);
+        gpio_init(motors[i].gpio_dir_pin,        GPO,                 0,     GPO_PUSH_PULL);
     }
 }
 
@@ -63,18 +63,11 @@ void motor_set_duty(MotorIndex index, int32 duty){
     if(abs(duty) > PWM_DUTY_MAX){
         (duty > 0) ? (duty = PWM_DUTY_MAX) : (duty = -PWM_DUTY_MAX);
     }
+    pwm_set_duty(motors[index].pwm_channel_pin,    duty);
     if(duty > 0){
-        pwm_set_duty(motors[index].pwm_channel_backward,    0);
-        pwm_set_duty(motors[index].pwm_channel_forward,     duty);
+        gpio_set_level(motors[index].gpio_dir_pin, 0);
     }else if(duty < 0){
-        pwm_set_duty(motors[index].pwm_channel_backward,    -duty);
-        pwm_set_duty(motors[index].pwm_channel_forward,     0);
-    }else if(duty == 0){
-        pwm_set_duty(motors[index].pwm_channel_backward,    0);
-        pwm_set_duty(motors[index].pwm_channel_forward,     0);
-    }else{
-        // TODO 
-        // Wrong!!
+        gpio_set_level(motors[index].gpio_dir_pin, 1);
     }
     // 记录占空比
     motors[index].pwm_duty = duty;
@@ -131,7 +124,7 @@ void encoder_all_init(){
     encoder_quad_init(encoder_rear.encoder_index,encoder_rear.encoder_channel_1,encoder_rear.encoder_channel_2);
 }
 void motor_encoder_pit_init(void){
-    pit_init(MOTOR_ENCODER_PIT,MOTOR_ENCODER_PIT_TIME);
+    pit_ms_init(MOTOR_ENCODER_PIT,MOTOR_ENCODER_PIT_TIME);
 }
 void motor_encoder_pit_call(void){
     for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
@@ -144,17 +137,17 @@ void motor_encoder_pit_call(void){
 
 // 车运动解算函数
 void target_motion_calc(void){
-    // 计算
-    // V前 = V要 * cos(目标角度弧度)
-    // 有正负，分别代表向前和向后
-    double speed_front_vector  =   target_speed_magnitude * cos(target_angle_arc);
-    // V前 = V要 * sin(目标角度弧度)
-    // 有正负，分别代表向左和向右
-    double speed_left_vector   =   target_speed_magnitude * sin(target_angle_arc);
+    // // 计算
+    // // V前 = V要 * cos(目标角度弧度)
+    // // 有正负，分别代表向前和向后
+    // double speed_front_vector  =   target_speed_magnitude * cos(target_angle_arc);
+    // // V前 = V要 * sin(目标角度弧度)
+    // // 有正负，分别代表向左和向右
+    // double speed_left_vector   =   target_speed_magnitude * sin(target_angle_arc);
 
-    // 计算移动速度
-    int32 motor_rear_speed = speed_left_vector;
-    // int32 motor_left_speed = 
+    // // 计算移动速度
+    // int32 motor_rear_speed = speed_left_vector;
+    // // int32 motor_left_speed = 
     
 }
 void target_motion_calc_result_apply(void){
