@@ -10,8 +10,8 @@ char wifi_spi_recv_head = 0;
 // wifi_spi接收命令缓存
 char wifi_spi_recv_cmd  = 0;
 // wifi_spi接收数据缓存
-char wifi_spi_recv_double_data[8]  = {0};
-char wifi_spi_recv_int_data[5]     = {0};
+char wifi_spi_recv_float_data[9]   = {0};
+char wifi_spi_recv_int_data[6]     = {0};
 // wifi_spi接收尾数据缓存
 char wifi_spi_recv_tail  = 0;
 
@@ -36,23 +36,32 @@ uint8 wifi_spi_read(void * dst,uint32 dst_size_n_uint8){
 // 参数说明     dst         要存入变量的地址
 // 返回参数     uint8       是否读取成功 0-成功 1-错误
 uint8 wifi_spi_read_5int(int32 * dst){
-    int32 temp = 0 , wei = 1;
+    int32 temp = 0;
     if( !wifi_spi_read(wifi_spi_recv_int_data,5) ){
-        for(int i = 4;i > 0;i--){
-            temp += (wifi_spi_recv_int_data[i] - '0') * wei;
-            wei *= 10;
-        }
-        if(wifi_spi_recv_int_data[0] == '-'){
-            temp *= -1;
-        }
-        *dst = (int32)temp;
+        wifi_spi_recv_int_data[5] = '\0';
+        sscanf(wifi_spi_recv_int_data,"%d",&temp);
+        *dst = temp;
+        return 0;
+    }
+    return 1;
+}
+
+// 函数简介     读取WIFI SPI 8个位置的float的数据(例如读取"-1234.56"存成-1234.56)
+// 参数说明     dst         要存入变量的地址
+// 返回参数     uint8       是否读取成功 0-成功 1-错误
+uint8 wifi_spi_read_8float(float * dst){
+    float temp = 0.0;
+    if( !wifi_spi_read(wifi_spi_recv_float_data,8) ){
+        wifi_spi_recv_float_data[8] = '\0';
+        sscanf(wifi_spi_recv_float_data,"%f",&temp);
+        *dst = temp;
         return 0;
     }
     return 1;
 }
 
 // wifi_spi中断回调函数
-uint8 wifi_spi_pit_call(void){
+void wifi_spi_pit_call(void){
     // 周期计数器自增
     wifi_spi_cycle_time++;
     
@@ -71,7 +80,8 @@ uint8 wifi_spi_pit_call(void){
                 wifi_spi_cycle_time = 0;
             }
         }
-        break;
+        // wifi_spi_send_string("avai\n");
+        return;
     // 接收到帧头，扫描接收命令
     case WIFI_SPI_RECVD_HEAD:
         // 长时间未接收到命令，返回空闲状态
@@ -83,6 +93,8 @@ uint8 wifi_spi_pit_call(void){
             wifi_spi_receive_flag = WIFI_SPI_RECVD_CMD;
             wifi_spi_cycle_time = 0;
         }
+        // wifi_spi_send_string("head\n");
+        break;
     case WIFI_SPI_RECVD_CMD:
         // 长时间未接收到数据，返回空闲状态
         if(wifi_spi_cycle_time > 8){
@@ -98,10 +110,35 @@ uint8 wifi_spi_pit_call(void){
                 wifi_spi_cycle_time = 0;
             }
             break;
-        
+        case 'b':
+            if(!wifi_spi_read_8float(&(motors[0].PID->KP))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        case 'c':
+            if(!wifi_spi_read_8float(&(motors[0].PID->KI))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        case 'd':
+            if(!wifi_spi_read_8float(&(motors[0].PID->KD))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        case 'e':
+            if(!wifi_spi_read_5int(&(motors[1].PID->sum_wrong))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
         default:
             break;
         }
+        // wifi_spi_send_string("cmd\n");
+        break;
     case WIFI_SPI_RECVD_DATA:
         // 长时间未接收到帧尾，返回空闲状态
         if(wifi_spi_cycle_time > 7){
@@ -115,10 +152,16 @@ uint8 wifi_spi_pit_call(void){
                 wifi_spi_cycle_time = 0;
             }
         }
+        // wifi_spi_send_string("data\n");
         break;
     default:
+        wifi_spi_cycle_time = 0;
         break;
     }
+}
+
+void wifi_spi_pit_init(void){
+    pit_ms_init(WIFI_SPI_RECV_PIT,WIFI_SPI_RECV_PIT_MS);
 }
 
 // ====================UART TO OpenART mini====================

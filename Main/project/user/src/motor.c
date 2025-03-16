@@ -51,7 +51,7 @@ Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
 // TARGET MOTION
 int32       target_speed_magnitude;
 double      target_angle;
-double      speed_kp;
+double      w_kp = 0.1;
 
 // 启动所有电机PWM通道输出，占空比为0，方向为逆时针
 void motor_all_init(void){
@@ -156,9 +156,15 @@ void target_motion_calc(void){
     // 计算各个轮子的移动速度
     
     int32 motor_left_speed,motor_right_speed,motor_rear_speed;
+    
+    // 平移运动
     motor_left_speed  = (int32) (speed_left * COS_PI_D_3 - speed_front * COS_PI_D_6);
     motor_right_speed = (int32) (speed_left * COS_PI_D_3 + speed_front * COS_PI_D_6);
     motor_rear_speed  = (int32) (speed_left * -1);
+    // 自转运动 逆时针为正
+    motor_left_speed  += (int32) (target_angle * w_kp);
+    motor_right_speed += (int32) (target_angle * w_kp);
+    motor_rear_speed  += (int32) (target_angle * w_kp);
     // 应用速度
     motor_run_with_speed(LEFT,motor_left_speed);
     motor_run_with_speed(RIGHT,motor_right_speed);

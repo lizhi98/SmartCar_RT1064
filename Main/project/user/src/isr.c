@@ -51,7 +51,8 @@ void PIT_IRQHandler(void)
     if(pit_flag_get(PIT_CH0))
     {
         motor_encoder_pit_call();
-        // motor_pid_pit_call();
+        motor_pid_pit_call();
+
         pit_flag_clear(PIT_CH0);
     }
     
@@ -64,7 +65,7 @@ void PIT_IRQHandler(void)
     
     if(pit_flag_get(PIT_CH2))
     {
-        // gyroscope_pit_call();
+        wifi_spi_pit_call();
         pit_flag_clear(PIT_CH2);
     }
     

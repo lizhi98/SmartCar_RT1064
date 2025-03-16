@@ -70,7 +70,7 @@ extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 // TARGET MOTION
 extern int32       target_speed_magnitude;
 extern double      target_angle;
-extern double      speed_kp;
+extern double      w_kp;
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);

@@ -24,13 +24,15 @@ int main(void)
     // hardware_init_flag = wifi_spi_init_(20);
 		hardware_init_flag = wifi_spi_init_();
     hardware_init_flag = wifi_spi_socket_connect("TCP","192.168.137.1","9894","6060");
+    wifi_spi_pit_init();
     // UART TO OpenART mini 初始化
     // TODO
     // 摄像头初始化
-    // hardware_init_flag = mt_camera_init();
+    hardware_init_flag = mt_camera_init();
     // 陀螺仪初始化
     
     // 电机初始化
+    motor_all_init();
     // 编码器初始化
     encoder_all_init();
     motor_encoder_pit_init();
@@ -40,19 +42,15 @@ int main(void)
     system_delay_ms(2000);
     screen_clear();
     // =====================外设初始化======================
-    // pwm_init(motors[0].pwm_channel_pin, MOTOR_PWM_FREQUENCY, 2000);
-    // pwm_init(motors[1].pwm_channel_pin, MOTOR_PWM_FREQUENCY, 2000);
-    // pwm_init(motors[2].pwm_channel_pin, MOTOR_PWM_FREQUENCY, 2000);
-    // gpio_init(motors[0].gpio_dir_pin, GPO, 1, GPO_PUSH_PULL);
-    // gpio_init(motors[1].gpio_dir_pin, GPO, 1, GPO_PUSH_PULL);
-    // gpio_init(motors[2].gpio_dir_pin, GPO, 1, GPO_PUSH_PULL);
     char temp[30];
     while(1)
     {
         // ICM42688_Get_Data();
-        system_delay_ms(200);
+        system_delay_ms(500);
         sprintf(temp,"%d.0,%d.0,%d.0\n",motors[0].current_speed,motors[1].current_speed,motors[2].current_speed);
+        // sprintf(temp,"%d\n",target_speed_magnitude);
         wifi_spi_send_string(temp);
+        target_motion_calc();
         // 此处编写需要循环执行的代码
     }
 }
