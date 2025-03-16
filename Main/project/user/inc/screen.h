@@ -6,7 +6,7 @@
 
 void screen_init(void);
 
-#define screen_show_str(x,y,str)        ips200_show_string(x,y,str);
-#define screen_show_int(x,y,dat,num)    ips200_show_int(x,y,dat,num);
-#define screen_clear();                 ips200_clear();
+#define screen_show_str(x,y,str)        ips200_show_string(x,y,str)
+#define screen_show_int(x,y,dat,num)    ips200_show_int(x,y,dat,num)
+#define screen_clear()                  ips200_clear()
 #endif

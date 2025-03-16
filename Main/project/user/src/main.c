@@ -10,6 +10,7 @@
 #include "zf_driver_gpio.h"
 #include "icm42688.h"
 #include "stdio.h"
+#include "mt_image.h"
 
 int main(void)
 {
@@ -36,20 +37,33 @@ int main(void)
     // 编码器初始化
     encoder_all_init();
     motor_encoder_pit_init();
+    timer_init(GPT_TIM_1, TIMER_MS);
+    timer_start(GPT_TIM_1);
+
     // 初始化完成，屏幕输出初始化结果
     if(hardware_init_flag){screen_show_str(0,0,"HW Init Fail!!!"); while(1){};} // 程序停止
     else                  {screen_show_str(0,0,"HW Init Success");}
     system_delay_ms(2000);
     screen_clear();
     // =====================外设初始化======================
-    char temp[30];
-    while(1)
-    {
-        // ICM42688_Get_Data();
-        system_delay_ms(500);
-        sprintf(temp,"%d.0,%d.0,%d.0\n",motors[0].current_speed,motors[1].current_speed,motors[2].current_speed);
-        // sprintf(temp,"%d\n",target_speed_magnitude);
+    char temp[WIFI_SPI_BUFFER_SIZE];
+    
+
+    while(1) {
+        if (timer_get(GPT_TIM_1) > WIFI_SPI_SEND_INTERVAL) {
+            timer_clear(GPT_TIM_1);
+            sprintf(temp, "%d.0,%d.0,%d.0\n",
+                motors[0].current_speed, motors[1].current_speed, motors[2].current_speed
+            );
+        }
+
         wifi_spi_send_string(temp);
+
+        if (mt9v03x_finish_flag) {
+            process_image(mt9v03x_image);
+            mt9v03x_finish_flag = 0;
+        }
+
         target_motion_calc();
         // 此处编写需要循环执行的代码
     }

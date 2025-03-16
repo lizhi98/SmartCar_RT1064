@@ -7,4 +7,7 @@
 #include "gyroscope.h"
 #include "mt_camera.h"
 
+#define WIFI_SPI_SEND_INTERVAL 500
+#define WIFI_SPI_BUFFER_SIZE 32
+
 #endif

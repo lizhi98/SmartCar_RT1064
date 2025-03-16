@@ -1,4 +1,5 @@
 #include "mt_image.h"
+#include "motor.h"
 
 #include <math.h>
 #include <stdbool.h>
@@ -90,6 +91,7 @@ const uint8 MID_LINE = 3;
 
 const float OFFSET_MIN = 1.0;
 
+// TODO: fix data
 const uint8 STD_ROAD_HALF_WIDTHS[] = {
     83,     82,     81,     80,
     79,     78,     78,     77,

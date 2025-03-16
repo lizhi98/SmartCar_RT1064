@@ -31,6 +31,8 @@
         "zf_device_type.h": "c",
         "icm42688.h": "c",
         "mt_image.h": "c",
-        "zf_device_mt9v03x.h": "c"
+        "zf_device_mt9v03x.h": "c",
+        "string.h": "c",
+        "stdbool.h": "c"
     }
 }
