@@ -60,6 +60,20 @@ uint8 wifi_spi_read_8float(float * dst){
     return 1;
 }
 
+// 函数简介     读取WIFI SPI 8个位置的double的数据(例如读取"-1234.56"存成-1234.56)
+// 参数说明     dst         要存入变量的地址
+// 返回参数     uint8       是否读取成功 0-成功 1-错误
+uint8 wifi_spi_read_8double(float * dst){
+    double temp = 0.0;
+    if( !wifi_spi_read(wifi_spi_recv_float_data,8) ){
+        wifi_spi_recv_float_data[8] = '\0';
+        sscanf(wifi_spi_recv_float_data,"%lf",&temp);
+        *dst = temp;
+        return 0;
+    }
+    return 1;
+}
+
 // wifi_spi中断回调函数
 void wifi_spi_pit_call(void){
     // 周期计数器自增
@@ -129,7 +143,7 @@ void wifi_spi_pit_call(void){
             }
             break;
         case 'e':
-            if(!wifi_spi_read_5int(&(motors[1].PID->sum_wrong))){
+            if(!wifi_spi_read_8double(&(target_angle))){
                 wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
                 wifi_spi_cycle_time = 0;
             }

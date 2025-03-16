@@ -13,7 +13,7 @@
 #define WIFI_SPI_CONNECT_MODE   "TCP"
 
 #define WIFI_SPI_RECV_PIT       PIT_CH2
-#define WIFI_SPI_RECV_PIT_MS    500
+#define WIFI_SPI_RECV_PIT_MS    100
 
 #define host_to_rt_head '\r'
 #define host_to_rt_tail '\n'

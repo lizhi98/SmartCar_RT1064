@@ -51,7 +51,7 @@ Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
 // TARGET MOTION
 int32       target_speed_magnitude;
 double      target_angle;
-double      w_kp = 0.1;
+double      w_kp = 1;
 
 // 启动所有电机PWM通道输出，占空比为0，方向为逆时针
 void motor_all_init(void){

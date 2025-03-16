@@ -22,7 +22,7 @@ int main(void)
     screen_init();
     // WIFI SPI 初始化
     // hardware_init_flag = wifi_spi_init_(20);
-		hardware_init_flag = wifi_spi_init_();
+    hardware_init_flag = wifi_spi_init_();
     hardware_init_flag = wifi_spi_socket_connect("TCP","192.168.137.1","9894","6060");
     wifi_spi_pit_init();
     // UART TO OpenART mini 初始化
