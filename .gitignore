@@ -41,3 +41,5 @@ uv4.log.lock
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+
+.vscode/c_cpp_properties.json
