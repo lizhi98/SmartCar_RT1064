@@ -22,13 +22,13 @@ int main(void)
     screen_init();
     // WIFI SPI 初始化
     // hardware_init_flag = wifi_spi_init_(20);
-    hardware_init_flag = wifi_spi_init_();
-    hardware_init_flag = wifi_spi_socket_connect("TCP","192.168.137.1","9894","6060");
+    hardware_init_flag += wifi_spi_init_();
+    hardware_init_flag += wifi_spi_socket_connect("TCP","192.168.137.1","9894","6060");
     wifi_spi_pit_init();
     // UART TO OpenART mini 初始化
     // TODO
     // 摄像头初始化
-    hardware_init_flag = mt_camera_init();
+    hardware_init_flag += mt_camera_init();
     // 陀螺仪初始化
     
     // 电机初始化
