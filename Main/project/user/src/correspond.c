@@ -63,7 +63,7 @@ uint8 wifi_spi_read_8float(float * dst){
 // 函数简介     读取WIFI SPI 8个位置的double的数据(例如读取"-1234.56"存成-1234.56)
 // 参数说明     dst         要存入变量的地址
 // 返回参数     uint8       是否读取成功 0-成功 1-错误
-uint8 wifi_spi_read_8double(float * dst){
+uint8 wifi_spi_read_8double(double * dst){
     double temp = 0.0;
     if( !wifi_spi_read(wifi_spi_recv_float_data,8) ){
         wifi_spi_recv_float_data[8] = '\0';
@@ -125,24 +125,63 @@ void wifi_spi_pit_call(void){
             }
             break;
         case 'b':
-            if(!wifi_spi_read_8float(&(motors[0].PID->KP))){
+            if(!wifi_spi_read_8float(&(motors[LEFT].PID->KP))){
                 wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
                 wifi_spi_cycle_time = 0;
             }
             break;
         case 'c':
-            if(!wifi_spi_read_8float(&(motors[0].PID->KI))){
+            if(!wifi_spi_read_8float(&(motors[LEFT].PID->KI))){
                 wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
                 wifi_spi_cycle_time = 0;
             }
             break;
         case 'd':
-            if(!wifi_spi_read_8float(&(motors[0].PID->KD))){
+            if(!wifi_spi_read_8float(&(motors[LEFT].PID->KD))){
                 wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
                 wifi_spi_cycle_time = 0;
             }
             break;
+        // RIGHT
         case 'e':
+            if(!wifi_spi_read_8float(&(motors[RIGHT].PID->KP))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        case 'f':
+            if(!wifi_spi_read_8float(&(motors[RIGHT].PID->KI))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        case 'g':
+            if(!wifi_spi_read_8float(&(motors[RIGHT].PID->KD))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        // REAR
+        case 'h':
+            if(!wifi_spi_read_8float(&(motors[REAR].PID->KP))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        case 'i':
+            if(!wifi_spi_read_8float(&(motors[REAR].PID->KI))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        case 'j':
+            if(!wifi_spi_read_8float(&(motors[REAR].PID->KD))){
+                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
+                wifi_spi_cycle_time = 0;
+            }
+            break;
+        // target_angle
+        case 'k':
             if(!wifi_spi_read_8double(&(target_angle))){
                 wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
                 wifi_spi_cycle_time = 0;
@@ -151,7 +190,7 @@ void wifi_spi_pit_call(void){
         default:
             break;
         }
-        // wifi_spi_send_string("cmd\n");
+
         break;
     case WIFI_SPI_RECVD_DATA:
         // 长时间未接收到帧尾，返回空闲状态
