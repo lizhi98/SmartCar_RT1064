@@ -38,7 +38,7 @@
 #include "isr.h"
 
 
-
+extern uint8 flag;
 
 void CSI_IRQHandler(void)
 {
@@ -65,7 +65,8 @@ void PIT_IRQHandler(void)
     
     if(pit_flag_get(PIT_CH2))
     {
-        wifi_spi_pit_call();
+        correspond_host_cmd_pit_call();
+        
         pit_flag_clear(PIT_CH2);
     }
     

@@ -1,48 +1,80 @@
 #ifndef _CODE_CORRESPOND_H_
 #define _CODE_CORRESPOND_H_
 
+#include "string.h"
+#include "math.h"
+#include "stdio.h"
+
 #include "zf_driver_uart.h"
 #include "zf_device_wifi_spi.h"
-#include "zf_driver_timer.h"
-#include "zf_driver_delay.h"
+#include "seekfree_assistant_interface.h"
+#include "seekfree_assistant.h"
+
 #include "motor.h"
 #include "gyroscope.h"
+#include "zf_device_wifi_uart.h"
 
-#define WIFI_SSID               "SmartCar"
+// WIRELESS CONFIG
+#define WIFI_SSID               "AP-lizhi"
 #define WIFI_PASS               "9894653xxk"
-#define WIFI_SPI_CONNECT_MODE   "TCP"
+#define HOST_IP                 "192.168.118.252"
 
-#define WIFI_SPI_RECV_PIT       PIT_CH2
-#define WIFI_SPI_RECV_PIT_MS    100
+// WIFI SPI CONFIG
+#define WIFI_SPI_CONNECT_MODE   "TCP"
+#define WIFI_SPI_HOST_PORT      "9894"
+
+// WIFI UART CONFIG
+#define WIFI_UART_HOST_PORT     "9895"
+
+// UART CONFIG
+#define UART_N      UART_4
+#define UART_BAUD   115200
+// #define UART_TX_PIN UART1_TX_B12
+// #define UART_RX_PIN UART1_RX_B13
+
+// CORRESPOND HOST CMD CONFIG
+#define HOST_CMD_RECV_PIT          PIT_CH2
+#define HOST_CMD_RECV_PIT_MS       100
+#define HOST_CMD_INT32_LENGTH      5
+#define HOST_CMD_DOUBLE_LENGTH     8
+#define HOST_CMD_FLOAT_LENGTH      8
 
 #define host_to_rt_head '\r'
 #define host_to_rt_tail '\n'
 
-#define UART_N      UART_1
-#define UART_BAUD   115200
-#define UART_TX_PIN UART1_TX_B12
-#define UART_RX_PIN UART1_RX_B13
-
-// wifi_spi标志位
+// HOST CMD标志位
 /*
 *   0:空闲状态，扫描接收帧头
 *   1:接收到帧头，扫描接收命令
 *   2:接收到命令，扫描接收数据
 *   3:接收完数据，准备接收帧尾
 */
-typedef enum _wifi_spi_state{
-    WIFI_SPI_AVAI     = 0,
-    WIFI_SPI_RECVD_HEAD,
-    WIFI_SPI_RECVD_CMD,
-    WIFI_SPI_RECVD_DATA,
-}wifi_spi_state;
+typedef enum _host_cmd_recv_state{
+    HOST_CMD_RECV_AVAI     = 0,
+    HOST_CMD_RECVD_HEAD,
+    HOST_CMD_RECVD_CMD,
+    HOST_CMD_RECVD_DATA,
+}host_cmd_recv_state;
 
-extern wifi_spi_state wifi_spi_receive_flag;
+extern host_cmd_recv_state host_cmd_receive_flag;
 
-// ================WIFI SPI====================
-uint8 wifi_spi_init_(void);
-uint8 wifi_spi_read(void * dst,uint32 dst_size);
-void  wifi_spi_pit_call(void);
-void  wifi_spi_pit_init(void);
+// ================WIFI_SPI==========================================
+uint8 wifi_spi_read(void * dst,uint32 dst_size_n_uint8);
+
+// ================WIFI_UART=========================================
+uint8 wifi_uart_read        (void * dst,    uint32 dst_size_n_uint8);
+uint8 wifi_uart_read_int32  (int32 * dst,   int32  data_lenth_n);
+uint8 wifi_uart_read_float  (float * dst,   int32  data_lenth_n);
+uint8 wifi_uart_read_double (double * dst,  int32  data_lenth_n);
+
+// ================CORRESPOND_HOST_CMD(WIFI_UART)====================
+uint8 correspond_host_cmd_init(void);
+void  correspond_host_cmd_pit_call(void);
+void  correspond_host_cmd_pit_init(void);
+
+// ================CORRESPOND_IMAGE_SEND(WIFI_SPI)====================
+
+uint8 correspond_image_send_init(void);
+void  correspond_image_send_call(void);
 
 #endif

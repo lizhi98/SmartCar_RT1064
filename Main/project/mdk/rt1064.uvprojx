@@ -2140,9 +2140,9 @@
           <GroupName>Tools</GroupName>
           <Files>
             <File>
-              <FileName>main.c</FileName>
+              <FileName>capture_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\main.c</FilePath>
+              <FilePath>..\tools\capture_main.c</FilePath>
             </File>
           </Files>
         </Group>

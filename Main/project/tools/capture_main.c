@@ -18,9 +18,14 @@
 //     // 屏幕初始化
 //     screen_init();
 //     // WIFI SPI 初始化
-//     // hardware_init_flag = wifi_spi_init_(20);
-//     hardware_init_flag = wifi_spi_init_();
-//     hardware_init_flag = wifi_spi_socket_connect("TCP","192.168.137.1","9894","6060");
+//     // hardware_init_flag = correspond_host_cmd_init(20);
+//     // hardware_init_flag += correspond_host_cmd_init();
+//     wifi_spi_init("AP-lizhi","9894653xxk");
+//     hardware_init_flag += wifi_spi_socket_connect("TCP","192.168.118.252","9894","6060");
+//     // correspond_host_cmd_pit_init();
+//     // wifi_uart_init("AP-lizhi","9894653xxk",WIFI_UART_STATION);
+//     // wifi_uart_entry_serianet();
+//     // wifi_uart_connect_tcp_servers("192.168.118.252","9894",WIFI_UART_SERIANET);
 //     // 摄像头初始化，逐飞助手图像信息初始化
 //     hardware_init_flag = mt_camera_init();
 //     seekfree_assistant_camera_information_config(SEEKFREE_ASSISTANT_MT9V03X,mt9v03x_image[0],MT9V03X_W,MT9V03X_H);

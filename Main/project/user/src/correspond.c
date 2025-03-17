@@ -1,28 +1,21 @@
 #include "correspond.h"
-#include "string.h"
-#include "math.h"
-// 超时计数器
-uint8 wifi_spi_cycle_time = 0;
+
+extern uint8 flag;
+
+// HOST_CMD_RECV 超时计数器
+uint8 host_cmd_cycle_time = 0;
 // wifi_spi状态
-wifi_spi_state wifi_spi_receive_flag = WIFI_SPI_AVAI;
+host_cmd_recv_state host_cmd_receive_flag = HOST_CMD_RECV_AVAI;
 // wifi_spi接收头数据缓存
-char wifi_spi_recv_head = 0;
+char host_cmd_recv_head = 0;
 // wifi_spi接收命令缓存
-char wifi_spi_recv_cmd  = 0;
+char host_cmd_recv_cmd  = 0;
 // wifi_spi接收数据缓存
-char wifi_spi_recv_float_data[9]   = {0};
-char wifi_spi_recv_int_data[6]     = {0};
+char host_cmd_recv_data[14]   = {0};
 // wifi_spi接收尾数据缓存
-char wifi_spi_recv_tail  = 0;
+char host_cmd_recv_tail  = 0;
 
-// ================WIFI SPI====================
-
-// 函数简介     WiFi 模块初始化
-// 参数说明     uint16 time_out_s  超时时间 单位s 尝试周期5s
-// 返回参数     uint8           模块初始化状态 0-成功 1-错误
-uint8 wifi_spi_init_(){
-    return wifi_spi_init(WIFI_SSID,WIFI_PASS);
-}
+// ====================================WIFI SPI===============================================
 
 // 函数简介     读取WIFI SPI的数据
 // 参数说明     dst         要存入变量的地址
@@ -32,159 +25,174 @@ uint8 wifi_spi_read(void * dst,uint32 dst_size_n_uint8){
     return (wifi_spi_read_buffer((uint8 *)dst,dst_size_n_uint8) != dst_size_n_uint8);
 }
 
-// 函数简介     读取WIFI SPI 5个位置的int的数据(例如读取"-1234"存成-1234)
+// =====================================WIFI UART==============================================
+
+// 函数简介     读取WIFI UART的数据
+// 参数说明     dst         要存入变量的地址
+// 参数说明     dst_size_n_uint8    变量的字节数
+// 返回参数     uint8       是否读取成功 0-成功 1-错误
+uint8 wifi_uart_read(void * dst,uint32 dst_size_n_uint8){
+    return (wifi_uart_read_buffer((uint8 *)dst,dst_size_n_uint8) != dst_size_n_uint8);
+}
+
+// 函数简介     读取WIFI UART data_lenth_n个位置的int32的数据(例如5个位置即读取"-1234"存成-1234)保存到dst指向的变量中
 // 参数说明     dst         要存入变量的地址
 // 返回参数     uint8       是否读取成功 0-成功 1-错误
-uint8 wifi_spi_read_5int(int32 * dst){
+uint8 wifi_uart_read_int32(int32 * dst,int32 data_lenth_n){
+    flag = 2;
     int32 temp = 0;
-    if( !wifi_spi_read(wifi_spi_recv_int_data,5) ){
-        wifi_spi_recv_int_data[5] = '\0';
-        sscanf(wifi_spi_recv_int_data,"%d",&temp);
+    if( !wifi_uart_read(host_cmd_recv_data,data_lenth_n) ){
+        host_cmd_recv_data[data_lenth_n] = '\0';
+        sscanf(host_cmd_recv_data,"%d",&temp);
         *dst = temp;
+        flag = 3;
         return 0;
     }
     return 1;
 }
 
-// 函数简介     读取WIFI SPI 8个位置的float的数据(例如读取"-1234.56"存成-1234.56)
+// 函数简介     读取WIFI UART data_lenth_n个位置的float的数据(例如8个位置即读取"-1234.56"存成-1234.56)保存到dst指向的变量中
 // 参数说明     dst         要存入变量的地址
 // 返回参数     uint8       是否读取成功 0-成功 1-错误
-uint8 wifi_spi_read_8float(float * dst){
+uint8 wifi_uart_read_float(float * dst,int32 data_lenth_n){
     float temp = 0.0;
-    if( !wifi_spi_read(wifi_spi_recv_float_data,8) ){
-        wifi_spi_recv_float_data[8] = '\0';
-        sscanf(wifi_spi_recv_float_data,"%f",&temp);
+    if( !wifi_uart_read(host_cmd_recv_data,data_lenth_n) ){
+        host_cmd_recv_data[data_lenth_n] = '\0';
+        sscanf(host_cmd_recv_data,"%f",&temp);
         *dst = temp;
         return 0;
     }
     return 1;
 }
 
-// 函数简介     读取WIFI SPI 8个位置的double的数据(例如读取"-1234.56"存成-1234.56)
+// 函数简介     读取WIFI UART data_lenth_n个位置的double的数据(例如8个位置即读取"-1234.56"存成-1234.56)保存到dst指向的变量中
 // 参数说明     dst         要存入变量的地址
 // 返回参数     uint8       是否读取成功 0-成功 1-错误
-uint8 wifi_spi_read_8double(double * dst){
+uint8 wifi_uart_read_double(double * dst,int32 data_lenth_n){
     double temp = 0.0;
-    if( !wifi_spi_read(wifi_spi_recv_float_data,8) ){
-        wifi_spi_recv_float_data[8] = '\0';
-        sscanf(wifi_spi_recv_float_data,"%lf",&temp);
+    if( !wifi_uart_read(host_cmd_recv_data,data_lenth_n) ){
+        host_cmd_recv_data[data_lenth_n] = '\0';
+        sscanf(host_cmd_recv_data,"%lf",&temp);
         *dst = temp;
         return 0;
     }
     return 1;
 }
 
-// wifi_spi中断回调函数
-void wifi_spi_pit_call(void){
+// =====================================CORRESPOND_HOST_CMD(WIFI_UART)=========================
+
+// 上位机命令接收定时器中断回调函数
+void correspond_host_cmd_pit_call(void){
     // 周期计数器自增
-    wifi_spi_cycle_time++;
-    
-    switch (wifi_spi_receive_flag)
+    host_cmd_cycle_time++;
+    flag =4;
+    switch (host_cmd_receive_flag)
     {
     // 空闲状态，扫描接收帧头
-    case WIFI_SPI_AVAI:
+    case HOST_CMD_RECV_AVAI:
         // 空闲中超时正常，周期计数器清零
-        if(wifi_spi_cycle_time > 10){
-            wifi_spi_cycle_time = 0;
+        if(host_cmd_cycle_time > 10){
+            host_cmd_cycle_time = 0;
         }
-        if( ! wifi_spi_read(&wifi_spi_recv_head,1)){
-            if (wifi_spi_recv_head == host_to_rt_head)
+        if( ! wifi_uart_read(&host_cmd_recv_head,1)){
+            if (host_cmd_recv_head == host_to_rt_head)
             {
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_HEAD;
-                wifi_spi_cycle_time = 0;
+                host_cmd_receive_flag = HOST_CMD_RECVD_HEAD;
+                host_cmd_cycle_time = 0;
             }
         }
         // wifi_spi_send_string("avai\n");
         return;
     // 接收到帧头，扫描接收命令
-    case WIFI_SPI_RECVD_HEAD:
+    case HOST_CMD_RECVD_HEAD:
         // 长时间未接收到命令，返回空闲状态
-        if(wifi_spi_cycle_time > 9){
-            wifi_spi_cycle_time = 0;
-            wifi_spi_receive_flag = WIFI_SPI_AVAI;
+        if(host_cmd_cycle_time > 20){
+            host_cmd_cycle_time = 0;
+            host_cmd_receive_flag = HOST_CMD_RECV_AVAI;
         }
-        if( ! wifi_spi_read(&wifi_spi_recv_cmd,1)){
-            wifi_spi_receive_flag = WIFI_SPI_RECVD_CMD;
-            wifi_spi_cycle_time = 0;
+        if( ! wifi_uart_read(&host_cmd_recv_cmd,1)){
+            host_cmd_receive_flag = HOST_CMD_RECVD_CMD;
+            host_cmd_cycle_time = 0;
         }
         // wifi_spi_send_string("head\n");
         break;
-    case WIFI_SPI_RECVD_CMD:
+    case HOST_CMD_RECVD_CMD:
         // 长时间未接收到数据，返回空闲状态
-        if(wifi_spi_cycle_time > 8){
-            wifi_spi_cycle_time = 0;
-            wifi_spi_receive_flag = WIFI_SPI_AVAI;
+        if(host_cmd_cycle_time > 20){
+            host_cmd_cycle_time = 0;
+            host_cmd_receive_flag = HOST_CMD_RECV_AVAI;
         }
-        switch (wifi_spi_recv_cmd)
+        switch (host_cmd_recv_cmd)
         {
         // a --> target_speed_magnitude
         case 'a':
-            if(!wifi_spi_read_5int(&target_speed_magnitude)){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            flag = 5;
+            if( !wifi_uart_read_int32(&target_speed_magnitude,HOST_CMD_INT32_LENGTH) ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         case 'b':
-            if(!wifi_spi_read_8float(&(motors[LEFT].PID->KP))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[LEFT].PID->KP),HOST_CMD_FLOAT_LENGTH) ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         case 'c':
-            if(!wifi_spi_read_8float(&(motors[LEFT].PID->KI))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[LEFT].PID->KI),HOST_CMD_FLOAT_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         case 'd':
-            if(!wifi_spi_read_8float(&(motors[LEFT].PID->KD))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[LEFT].PID->KD),HOST_CMD_FLOAT_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         // RIGHT
         case 'e':
-            if(!wifi_spi_read_8float(&(motors[RIGHT].PID->KP))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[RIGHT].PID->KP),HOST_CMD_FLOAT_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         case 'f':
-            if(!wifi_spi_read_8float(&(motors[RIGHT].PID->KI))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[RIGHT].PID->KI),HOST_CMD_FLOAT_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         case 'g':
-            if(!wifi_spi_read_8float(&(motors[RIGHT].PID->KD))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[RIGHT].PID->KD),HOST_CMD_FLOAT_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         // REAR
         case 'h':
-            if(!wifi_spi_read_8float(&(motors[REAR].PID->KP))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[REAR].PID->KP),HOST_CMD_FLOAT_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         case 'i':
-            if(!wifi_spi_read_8float(&(motors[REAR].PID->KI))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[REAR].PID->KI),HOST_CMD_FLOAT_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         case 'j':
-            if(!wifi_spi_read_8float(&(motors[REAR].PID->KD))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_float(&(motors[REAR].PID->KD),HOST_CMD_FLOAT_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         // target_angle
         case 'k':
-            if(!wifi_spi_read_8double(&(target_angle))){
-                wifi_spi_receive_flag = WIFI_SPI_RECVD_DATA;
-                wifi_spi_cycle_time = 0;
+            if(  !wifi_uart_read_double(&(target_angle),HOST_CMD_DOUBLE_LENGTH)  ){
+                host_cmd_receive_flag = HOST_CMD_RECVD_DATA;
+                host_cmd_cycle_time = 0;
             }
             break;
         default:
@@ -192,34 +200,59 @@ void wifi_spi_pit_call(void){
         }
 
         break;
-    case WIFI_SPI_RECVD_DATA:
+    case HOST_CMD_RECVD_DATA:
         // 长时间未接收到帧尾，返回空闲状态
-        if(wifi_spi_cycle_time > 7){
-            wifi_spi_cycle_time = 0;
-            wifi_spi_receive_flag = WIFI_SPI_AVAI;
+        if(host_cmd_cycle_time > 20){
+            host_cmd_cycle_time = 0;
+            host_cmd_receive_flag = HOST_CMD_RECV_AVAI;
         }
-        if( ! wifi_spi_read(&wifi_spi_recv_tail,1)){
-            if (wifi_spi_recv_tail == host_to_rt_tail)
+        if( ! wifi_uart_read(&host_cmd_recv_tail,1)){
+            if (host_cmd_recv_tail == host_to_rt_tail)
             {
-                wifi_spi_receive_flag = WIFI_SPI_AVAI;
-                wifi_spi_cycle_time = 0;
+                host_cmd_receive_flag = HOST_CMD_RECV_AVAI;
+                host_cmd_cycle_time = 0;
             }
         }
         // wifi_spi_send_string("data\n");
         break;
     default:
-        wifi_spi_cycle_time = 0;
+        host_cmd_cycle_time = 0;
         break;
     }
 }
 
-void wifi_spi_pit_init(void){
-    pit_ms_init(WIFI_SPI_RECV_PIT,WIFI_SPI_RECV_PIT_MS);
+void correspond_host_cmd_pit_init(void){
+    pit_ms_init(HOST_CMD_RECV_PIT,HOST_CMD_RECV_PIT_MS);
+}
+
+uint8 correspond_host_cmd_init(void){
+    return (wifi_uart_init(WIFI_SSID,WIFI_PASS,WIFI_UART_STATION) || 
+            wifi_uart_connect_tcp_servers(HOST_IP,WIFI_UART_HOST_PORT,WIFI_UART_COMMAND));
+}
+
+// ================CORRESPOND_IMAGE_SEND(WIFI_SPI)====================
+
+// 函数简介     图传（WIFI_SPI）初始化
+// 返回参数     uint8           模块初始化状态 0-成功 1-错误
+uint8 correspond_image_send_init(void){
+    if( ! (wifi_spi_init(WIFI_SSID,WIFI_PASS) || 
+           wifi_spi_socket_connect(WIFI_SPI_CONNECT_MODE,HOST_IP,WIFI_SPI_HOST_PORT,WIFI_SPI_LOCAL_PORT)))
+    {
+
+        seekfree_assistant_interface_init(SEEKFREE_ASSISTANT_WIFI_SPI);
+        seekfree_assistant_camera_information_config(SEEKFREE_ASSISTANT_MT9V03X,mt9v03x_image[0],MT9V03X_W,MT9V03X_H);
+        return 0;
+    }
+    return 1;
+}
+
+void correspond_image_send_call(void){
+    seekfree_assistant_camera_send();
 }
 
 // ====================UART TO OpenART mini====================
-void uart_init_(void){
-    uart_init(UART_N,UART_BAUD,UART_TX_PIN,UART_RX_PIN);
-}
+// void uart_init_(void){
+//     uart_init(UART_N,UART_BAUD,UART_TX_PIN,UART_RX_PIN);
+// }
 
 

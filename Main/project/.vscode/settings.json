@@ -36,6 +36,9 @@
         "stdbool.h": "c",
         "zf_common_interrupt.h": "c",
         "zf_common_debug.h": "c",
-        "zf_device_wifi_uart.h": "c"
+        "zf_device_wifi_uart.h": "c",
+        "seekfree_assistant_interface.h": "c",
+        "zf_common_fifo.h": "c",
+        "zf_common_function.h": "c"
     }
 }
