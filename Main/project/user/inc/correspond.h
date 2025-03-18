@@ -15,16 +15,21 @@
 #include "zf_device_wifi_uart.h"
 
 // WIRELESS CONFIG
-#define WIFI_SSID               "AP-lizhi"
-#define WIFI_PASS               "9894653xxk"
-#define HOST_IP                 "192.168.118.252"
+#define WIFI_SSID                               "AP-lizhi"
+#define WIFI_PASS                               "9894653xxk"
+#define HOST_IP                                 "192.168.118.252"
 
 // WIFI SPI CONFIG
-#define WIFI_SPI_CONNECT_MODE   "TCP"
-#define WIFI_SPI_HOST_PORT      "9894"
+#define WIFI_SPI_CONNECT_MODE                   "TCP"
+#define WIFI_SPI_HOST_PORT                      "9894"
 
 // WIFI UART CONFIG
-#define WIFI_UART_HOST_PORT     "9895"
+#define WIFI_UART_HOST_PORT                     "9895"
+#define WIFI_UART_READ_BUFFER_TEMP_SIZE         24
+#define WIFI_UART_READ_BUFFER_HEAD              "+IPD,"
+#define WIFI_UART_READ_BUFFER_HEAD_SIZE         5
+#define WIFI_UART_READ_BUFFER_DATA_SIZE_POSI    5
+#define WIFI_UART_READ_BUFFER_DATA_START        7
 
 // UART CONFIG
 #define UART_N      UART_4
@@ -38,6 +43,7 @@
 #define HOST_CMD_INT32_LENGTH      5
 #define HOST_CMD_DOUBLE_LENGTH     8
 #define HOST_CMD_FLOAT_LENGTH      8
+#define HOST_CMD_SIZE_PLUS_ONE     12 // plus one是为了加上\0
 
 #define host_to_rt_head '\r'
 #define host_to_rt_tail '\n'
@@ -62,10 +68,11 @@ extern host_cmd_recv_state host_cmd_receive_flag;
 uint8 wifi_spi_read(void * dst,uint32 dst_size_n_uint8);
 
 // ================WIFI_UART=========================================
-uint8 wifi_uart_read        (void * dst,    uint32 dst_size_n_uint8);
-uint8 wifi_uart_read_int32  (int32 * dst,   int32  data_lenth_n);
-uint8 wifi_uart_read_float  (float * dst,   int32  data_lenth_n);
-uint8 wifi_uart_read_double (double * dst,  int32  data_lenth_n);
+uint8 wifi_uart_read_n_data(void * dst,uint32 dst_size_n_uint8);
+
+// uint8 wifi_uart_read_int32  (int32 * dst,   int32  data_lenth_n);
+// uint8 wifi_uart_read_float  (float * dst,   int32  data_lenth_n);
+// uint8 wifi_uart_read_double (double * dst,  int32  data_lenth_n);
 
 // ================CORRESPOND_HOST_CMD(WIFI_UART)====================
 uint8 correspond_host_cmd_init(void);
