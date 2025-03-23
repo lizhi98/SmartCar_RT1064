@@ -17,19 +17,18 @@
 // WIRELESS CONFIG
 #define WIFI_SSID                               "AP-lizhi"
 #define WIFI_PASS                               "9894653xxk"
-#define HOST_IP                                 "192.168.118.252"
+#define HOST_IP                                 "192.168.222.252"
 
 // WIFI SPI CONFIG
-#define WIFI_SPI_CONNECT_MODE                   "TCP"
+#define WIFI_SPI_CONNECT_MODE                   "UDP"
 #define WIFI_SPI_HOST_PORT                      "9894"
 
 // WIFI UART CONFIG
 #define WIFI_UART_HOST_PORT                     "9895"
 #define WIFI_UART_READ_BUFFER_TEMP_SIZE         24
-#define WIFI_UART_READ_BUFFER_HEAD              "+IPD,"
-#define WIFI_UART_READ_BUFFER_HEAD_SIZE         5
-#define WIFI_UART_READ_BUFFER_DATA_SIZE_POSI    5
-#define WIFI_UART_READ_BUFFER_DATA_START        7
+#define WIFI_UART_READ_BUFFER_HEAD              "[["
+#define WIFI_UART_READ_BUFFER_HEAD_SIZE         2
+   
 
 // UART CONFIG
 #define UART_N      UART_4
@@ -40,29 +39,11 @@
 // CORRESPOND HOST CMD CONFIG
 #define HOST_CMD_RECV_PIT          PIT_CH2
 #define HOST_CMD_RECV_PIT_MS       100
-#define HOST_CMD_INT32_LENGTH      5
-#define HOST_CMD_DOUBLE_LENGTH     8
-#define HOST_CMD_FLOAT_LENGTH      8
 #define HOST_CMD_SIZE_PLUS_ONE     12 // plus one是为了加上\0
 
-#define host_to_rt_head '\r'
-#define host_to_rt_tail '\n'
 
-// HOST CMD标志位
-/*
-*   0:空闲状态，扫描接收帧头
-*   1:接收到帧头，扫描接收命令
-*   2:接收到命令，扫描接收数据
-*   3:接收完数据，准备接收帧尾
-*/
-typedef enum _host_cmd_recv_state{
-    HOST_CMD_RECV_AVAI     = 0,
-    HOST_CMD_RECVD_HEAD,
-    HOST_CMD_RECVD_CMD,
-    HOST_CMD_RECVD_DATA,
-}host_cmd_recv_state;
-
-extern host_cmd_recv_state host_cmd_receive_flag;
+extern uint8 wifi_uart_read_buffer_temp[WIFI_UART_READ_BUFFER_TEMP_SIZE];
+extern char  host_cmd_recv_temp[HOST_CMD_SIZE_PLUS_ONE];
 
 // ================WIFI_SPI==========================================
 uint8 wifi_spi_read(void * dst,uint32 dst_size_n_uint8);

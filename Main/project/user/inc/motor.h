@@ -48,9 +48,9 @@ typedef struct _MotorPID
     float KP;
     float KI;
     float KD;
-    float wrong;
-    float last_wrong;
-    float sum_wrong;
+    int32 wrong;
+    int32 last_wrong;
+    int32 sum_wrong;
 } MotorPID;
 
 typedef struct _Motor
@@ -75,6 +75,8 @@ extern double      w_kp;
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);
+void motor_plus_duty(MotorIndex index, int32 delta_duty);
+
 void motor_run_with_speed(MotorIndex index, int32 speed);
 void motor_unpower(MotorIndex index);
 void motor_all_stop(void);
