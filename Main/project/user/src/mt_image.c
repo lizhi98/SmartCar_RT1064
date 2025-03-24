@@ -200,12 +200,23 @@ SearchResult search(Image image) {
 
     SearchResult result = { 0 };
 
-#ifdef IMAGE_DEBUG
-    result.track = track;
-#endif
-
     if (track != None) {
         int x_mid;
+
+        if (track == Both) {
+            uint8 left_factor = 0, right_factor = 0;
+            for (uint8 i = 1; i < offset_count; i ++) {
+                left_factor += x_rights[i + 1] < x_rights[i];
+                right_factor += x_lefts[i + 1] > x_lefts[i];
+            }
+            if (left_factor * 2 > offset_count) {
+                track = Left;
+            }
+            else if (right_factor * 2 > offset_count) {
+                track = Right;
+            }
+        }
+
         for (uint8 i = 1; i <= offset_count; i ++) {
             if (track == Both) x_mid = (x_lefts[i] + x_rights[i]) >> 1;
             else {
@@ -229,6 +240,10 @@ SearchResult search(Image image) {
             if (abs(result.offset) < OFFSET_MIN) result.offset = 0;
         }
     }
+
+#ifdef IMAGE_DEBUG
+    result.track = track;
+#endif
 
     if (track == Left)
         result.element_type = CurveLeft;
