@@ -206,8 +206,8 @@ SearchResult search(Image image) {
         if (track == Both) {
             uint8 left_factor = 0, right_factor = 0;
             for (uint8 i = 1; i < offset_count; i ++) {
-                left_factor += x_rights[i + 1] < x_rights[i];
-                right_factor += x_lefts[i + 1] > x_lefts[i];
+                left_factor += x_lefts[i + 1] < x_lefts[i];
+                right_factor += x_rights[i + 1] > x_rights[i];
             }
             if (left_factor * 2 > offset_count) {
                 track = Left;
