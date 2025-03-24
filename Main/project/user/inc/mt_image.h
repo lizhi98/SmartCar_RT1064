@@ -1,12 +1,11 @@
 #ifndef _CODE_MT_IMAGE_H_
 #define _CODE_MT_IMAGE_H_
 
-#include "zf_device_mt9v03x.h"
 #include "math.h"
 
-
 #ifndef __linux__
-	#include<zf_common_typedef.h>
+    #include "zf_device_mt9v03x.h"
+	#include "zf_common_typedef.h"
 #else
 	#define uint8 unsigned char
     #define int8 char
@@ -21,11 +20,6 @@
 #define X_MID 93
 #define X_MAX 186
 #define Y_MAX 119
-
-
-// TARGET MOTION
-// 目标角度
-extern double      target_angle;
 
 typedef uint8 (*Image)[REAL_WIDTH];
 

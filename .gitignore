@@ -1,7 +1,11 @@
-# Muti_Project_Workspace.uvmpw
-# Muti_Project_Workspace.uvmpw.uvgui.lizhi
-RT1064核心板丝印与芯片引脚对应表格.xlsx
-RT1064智能车推荐引脚分配.txt
+*.uvmpw
+*.uvmpw.*
+uv4.log.lock
+
+node_modules
+
+System\ Volume\ Information
+
 *.pbi
 *.xcl
 *.dep
@@ -32,7 +36,6 @@ RT1064智能车推荐引脚分配.txt
 *.log
 *.xml
 *.iml
-uv4.log.lock
 # 默认忽略的文件
 /shelf/
 /workspace.xml

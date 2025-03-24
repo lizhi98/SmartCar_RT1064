@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Image To Array</title>
+	</head>
+	<body>
+		<div>
+			<canvas width="188" height="120"></canvas>
+		</div>
+		<input type="file" />
+		<button>OK</button>
+		<pre id="output" style="width: calc(100vw - 40px); white-space: pre-wrap; font-size: 10px;"></pre>
+
+		<script>
+			const W = 188, H = 120
+			const $ = sel => document.querySelector(sel)
+			const $output = $('#output')
+			const $canvas = $('canvas')
+			const ctx = $canvas.getContext('2d')
+			const output = txt => $output.innerHTML = txt
+			$('button').addEventListener('click', () => {
+				const [ file ] = $('input').files
+				if (! file) return output('no file')
+				const reader = new FileReader()
+				reader.addEventListener('load', ev => {
+					const img = new Image()
+					img.addEventListener('load', () => {
+						ctx.clearRect(0, 0, W, H)
+						ctx.drawImage(img, 0, 0)
+
+						const imageData = ctx.getImageData(0, 0, W, H).data
+						const array = Array
+							.from({ length: W * H })
+							.map((_, i) => imageData[i * 4])
+						output(`int image[${ H }][${ W }] = { ${ array.join(', ') } };`)
+					})
+					img.src = ev.target.result
+				})
+				reader.readAsDataURL(file)
+			})
+		</script>
+	</body>
+</html>
