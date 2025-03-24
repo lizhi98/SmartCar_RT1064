@@ -1,11 +1,16 @@
+# Keil
 *.uvmpw
 *.uvmpw.*
+*.uvguix.*
 uv4.log.lock
 
+# Node.js
 node_modules
 
+# Windows
 System\ Volume\ Information
 
+# Misc
 *.pbi
 *.xcl
 *.dep
@@ -21,7 +26,6 @@ System\ Volume\ Information
 *.browse
 *.crun
 *.dbgdt
-*.uvguix.*
 *.lst
 *.crf
 *.d
@@ -33,16 +37,10 @@ System\ Volume\ Information
 *.sim
 *JLinkLog.txt
 *.tmp
+*.tmp.*
 *.log
 *.xml
 *.iml
-# 默认忽略的文件
-/shelf/
-/workspace.xml
-# 基于编辑器的 HTTP 客户端请求
-/httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
 
+# VS Code
 .vscode/c_cpp_properties.json
