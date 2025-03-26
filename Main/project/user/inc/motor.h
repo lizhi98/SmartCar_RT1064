@@ -24,6 +24,8 @@
 #define MOTOR_PID_PIT           PIT_CH0 // TODO 需要根据实际修改
 #define MOTOR_PID_PIT_TIME      20 // TODO
 
+#define SUM_OFFSET_MAX          100    // TODO
+
 // ENCODER
 #define MOTOR_ENCODER_PIT       PIT_CH0
 #define MOTOR_ENCODER_PIT_TIME  20
@@ -42,6 +44,15 @@ typedef struct _Encoder
     encoder_channel1_enum   encoder_channel_1;
     encoder_channel2_enum   encoder_channel_2;
 } Encoder;
+
+typedef struct _W_PID{
+    float KP;
+    float KI;
+    float KD;
+    int32 offset;
+    int32 last_offset;
+    int32 sum_offset;
+} W_PID;
 
 typedef struct _MotorPID
 {
@@ -67,11 +78,10 @@ typedef struct _Motor
 
 // MOTOR
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
-
+extern W_PID w_pid;
 // TARGET MOTION
 extern int32       target_speed_magnitude;
 extern double      target_angle;
-extern double      w_kp;
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);
@@ -86,6 +96,8 @@ void motor_all_init(void);
 void motor_pid_pit_init(void);
 void motor_pid_calc_apply(MotorIndex index);
 void motor_pid_pit_call(void);
+
+int32 rotation_pid_calc_apply();
 
 // Motor encoder
 void motor_encoder_pit_init(void);

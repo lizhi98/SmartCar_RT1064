@@ -55,7 +55,9 @@ int main(void)
     char temp[WIFI_SPI_BUFFER_SIZE];
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
-    target_speed_magnitude = 530;
+    target_speed_magnitude = 800;
+
+    // 主循环
     while(1) {
         // 定时发送速度信息
         if (timer_get(GPT_TIM_1) > WIFI_SPI_SEND_INTERVAL) {

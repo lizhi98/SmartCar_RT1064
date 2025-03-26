@@ -18,6 +18,7 @@ Encoder encoder_rear = {
     .encoder_channel_2  = QTIMER2_ENCODER1_CH2_C4,
 };
 
+// 电机速度PID
 MotorPID motor_left_pid = {
     .KP = 2.0,          .KI = 0.05,        .KD = 0.9,
     .last_wrong = 0,    .sum_wrong = 0, .wrong = 0,
@@ -29,6 +30,12 @@ MotorPID motor_right_pid = {
 MotorPID motor_rear_pid = {
     .KP = 2.0,          .KI = 0.10,        .KD = 0.9,
     .last_wrong = 0,    .sum_wrong = 0, .wrong = 0,
+};
+
+// 角速度PID
+W_PID w_pid = {
+    .KP = -3.0,          .KI = -0.02,        .KD = -1.0,
+    .last_offset = 0,    .sum_offset = 0,   .offset = 0,
 };
 
 // TODO
@@ -52,8 +59,6 @@ Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
 
 // TARGET MOTION
 int32       target_speed_magnitude;
-double      target_angle;
-double      w_kp = -2.0;
 
 // 启动所有电机PWM通道输出，占空比为0，方向为逆时针
 void motor_all_init(void){
@@ -133,6 +138,29 @@ void motor_pid_calc_apply(MotorIndex index){
     // 输出
     motor_plus_duty(index, (int32)out);
 }
+
+int32 rotation_pid_calc_apply(){
+    
+    double out = 0.;
+    // 比例
+    out += (double) (w_pid.KP * w_pid.offset);
+
+    // 积分
+    w_pid.sum_offset += w_pid.offset;
+    // 积分限幅
+    if(abs(w_pid.sum_offset) > SUM_OFFSET_MAX){
+        (w_pid.sum_offset > 0) ? (w_pid.sum_offset = SUM_OFFSET_MAX) : (w_pid.sum_offset = -SUM_OFFSET_MAX);
+    }
+    // 微分
+    out += (double) (w_pid.KD * (w_pid.offset - w_pid.last_offset));
+
+    // 记录wrong
+    w_pid.last_offset = w_pid.offset;
+
+    // 输出
+    return (int32)out;
+}
+
 void motor_pid_pit_call(void){
     for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
         motor_pid_calc_apply(index);
@@ -163,32 +191,59 @@ void motor_encoder_pit_call(void){
 
 // 车运动解算函数
 void target_motion_calc(void){
-    // 目标速度正交分解
-    // V前 = V要 * cos(目标角度弧度)
-    // 有正负，分别代表向前和向后
-    // double speed_front  =        target_speed_magnitude * cos(target_angle);
-    // // V前 = V要 * sin(目标角度弧度)
-    // // 有正负，分别代表向左和向右
-    // double speed_left   =   -1 * target_speed_magnitude * sin(target_angle);
+
+    w_pid.offset = search_result.offset;
+
+    int32   motor_left_speed    = 0,
+            motor_right_speed   = 0,
+            motor_rear_speed    = 0;
 
     double speed_front  =   (double)target_speed_magnitude;
-    double speed_left   =   0.0;
-    // // 计算各个轮子的移动速度
-    
-    int32 motor_left_speed,motor_right_speed,motor_rear_speed;
-    
-    // 平移运动
-    motor_left_speed  = (int32) (speed_left * COS_PI_D_3 - speed_front * COS_PI_D_6);
-    motor_right_speed = (int32) (speed_left * COS_PI_D_3 + speed_front * COS_PI_D_6);
-    // motor_rear_speed  = (int32) (speed_left * -1);
-    // 自转运动 逆时针为正
-    // motor_left_speed  += (int32) (target_angle * w_kp);
-    // motor_right_speed += (int32) (target_angle * w_kp);
-    // motor_rear_speed  += (int32) (target_angle * w_kp);
 
-    motor_left_speed  += (int32) (w_kp * search_result.offset);
-    motor_right_speed += (int32) (w_kp * search_result.offset);
-    motor_rear_speed  = (int32) (w_kp * search_result.offset);
+    motor_left_speed    =   (int32) (-speed_front * COS_PI_D_6);
+    motor_right_speed   =   (int32) (speed_front * COS_PI_D_6);
+
+
+
+    motor_left_speed    +=  rotation_pid_calc_apply();
+    motor_right_speed   +=  rotation_pid_calc_apply();
+    motor_rear_speed    +=  rotation_pid_calc_apply();
+    // 分情况计算速度
+    // switch(search_result.element_type){
+    //     case Normal:
+    //         // 往前跑+自转
+    //         double speed_front  =   (double)target_speed_magnitude;
+
+    //         motor_left_speed    =   (int32) (-speed_front * COS_PI_D_6);
+    //         motor_right_speed   =   (int32) (speed_front * COS_PI_D_6);
+
+    //         motor_left_speed    +=  (int32) (w_kp * search_result.offset);
+    //         motor_right_speed   +=  (int32) (w_kp * search_result.offset);
+    //         motor_rear_speed    +=  (int32) (w_kp * search_result.offset);
+    //     break;
+
+    //     case CurveLeft:
+            
+    //         // 计算各个轮子的移动速度
+    //         // 目标速度正交分解
+    //         // V前 = V要 * cos(目标角度弧度)
+    //         // 有正负，分别代表向前和向后
+    //         double speed_front  =        target_speed_magnitude * cos(target_angle);
+    //         // // V前 = V要 * sin(目标角度弧度)
+    //         // // 有正负，分别代表向左和向右
+    //         double speed_left   =   -1 * target_speed_magnitude * sin(target_angle);
+            
+            
+    //         // 平移运动
+            
+    //         // motor_rear_speed  = (int32) (speed_left * -1);
+    //         // 自转运动 逆时针为正
+    //         // motor_left_speed  += (int32) (target_angle * w_kp);
+    //         // motor_right_speed += (int32) (target_angle * w_kp);
+    //         // motor_rear_speed  += (int32) (target_angle * w_kp);
+    //     break;
+    // }
+
 
     // 应用速度
     motor_run_with_speed(LEFT,motor_left_speed);
