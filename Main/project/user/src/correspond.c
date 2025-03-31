@@ -4,6 +4,9 @@
 uint8 wifi_uart_read_buffer_temp[WIFI_UART_READ_BUFFER_TEMP_SIZE] = {0};
 char  host_cmd_recv_temp[HOST_CMD_SIZE_PLUS_ONE]                  = {0};
 
+// WIFI_UART数据发送缓冲区
+char  wifi_uart_send_buffer_temp[WIFI_UART_SEND_BUFFER_TEMP_SIZE] = {0};
+
 // ====================================WIFI SPI===============================================
 
 // 函数简介     读取WIFI SPI的数据
@@ -89,6 +92,26 @@ void correspond_host_cmd_pit_call(void){
     memset(host_cmd_recv_temp,0,HOST_CMD_SIZE_PLUS_ONE);
     
 
+}
+
+// 函数名称     correspond_send_info_to_host
+// 函数简介     将信息发送到上位机
+void correspond_send_info_to_host(){
+#if CORRESPOND_SEND_INFO_MODE == 1
+    sprintf(wifi_uart_send_buffer_temp, 
+        "%d.0,%d.0,%d.0,%f,%d,%d,%d\n",
+        motors[LEFT].current_speed, motors[RIGHT].current_speed, motors[REAR].current_speed,  // 左右后电机速度
+        search_result.offset,  // 偏差
+        motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty  // 电机实时PWM
+    );
+#elif CORRESPOND_SEND_INFO_MODE == 2
+    sprintf(wifi_uart_send_buffer_temp, 
+        "%lf,%lf,%lf,%lf,%lf,%lf\n",
+        gyroscope_processed_data.x,  gyroscope_processed_data.y, gyroscope_processed_data.z,    // 陀螺仪角度
+        gyroscope_processed_data.vx, gyroscope_processed_data.vy, gyroscope_processed_data.vz  // 陀螺仪速度
+    );
+#endif
+    wifi_uart_send_buffer((uint8 *)wifi_uart_send_buffer_temp, strlen(wifi_uart_send_buffer_temp));
 }
 
 void correspond_host_cmd_pit_init(void){

@@ -249,8 +249,4 @@ void target_motion_calc(void){
     motor_run_with_speed(LEFT,motor_left_speed);
     motor_run_with_speed(RIGHT,motor_right_speed);
     motor_run_with_speed(REAR,motor_rear_speed);
-
-    // motor_run_with_speed(LEFT,target_speed_magnitude);
-    // motor_run_with_speed(RIGHT,-target_speed_magnitude);
-    // motor_run_with_speed(REAR,(int32) (w_kp * target_angle));
 }

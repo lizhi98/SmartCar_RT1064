@@ -23,6 +23,8 @@ int main(void)
     hardware_init_flag += mt_camera_init();
     // 陀螺仪初始化
     // TODO
+    gyroscope_init();
+    gyroscope_pit_init();
 
     // 电机初始化
     motor_all_init();
@@ -36,7 +38,7 @@ int main(void)
     correspond_host_cmd_pit_init();
 
     // 图传初始化
-    correspond_image_send_init();
+    // correspond_image_send_init();
 
     // 计时器初始化
     timer_init(GPT_TIM_1, TIMER_MS);
@@ -55,28 +57,24 @@ int main(void)
     char temp[WIFI_SPI_BUFFER_SIZE];
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
-    target_speed_magnitude = 800;
+    // target_speed_magnitude = 800;
 
     // 主循环
     while(1) {
         // 定时发送速度信息
         if (timer_get(GPT_TIM_1) > WIFI_SPI_SEND_INTERVAL) {
             timer_clear(GPT_TIM_1);
-            sprintf(temp, "%d.0,%d.0,%d.0,%f,%d,%d,%d\n",
-                motors[LEFT].current_speed, motors[RIGHT].current_speed, motors[REAR].current_speed,
-                search_result.offset,motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty
-            );
-            wifi_uart_send_buffer((uint8 *)temp, strlen(temp));
+            correspond_send_info_to_host();
             // wifi_uart_send_buffer(wifi_uart_read_buffer_temp,WIFI_UART_READ_BUFFER_TEMP_SIZE);
         }
 
         // 图像处理、发送与运动解算
         if (mt9v03x_finish_flag) {
             process_image(mt9v03x_image);
-            seekfree_assistant_camera_send();
+            // seekfree_assistant_camera_send();
             mt9v03x_finish_flag = 0;
         }
-        target_motion_calc();
+        // target_motion_calc();
         
     }
 }

@@ -7,17 +7,17 @@
 
 #include "zf_driver_uart.h"
 #include "zf_device_wifi_spi.h"
+#include "zf_device_wifi_uart.h"
 #include "seekfree_assistant_interface.h"
 #include "seekfree_assistant.h"
 
 #include "motor.h"
 #include "gyroscope.h"
-#include "zf_device_wifi_uart.h"
 
 // WIRELESS CONFIG
 #define WIFI_SSID                               "AP-lizhi"
 #define WIFI_PASS                               "9894653xxk"
-#define HOST_IP                                 "192.168.222.252"
+#define HOST_IP                                 "192.168.201.252"
 
 // WIFI SPI CONFIG
 #define WIFI_SPI_CONNECT_MODE                   "UDP"
@@ -28,7 +28,9 @@
 #define WIFI_UART_READ_BUFFER_TEMP_SIZE         24
 #define WIFI_UART_READ_BUFFER_HEAD              "[["
 #define WIFI_UART_READ_BUFFER_HEAD_SIZE         2
-   
+
+#define WIFI_UART_SEND_BUFFER_TEMP_SIZE         64
+#define CORRESPOND_SEND_INFO_MODE               2 // 1-发送电机速度，offset，PWM 2-发送陀螺仪数据
 
 // UART CONFIG
 #define UART_N      UART_4
@@ -59,6 +61,7 @@ uint8 wifi_uart_read_n_data(void * dst,uint32 dst_size_n_uint8);
 uint8 correspond_host_cmd_init(void);
 void  correspond_host_cmd_pit_call(void);
 void  correspond_host_cmd_pit_init(void);
+void  correspond_send_info_to_host(void);
 
 // ================CORRESPOND_IMAGE_SEND(WIFI_SPI)====================
 
