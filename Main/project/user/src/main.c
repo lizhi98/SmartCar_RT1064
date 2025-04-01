@@ -1,5 +1,4 @@
 #include "zf_common_headfile.h"
-
 // 打开新的工程或者工程移动了位置务必执行以下操作
 // 第一步 关闭上面所有打开的文件
 // 第二步 project->clean  等待下方进度条走完
@@ -22,7 +21,6 @@ int main(void)
     // 摄像头初始化
     hardware_init_flag += mt_camera_init();
     // 陀螺仪初始化
-    // TODO
     gyroscope_init();
     gyroscope_pit_init();
 
@@ -54,7 +52,6 @@ int main(void)
     // =====================外设初始化结束========================
 
     // 主循环准备
-    char temp[WIFI_SPI_BUFFER_SIZE];
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
     // target_speed_magnitude = 800;
@@ -65,7 +62,6 @@ int main(void)
         if (timer_get(GPT_TIM_1) > WIFI_SPI_SEND_INTERVAL) {
             timer_clear(GPT_TIM_1);
             correspond_send_info_to_host();
-            // wifi_uart_send_buffer(wifi_uart_read_buffer_temp,WIFI_UART_READ_BUFFER_TEMP_SIZE);
         }
 
         // 图像处理、发送与运动解算

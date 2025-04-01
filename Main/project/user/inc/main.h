@@ -12,6 +12,5 @@
 #include "mt_image.h"
 
 #define WIFI_SPI_SEND_INTERVAL 200
-#define WIFI_SPI_BUFFER_SIZE 64
 
 #endif

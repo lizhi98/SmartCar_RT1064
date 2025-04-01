@@ -54,7 +54,7 @@ void correspond_host_cmd_pit_call(void){
             sscanf(&host_cmd_recv_temp[2],"%d",&target_speed_magnitude);
             break;
         case 'b':
-            sscanf(&host_cmd_recv_temp[2],"%f",&w_pid.KP);
+            sscanf(&host_cmd_recv_temp[2],"%f",&rotation_pid.KP);
             break;
         // PID
         case 'c':

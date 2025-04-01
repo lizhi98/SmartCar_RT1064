@@ -37,6 +37,7 @@
         "zf_common_interrupt.h": "c",
         "zf_common_debug.h": "c",
         "zf_device_wifi_uart.h": "c",
-        "screen.h": "c"
+        "screen.h": "c",
+        "__config": "c"
     }
 }

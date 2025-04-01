@@ -4,8 +4,8 @@
 #include "icm42688.h"
 #include "zf_driver_pit.h"
 
-#define GYROSCOPE_PIT PIT_CH1
-#define GYROSCOPE_PIT_TIME 8
+#define GYROSCOPE_PIT PIT_CH0
+#define GYROSCOPE_PIT_TIME 5
 
 typedef struct _gyroscope_integrated_data{
     double x;

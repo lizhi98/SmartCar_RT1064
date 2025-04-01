@@ -17,18 +17,21 @@
 
 // MOTOR PWM
 #define MOTOR_PWM_FREQUENCY     17000
-#define MOTOR_PWM_DUTY_MAX      4000
+#define MOTOR_PWM_DUTY_MAX      4500
 
-// PID
-#define SUM_WRONG_MAX           4000    // TODO
-#define MOTOR_PID_PIT           PIT_CH0 // TODO 需要根据实际修改
-#define MOTOR_PID_PIT_TIME      20 // TODO
-
-#define SUM_OFFSET_MAX          100    // TODO
+// SPEED PID
+#define SUM_WRONG_MAX           4500
+#define MOTOR_PID_PIT           PIT_CH2
+#define MOTOR_PID_PIT_TIME      20
 
 // ENCODER
-#define MOTOR_ENCODER_PIT       PIT_CH0
+#define MOTOR_ENCODER_PIT       PIT_CH2
 #define MOTOR_ENCODER_PIT_TIME  20
+
+// ROTATION PID
+#define SUM_OFFSET_MAX          150
+#define ROTATION_PID_PIT        PIT_CH1
+#define ROTATION_PID_PIT_TIME   10
 
 typedef enum _MotorIndex
 {
@@ -45,14 +48,15 @@ typedef struct _Encoder
     encoder_channel2_enum   encoder_channel_2;
 } Encoder;
 
-typedef struct _W_PID{
+typedef struct _Rotation_PID{
     float KP;
     float KI;
     float KD;
     int32 offset;
     int32 last_offset;
     int32 sum_offset;
-} W_PID;
+    int32 wl_out;
+} Rotation_PID;
 
 typedef struct _MotorPID
 {
@@ -78,7 +82,7 @@ typedef struct _Motor
 
 // MOTOR
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
-extern W_PID w_pid;
+extern Rotation_PID rotation_pid;
 // TARGET MOTION
 extern int32       target_speed_magnitude;
 extern double      target_angle;
@@ -97,7 +101,8 @@ void motor_pid_pit_init(void);
 void motor_pid_calc_apply(MotorIndex index);
 void motor_pid_pit_call(void);
 
-int32 rotation_pid_calc_apply();
+void rotation_pid_calc(void);
+void rotation_pid_pit_init(void);
 
 // Motor encoder
 void motor_encoder_pit_init(void);

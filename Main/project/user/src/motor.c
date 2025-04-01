@@ -21,21 +21,21 @@ Encoder encoder_rear = {
 // 电机速度PID
 MotorPID motor_left_pid = {
     .KP = 2.0,          .KI = 0.05,        .KD = 0.9,
-    .last_wrong = 0,    .sum_wrong = 0, .wrong = 0,
+    .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_right_pid = {
     .KP = 2.0,          .KI = 0.05,        .KD = 0.9,
-    .last_wrong = 0,    .sum_wrong = 0, .wrong = 0,
+    .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_rear_pid = {
     .KP = 2.0,          .KI = 0.10,        .KD = 0.9,
-    .last_wrong = 0,    .sum_wrong = 0, .wrong = 0,
+    .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 
 // 角速度PID
-W_PID w_pid = {
+Rotation_PID rotation_pid = {
     .KP = -3.0,          .KI = -0.02,        .KD = -1.0,
-    .last_offset = 0,    .sum_offset = 0,   .offset = 0,
+    .last_offset = 0,    .sum_offset = 0,    .offset = 0,
 };
 
 // TODO
@@ -139,27 +139,6 @@ void motor_pid_calc_apply(MotorIndex index){
     motor_plus_duty(index, (int32)out);
 }
 
-int32 rotation_pid_calc_apply(){
-    
-    double out = 0.;
-    // 比例
-    out += (double) (w_pid.KP * w_pid.offset);
-
-    // 积分
-    w_pid.sum_offset += w_pid.offset;
-    // 积分限幅
-    if(abs(w_pid.sum_offset) > SUM_OFFSET_MAX){
-        (w_pid.sum_offset > 0) ? (w_pid.sum_offset = SUM_OFFSET_MAX) : (w_pid.sum_offset = -SUM_OFFSET_MAX);
-    }
-    // 微分
-    out += (double) (w_pid.KD * (w_pid.offset - w_pid.last_offset));
-
-    // 记录wrong
-    w_pid.last_offset = w_pid.offset;
-
-    // 输出
-    return (int32)out;
-}
 
 void motor_pid_pit_call(void){
     for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
@@ -189,10 +168,42 @@ void motor_encoder_pit_call(void){
     encoder_clear_count(motors[REAR].encoder->encoder_index);
 }
 
+// ROTATION
+void rotation_pid_calc(){
+    // 车体自转PID计算
+    double out = 0.;
+
+    // 从图像获取offset
+    rotation_pid.offset = search_result.offset;
+    // 比例
+    out += (double) (rotation_pid.KP * rotation_pid.offset);
+    // 积分
+    rotation_pid.sum_offset += rotation_pid.offset;
+    // 积分清零
+    if(rotation_pid.offset == 0){
+        rotation_pid.sum_offset = 0;
+    }
+    // 积分限幅
+    if(abs(rotation_pid.sum_offset) > SUM_OFFSET_MAX){
+        (rotation_pid.sum_offset > 0) ? (rotation_pid.sum_offset = SUM_OFFSET_MAX) : (rotation_pid.sum_offset = -SUM_OFFSET_MAX);
+    }
+    // 微分
+    out += (double) (rotation_pid.KD * (rotation_pid.offset - rotation_pid.last_offset));
+
+    // 记录wrong
+    rotation_pid.last_offset = rotation_pid.offset;
+
+    // 输出
+    rotation_pid.wl_out = (int32)out;
+
+}
+
+void rotation_pid_pit_init(void){
+    pit_ms_init(ROTATION_PID_PIT,ROTATION_PID_PIT_TIME);
+}
+
 // 车运动解算函数
 void target_motion_calc(void){
-
-    w_pid.offset = search_result.offset;
 
     int32   motor_left_speed    = 0,
             motor_right_speed   = 0,
@@ -201,13 +212,11 @@ void target_motion_calc(void){
     double speed_front  =   (double)target_speed_magnitude;
 
     motor_left_speed    =   (int32) (-speed_front * COS_PI_D_6);
-    motor_right_speed   =   (int32) (speed_front * COS_PI_D_6);
+    motor_right_speed   =   (int32) (speed_front  * COS_PI_D_6);
 
-
-
-    motor_left_speed    +=  rotation_pid_calc_apply();
-    motor_right_speed   +=  rotation_pid_calc_apply();
-    motor_rear_speed    +=  rotation_pid_calc_apply();
+    motor_left_speed    +=  rotation_pid.wl_out;
+    motor_right_speed   +=  rotation_pid.wl_out;
+    motor_rear_speed    +=  rotation_pid.wl_out;
     // 分情况计算速度
     // switch(search_result.element_type){
     //     case Normal:
@@ -243,7 +252,6 @@ void target_motion_calc(void){
     //         // motor_rear_speed  += (int32) (target_angle * w_kp);
     //     break;
     // }
-
 
     // 应用速度
     motor_run_with_speed(LEFT,motor_left_speed);
