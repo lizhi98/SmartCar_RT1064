@@ -14,9 +14,11 @@
 #ifndef PI
 #define PI 3.14159265
 #endif
+
 #define HEIGHT 120
 #define REAL_WIDTH 188
 #define WIDTH 187
+#define PIXEL 22560 // REAL_WIDTH * HEIGHT
 #define X_MID 93
 #define X_MAX 186
 #define Y_MAX 119
@@ -30,14 +32,14 @@ typedef enum ElementType_t {
     Zebra,
 } ElementType;
 
-typedef enum Track_t {
+typedef enum {
     None,
     Left,
     Right,
     Both
 } Track;
 
-typedef struct MidlineResult_t {
+typedef struct {
     float offset;
     ElementType element_type;
 #ifdef IMAGE_DEBUG
@@ -53,9 +55,24 @@ SearchResult search(Image image);
 extern SearchResult search_result;
 extern uint8 otsu_threshold;
 
-extern uint8 OTSU_THRESHOLD_MIN;
-extern uint8 OTSU_THRESHOLD_MAX;
-extern int OSTU_COUNTER_MAX;
-extern int OTSU_COMPRESS_RATIO;
+#define OSTU_COUNTER_MAX 10
+#define OTSU_THRESHOLD_MIN 50
+
+#define OTSU_THRESHOLD_MAX 200
+#define OTSU_COMPRESS_RATIO 2
+#define OTSU_COMPRESS_RATIO_SQUARE 4 // OTSU_COMPRESS_RATIO * OTSU_COMPRESS_RATIO
+#define OTSU_THRESHOLD_DELTA 4
+
+#define EMPTY 0
+#define ROAD 1
+#define BOUND 2
+#define BOUND_APP 4
+#define MID_LINE 3
+
+#define Y_BD_MIN 45
+#define DX_BD_MAX 4
+#define DX_M_MAX 2
+#define BD_LENGTH 85
+#define LOST_COUNT_MAX 5
 
 #endif 
