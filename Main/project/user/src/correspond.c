@@ -48,7 +48,10 @@ void correspond_host_cmd_pit_call(void){
     if(! wifi_uart_read_n_data(host_cmd_recv_temp,HOST_CMD_SIZE_PLUS_ONE - 1)){
         switch (host_cmd_recv_temp[0])
         {
-        // target_motion
+        case 's':
+            // flag = 1;
+            target_speed_magnitude = 0;
+            break;
         case 'a':
             // flag = 1;
             sscanf(&host_cmd_recv_temp[2],"%d",&target_speed_magnitude);

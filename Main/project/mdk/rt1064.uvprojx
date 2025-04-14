@@ -522,7 +522,7 @@
             <File>
               <FileName>motor_test_main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Tools\motor_test_main.c</FilePath>
+              <FilePath>..\tools\motor_test_main.c</FilePath>
             </File>
           </Files>
         </Group>

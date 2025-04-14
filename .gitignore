@@ -41,7 +41,7 @@ System\ Volume\ Information
 *.log
 *.xml
 *.iml
-
+Object_detection_training.7z
 # VS Code
 .vscode/c_cpp_properties.json
 Main/project/RT1064智能车推荐引脚分配.txt
