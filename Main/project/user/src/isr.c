@@ -33,7 +33,7 @@ void PIT_IRQHandler(void)
     
     if(pit_flag_get(PIT_CH3))
     {
-        correspond_host_cmd_pit_call();
+        // correspond_host_cmd_pit_call();
         pit_flag_clear(PIT_CH3);
     }
 

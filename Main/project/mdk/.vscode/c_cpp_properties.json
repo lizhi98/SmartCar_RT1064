@@ -40,9 +40,10 @@
                 "D:\\Program Files\\Keil_v5\\ARM\\ARMCLANG\\include\\arm_linux_compat",
                 "D:\\Program Files\\Keil_v5\\ARM\\ARMCLANG\\include\\libcxx",
                 "d:\\Code\\SmartCarProgram_RT1064\\Main\\project\\user\\src",
+                "d:\\Code\\SmartCarProgram_RT1064\\Main\\project\\tools",
+                "d:\\Code\\SmartCarProgram_RT1064\\Tools",
                 "d:\\Code\\SmartCarProgram_RT1064\\Main\\libraries\\doc",
-                "d:\\Code\\SmartCarProgram_RT1064\\Main\\libraries\\components\\sdmmc\\host\\usdhc\\non_blocking",
-                "d:\\Code\\SmartCarProgram_RT1064\\Main\\project\\tools"
+                "d:\\Code\\SmartCarProgram_RT1064\\Main\\libraries\\components\\sdmmc\\host\\usdhc\\non_blocking"
             ],
             "defines": [
                 "CPU_MIMXRT1064DVL6A",

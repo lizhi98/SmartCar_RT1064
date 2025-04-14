@@ -8,12 +8,12 @@
 #define GYROSCOPE_PIT_TIME 5
 
 typedef struct _gyroscope_integrated_data{
-    double x;
-    double y;
-    double z;
-    double vx;
-    double vy;
-    double vz;
+    volatile double x;
+    volatile double y;
+    volatile double z;
+    volatile double vx;
+    volatile double vy;
+    volatile double vz;
 }gyroscope_integrated_data;
 
 extern gyroscope_integrated_data gyroscope_processed_data;

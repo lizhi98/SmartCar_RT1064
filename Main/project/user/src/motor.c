@@ -34,7 +34,7 @@ MotorPID motor_rear_pid = {
 
 // 角速度PID
 Rotation_PID rotation_pid = {
-    .KP = -3.0,          .KI = -0.02,        .KD = -1.0,
+    .KP = -3.0,          .KI = -0.01,        .KD = -0.8,
     .last_offset = 0,    .sum_offset = 0,    .offset = 0,
 };
 
@@ -46,12 +46,12 @@ Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
         .encoder = &encoder_left,   .PID = &motor_left_pid,
     },
     {
-        .index = RIGHT,             .pwm_channel_pin = PWM2_MODULE2_CHB_C11, .gpio_dir_pin = C10,
+        .index = RIGHT,             .pwm_channel_pin = PWM2_MODULE3_CHB_D3, .gpio_dir_pin = D2,
         .pwm_duty = 0,              .current_speed = 0,                      .set_speed = 0,
         .encoder = &encoder_right,  .PID = &motor_right_pid,
     },
     {
-        .index = REAR,              .pwm_channel_pin = PWM2_MODULE3_CHB_D3,  .gpio_dir_pin = D2,
+        .index = REAR,              .pwm_channel_pin = PWM2_MODULE2_CHB_C11,  .gpio_dir_pin = C10,
         .pwm_duty = 0,              .current_speed = 0,                      .set_speed = 0,
         .encoder = &encoder_rear,   .PID = &motor_rear_pid,
     },
@@ -171,7 +171,7 @@ void motor_encoder_pit_call(void){
 // ROTATION
 void rotation_pid_calc(){
     // 车体自转PID计算
-    double out = 0.;
+    volatile double out = 0.;
 
     // 从图像获取offset
     rotation_pid.offset = search_result.offset;

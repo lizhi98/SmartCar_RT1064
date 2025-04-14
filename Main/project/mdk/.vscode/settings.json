@@ -38,6 +38,15 @@
         "zf_common_debug.h": "c",
         "zf_device_wifi_uart.h": "c",
         "screen.h": "c",
-        "__config": "c"
+        "__config": "c",
+        "fsl_gpt.h": "c",
+        "zf_device_ips200.h": "c",
+        "ratio": "c",
+        "zf_common_font.h": "c",
+        "zf_driver_spi.h": "c",
+        "menu.h": "c",
+        "zf_device_key.h": "c",
+        "stdlib.h": "c",
+        "zf_driver_soft_spi.h": "c"
     }
 }

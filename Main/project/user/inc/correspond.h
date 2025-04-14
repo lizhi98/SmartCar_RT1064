@@ -13,6 +13,7 @@
 
 #include "motor.h"
 #include "gyroscope.h"
+#include "main.h"
 
 // WIRELESS CONFIG
 #define WIFI_SSID                               "AP-lizhi"
@@ -30,7 +31,7 @@
 #define WIFI_UART_READ_BUFFER_HEAD_SIZE         2
 
 #define WIFI_UART_SEND_BUFFER_TEMP_SIZE         64
-#define CORRESPOND_SEND_INFO_MODE               2 // 1-发送电机速度，offset，PWM 2-发送陀螺仪数据
+#define CORRESPOND_SEND_INFO_MODE               1 // 1-发送电机速度，offset，PWM 2-发送陀螺仪数据
 
 // UART CONFIG
 #define UART_N      UART_4

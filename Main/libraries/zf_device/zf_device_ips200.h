@@ -65,6 +65,8 @@
 #include "zf_common_typedef.h"
 #include "zf_driver_gpio.h"
 
+#define USER_MODIFIED_LIB_SWITCH 1
+
 #define IPS200_USE_SOFT_SPI             (0 )                                    // 默认使用硬件 SPI 方式驱动 建议使用硬件 SPI 方式驱动
 #if IPS200_USE_SOFT_SPI                                                         // 这两段 颜色正常的才是正确的 颜色灰的就是没有用的
 //====================================================软件 SPI 驱动====================================================
@@ -206,5 +208,11 @@ void    ips200_show_chinese             (uint16 x, uint16 y, uint8 size, const u
 #define ips200_displayimage8660(p, width, height)       (ips200_show_rgb565_image(0, 0, (p), SCC8660_W, SCC8660_H, (width), (height), 1))
 
 void    ips200_init                     (ips200_type_enum type_select);
+
+#endif
+
+#if USER_MODIFIED_LIB_SWITCH == 1
+
+void ips200_draw_region(uint16 xs, uint16 ys, uint16 xe, uint16 ye, const uint16 color);
 
 #endif
