@@ -29,7 +29,7 @@
 #define MOTOR_ENCODER_PIT_TIME  20
 
 // ROTATION PID
-#define SUM_OFFSET_MAX          150
+#define SUM_OFFSET_MAX          40
 #define ROTATION_PID_PIT        PIT_CH1
 #define ROTATION_PID_PIT_TIME   10
 
@@ -49,43 +49,50 @@ typedef struct _Encoder
 } Encoder;
 
 typedef struct _Rotation_PID{
-    float KP;
-    float KI;
-    float KD;
-    int32 offset;
-    int32 last_offset;
-    int32 sum_offset;
-    int32 wl_out;
+    volatile float KP;
+    volatile float KI;
+    volatile float KD;
+    volatile int32 offset;
+    volatile int32 last_offset;
+    volatile int32 sum_offset;
+    volatile int32 wl_out;
 } Rotation_PID;
 
 typedef struct _MotorPID
 {
-    float KP;
-    float KI;
-    float KD;
-    int32 wrong;
-    int32 last_wrong;
-    int32 sum_wrong;
+    volatile float KP;
+    volatile float KI;
+    volatile float KD;
+    volatile int32 wrong;
+    volatile int32 last_wrong;
+    volatile int32 sum_wrong;
 } MotorPID;
 
 typedef struct _Motor
 {
-    MotorIndex          index;
-    pwm_channel_enum    pwm_channel_pin;
-    gpio_pin_enum       gpio_dir_pin;
-    Encoder *           encoder;
-    int32               pwm_duty;
-    int32               current_speed;
-    int32               set_speed;
-    MotorPID *          PID;
+             MotorIndex          index;
+             pwm_channel_enum    pwm_channel_pin;
+             gpio_pin_enum       gpio_dir_pin;
+             Encoder *           encoder;
+    volatile int32               pwm_duty;
+    volatile int32               current_speed;
+    volatile int32               set_speed;
+             MotorPID *          PID;
 } Motor;
+
+// MOTION MODE
+typedef enum _MotionMode{
+    LINE_FOLLOW,
+    PUSH_BOX,
+}MotionMode;
+
+extern MotionMode motion_mode;
 
 // MOTOR
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 extern Rotation_PID rotation_pid;
 // TARGET MOTION
 extern int32       target_speed_magnitude;
-extern double      target_angle;
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);

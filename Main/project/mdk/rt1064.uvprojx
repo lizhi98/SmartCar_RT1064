@@ -424,6 +424,26 @@
               <FileType>1</FileType>
               <FilePath>..\user\src\screen.c</FilePath>
             </File>
+            <File>
+              <FileName>key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\key.c</FilePath>
+            </File>
+            <File>
+              <FileName>menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\menu.c</FilePath>
+            </File>
+            <File>
+              <FileName>MCX_Vision.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\MCX_Vision.c</FilePath>
+            </File>
+            <File>
+              <FileName>OpenMV.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\OpenMV.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -469,6 +489,26 @@
               <FileType>5</FileType>
               <FilePath>..\user\inc\screen.h</FilePath>
             </File>
+            <File>
+              <FileName>key.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\key.h</FilePath>
+            </File>
+            <File>
+              <FileName>menu.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\menu.h</FilePath>
+            </File>
+            <File>
+              <FileName>MCX_Vision.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\MCX_Vision.h</FilePath>
+            </File>
+            <File>
+              <FileName>OpenMV.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\OpenMV.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -483,6 +523,26 @@
               <FileName>icm42688.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\code\icm42688.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Tools</GroupName>
+          <Files>
+            <File>
+              <FileName>capture_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\tools\capture_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>menu_test_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\tools\menu_test_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor_test_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\tools\motor_test_main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2133,16 +2193,6 @@
               <FileName>usb_device_descriptor.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\components\usb\usb_cdc_adapter\usb_device_descriptor.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Tools</GroupName>
-          <Files>
-            <File>
-              <FileName>capture_main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\tools\capture_main.c</FilePath>
             </File>
           </Files>
         </Group>

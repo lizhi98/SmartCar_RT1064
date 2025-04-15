@@ -10,7 +10,11 @@
 #include "mt_camera.h"
 #include "icm42688.h"
 #include "mt_image.h"
+#include "menu.h"
 
 #define WIFI_SPI_SEND_INTERVAL 200
+// 图像处理时间记录
+extern uint32 image_process_time_start;
+extern uint32 image_process_time;
 
 #endif

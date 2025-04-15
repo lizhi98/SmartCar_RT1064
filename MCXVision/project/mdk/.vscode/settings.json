@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "clock_config.h": "c",
+        "board.h": "c",
+        "fsl_gpio.h": "c",
+        "zf_device_config.h": "c",
+        "zf_driver_ezh.h": "c",
+        "zf_driver_gpio.h": "c"
+    }
+}

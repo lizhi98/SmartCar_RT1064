@@ -5,6 +5,12 @@
 // 本例程是开源库移植用空工程
 #include "main.h"
 
+#define HOST_DEBUG 1
+
+// 图像处理时间记录
+uint32 image_process_time_start = 0;
+uint32 image_process_time = 0;
+
 int main(void)
 {
     clock_init(SYSTEM_CLOCK_600M);  // 不可删除
@@ -29,15 +35,14 @@ int main(void)
     // 编码器初始化
     encoder_all_init();
     motor_encoder_pit_init();
-
+    rotation_pid_pit_init();    
+#if HOST_DEBUG == 1
     // 上位机控制初始化
     hardware_init_flag += correspond_host_cmd_init();
-
     correspond_host_cmd_pit_init();
-
     // 图传初始化
-    // correspond_image_send_init();
-
+    correspond_image_send_init();
+#endif
     // 计时器初始化
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
@@ -48,30 +53,40 @@ int main(void)
 
     system_delay_ms(2000);
     screen_clear();
-    
+
     // =====================外设初始化结束========================
 
     // 主循环准备
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
-    // target_speed_magnitude = 800;
+    target_speed_magnitude = 700;
 
     // 主循环
     while(1) {
         // 定时发送速度信息
         if (timer_get(GPT_TIM_1) > WIFI_SPI_SEND_INTERVAL) {
             timer_clear(GPT_TIM_1);
+#if HOST_DEBUG == 1
             correspond_send_info_to_host();
+#endif
         }
 
+        // 计算图像处理时间
+        image_process_time_start = timer_get(GPT_TIM_1);
         // 图像处理、发送与运动解算
         if (mt9v03x_finish_flag) {
             process_image(mt9v03x_image);
-            // seekfree_assistant_camera_send();
+#if HOST_DEBUG == 1
+        //seekfree_assistant_camera_send();
+#endif
             mt9v03x_finish_flag = 0;
         }
-        // target_motion_calc();
-        
+            // 计算图像处理时间
+            image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;
+            // 根据结果判断前进速度
+            
+            target_motion_calc();
+
     }
 }
 

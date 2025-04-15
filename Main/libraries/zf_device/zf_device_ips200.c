@@ -1287,3 +1287,36 @@ void ips200_init (ips200_type_enum type_select)
     ips200_clear();                                                             // 初始化为白屏
     ips200_debug_init();
 }
+
+#if USER_MODIFIED_LIB_SWITCH == 1
+
+void ips200_draw_region(uint16 xs, uint16 ys, uint16 xe, uint16 ye, const uint16 color)
+{
+    // 利用逐飞库函数进行断言检查
+    zf_assert(xe >= xs);
+    zf_assert(ye >= ys);
+    zf_assert(xe < ips200_x_max);
+    zf_assert(ye < ips200_y_max);
+
+    uint16 * color_buffer = (uint16 *)malloc(sizeof(uint16) * (xe - xs + 1));
+
+    if(IPS200_TYPE_SPI == ips200_display_type)
+    {
+        IPS200_CS(0);
+    }
+    ips200_set_region(xs, ys, xe, ye); // 设置显示区域
+    for(uint16 i = 0; i < (xe - xs); i ++)
+    {
+        color_buffer[i] = color;
+    }
+    for (uint16 j = 0; j < (ye - ys); j ++)
+    {
+        ips200_write_16bit_data_array(color_buffer, xe - xs + 1);
+    }
+    if(IPS200_TYPE_SPI == ips200_display_type)
+    {
+        IPS200_CS(1);
+    }
+}
+
+#endif

@@ -48,7 +48,10 @@ void correspond_host_cmd_pit_call(void){
     if(! wifi_uart_read_n_data(host_cmd_recv_temp,HOST_CMD_SIZE_PLUS_ONE - 1)){
         switch (host_cmd_recv_temp[0])
         {
-        // target_motion
+        case 's':
+            // flag = 1;
+            target_speed_magnitude = 0;
+            break;
         case 'a':
             // flag = 1;
             sscanf(&host_cmd_recv_temp[2],"%d",&target_speed_magnitude);
@@ -99,9 +102,9 @@ void correspond_host_cmd_pit_call(void){
 void correspond_send_info_to_host(){
 #if CORRESPOND_SEND_INFO_MODE == 1
     sprintf(wifi_uart_send_buffer_temp, 
-        "%d.0,%d.0,%d.0,%f,%d,%d,%d\n",
+        "%d.0,%d.0,%d.0,%f,%d,%d,%d,%d\n",
         motors[LEFT].current_speed, motors[RIGHT].current_speed, motors[REAR].current_speed,  // 左右后电机速度
-        search_result.offset,  // 偏差
+        search_result.offset,  image_process_time,// 图像
         motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty  // 电机实时PWM
     );
 #elif CORRESPOND_SEND_INFO_MODE == 2

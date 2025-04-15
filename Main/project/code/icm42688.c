@@ -1,7 +1,7 @@
 /*
  * icm42688.c
  *
- *  Created on: 2024年8月2日
+ *  Created on: 2024锟斤拷8锟斤拷2锟斤拷
  *      Author: ljk
  */
 /*MIT License
@@ -359,40 +359,6 @@ void ICM42688_Get_Data(void)
     ICM42688.acc_y = ICM42688_RAW.acc_y_lsb/Acc_Sensitivity;
     ICM42688.acc_z = ICM42688_RAW.acc_z_lsb/Acc_Sensitivity;
 }
-
-////求Bias平均数并且填入相关寄存器 传感器会自动减去Bias 参数为采样次数 暂时弃用
-////此处采用较为简单的求平均数方法求解Bias 也可以用一些状态观测等更好的办法替代！
-//void static Remove_Bias_On_Chip(uint16 times)
-//{
-//    uint8 WRITE_OFFSET_USER0 = 0X77;//X轴陀螺仪Bias低八位
-//    uint8 WRITE_OFFSET_USER1 = 0X78;//X与Y轴陀螺仪Bias高四位
-//    uint8 WRITE_OFFSET_USER2 = 0X79;//Y轴陀螺仪Bias低八位
-//    uint8 WRITE_OFFSET_USER3 = 0X7A;//Z轴陀螺仪Bias低八位
-//    uint8 WRITE_OFFSET_USER4 = 0X7B;//Z轴陀螺仪Bias高四位
-//    for(uint16 i=0;i<times;i++)
-//    {
-//        system_delay_us(10);
-//        ICM42688_Get_Data();
-//        bias_gyro_x+=ICM42688_RAW.gyro_x_lsb;
-//        bias_gyro_y+=ICM42688_RAW.gyro_y_lsb;
-//        bias_gyro_z+=ICM42688_RAW.gyro_z_lsb;
-//    }
-//    bias_gyro_x=bias_gyro_x/times;
-//    bias_gyro_y=bias_gyro_y/times;
-//    bias_gyro_z=bias_gyro_z/times;
-//    //printf("%d %d %d\n",bias_gyro_x,bias_gyro_y,bias_gyro_z);
-//    //while(1);
-//    bias_gyro_x = 0xABCD;
-//    //SPI_Transfer_16bit(((uint16)WRITE_OFFSET_USER0<<8|((uint8)(bias_gyro_x>>4))));
-//    //SPI_Transfer_16bit(((uint16)WRITE_OFFSET_USER0<<8|0X44));
-////    SPI_Transfer_16bit(((uint16)WRITE_OFFSET_USER1<<8|(uint8)(((bias_gyro_y&=0XF000)|((bias_gyro_x>>4)&0X0F00))>>8)));
-////    SPI_Transfer_16bit(((uint16)WRITE_OFFSET_USER2<<8|((uint8)bias_gyro_y>>4)));
-////    SPI_Transfer_16bit(((uint16)WRITE_OFFSET_USER3<<8|((uint8)bias_gyro_z>>4)));
-////    SPI_Transfer_16bit(((uint16)WRITE_OFFSET_USER4<<8|(uint8)((0x0000|((bias_gyro_z>>4)&0X0F00))>>8)));
-//    uint16 test = SPI_Transfer_16bit(0XF700);
-//    uint16 test2 = SPI_Transfer_16bit(0XF800);
-//    printf("%X %X\n",test,test2);
-//}
 
 void icm42688_init(ICM42688_CONFIG_STRUCT*ICM42688_CONFIG)
 {
