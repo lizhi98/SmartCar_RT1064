@@ -4,6 +4,8 @@
         "encoder.h": "c",
         "mt_image.h": "c",
         "time.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "stdio.h": "c",
+        "stdbool.h": "c"
     }
 }
