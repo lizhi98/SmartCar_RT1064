@@ -1,111 +1,111 @@
 /*********************************************************************************************************************
-* MCX Vision Opensourec Library ¼´£¨MCX Vision ¿ªÔ´¿â£©ÊÇÒ»¸ö»ùÓÚ¹Ù·½ SDK ½Ó¿ÚµÄµÚÈý·½¿ªÔ´¿â
-* Copyright (c) 2024 SEEKFREE Öð·É¿Æ¼¼
+* MCX Vision Opensourec Library å³ï¼ˆMCX Vision å¼€æºåº“ï¼‰æ˜¯ä¸€ä¸ªåŸºäºŽå®˜æ–¹ SDK æŽ¥å£çš„ç¬¬ä¸‰æ–¹å¼€æºåº“
+* Copyright (c) 2024 SEEKFREE é€é£žç§‘æŠ€
 * 
-* ±¾ÎÄ¼þÊÇ MCX Vision ¿ªÔ´¿âµÄÒ»²¿·Ö
+* æœ¬æ–‡ä»¶æ˜¯ MCX Vision å¼€æºåº“çš„ä¸€éƒ¨åˆ†
 * 
-* MCX Vision ¿ªÔ´¿â ÊÇÃâ·ÑÈí¼þ
-* Äú¿ÉÒÔ¸ù¾Ý×ÔÓÉÈí¼þ»ù½ð»á·¢²¼µÄ GPL£¨GNU General Public License£¬¼´ GNUÍ¨ÓÃ¹«¹²Ðí¿ÉÖ¤£©µÄÌõ¿î
-* ¼´ GPL µÄµÚ3°æ£¨¼´ GPL3.0£©»ò£¨ÄúÑ¡ÔñµÄ£©ÈÎºÎºóÀ´µÄ°æ±¾£¬ÖØÐÂ·¢²¼ºÍ/»òÐÞ¸ÄËü
+* MCX Vision å¼€æºåº“ æ˜¯å…è´¹è½¯ä»¶
+* æ‚¨å¯ä»¥æ ¹æ®è‡ªç”±è½¯ä»¶åŸºé‡‘ä¼šå‘å¸ƒçš„ GPLï¼ˆGNU General Public Licenseï¼Œå³ GNUé€šç”¨å…¬å…±è®¸å¯è¯ï¼‰çš„æ¡æ¬¾
+* å³ GPL çš„ç¬¬3ç‰ˆï¼ˆå³ GPL3.0ï¼‰æˆ–ï¼ˆæ‚¨é€‰æ‹©çš„ï¼‰ä»»ä½•åŽæ¥çš„ç‰ˆæœ¬ï¼Œé‡æ–°å‘å¸ƒå’Œ/æˆ–ä¿®æ”¹å®ƒ
 * 
-* ±¾¿ªÔ´¿âµÄ·¢²¼ÊÇÏ£ÍûËüÄÜ·¢»Ó×÷ÓÃ£¬µ«²¢Î´¶ÔÆä×÷ÈÎºÎµÄ±£Ö¤
-* ÉõÖÁÃ»ÓÐÒþº¬µÄÊÊÏúÐÔ»òÊÊºÏÌØ¶¨ÓÃÍ¾µÄ±£Ö¤
-* ¸ü¶àÏ¸½ÚÇë²Î¼û GPL
+* æœ¬å¼€æºåº“çš„å‘å¸ƒæ˜¯å¸Œæœ›å®ƒèƒ½å‘æŒ¥ä½œç”¨ï¼Œä½†å¹¶æœªå¯¹å…¶ä½œä»»ä½•çš„ä¿è¯
+* ç”šè‡³æ²¡æœ‰éšå«çš„é€‚é”€æ€§æˆ–é€‚åˆç‰¹å®šç”¨é€”çš„ä¿è¯
+* æ›´å¤šç»†èŠ‚è¯·å‚è§ GPL
 * 
-* ÄúÓ¦¸ÃÔÚÊÕµ½±¾¿ªÔ´¿âµÄÍ¬Ê±ÊÕµ½Ò»·Ý GPL µÄ¸±±¾
-* Èç¹ûÃ»ÓÐ£¬Çë²ÎÔÄ<https://www.gnu.org/licenses/>
+* æ‚¨åº”è¯¥åœ¨æ”¶åˆ°æœ¬å¼€æºåº“çš„åŒæ—¶æ”¶åˆ°ä¸€ä»½ GPL çš„å‰¯æœ¬
+* å¦‚æžœæ²¡æœ‰ï¼Œè¯·å‚é˜…<https://www.gnu.org/licenses/>
 * 
-* ¶îÍâ×¢Ã÷£º
-* ±¾¿ªÔ´¿âÊ¹ÓÃ GPL3.0 ¿ªÔ´Ðí¿ÉÖ¤Ð­Òé ÒÔÉÏÐí¿ÉÉêÃ÷ÎªÒëÎÄ°æ±¾
-* Ðí¿ÉÉêÃ÷Ó¢ÎÄ°æÔÚ libraries/doc ÎÄ¼þ¼ÐÏÂµÄ GPL3_permission_statement.txt ÎÄ¼þÖÐ
-* »¶Ó­¸÷Î»Ê¹ÓÃ²¢´«²¥±¾³ÌÐò µ«ÐÞ¸ÄÄÚÈÝÊ±±ØÐë±£ÁôÖð·É¿Æ¼¼µÄ°æÈ¨ÉùÃ÷£¨¼´±¾ÉùÃ÷£©
+* é¢å¤–æ³¨æ˜Žï¼š
+* æœ¬å¼€æºåº“ä½¿ç”¨ GPL3.0 å¼€æºè®¸å¯è¯åè®® ä»¥ä¸Šè®¸å¯ç”³æ˜Žä¸ºè¯‘æ–‡ç‰ˆæœ¬
+* è®¸å¯ç”³æ˜Žè‹±æ–‡ç‰ˆåœ¨ libraries/doc æ–‡ä»¶å¤¹ä¸‹çš„ GPL3_permission_statement.txt æ–‡ä»¶ä¸­
+* æ¬¢è¿Žå„ä½ä½¿ç”¨å¹¶ä¼ æ’­æœ¬ç¨‹åº ä½†ä¿®æ”¹å†…å®¹æ—¶å¿…é¡»ä¿ç•™é€é£žç§‘æŠ€çš„ç‰ˆæƒå£°æ˜Žï¼ˆå³æœ¬å£°æ˜Žï¼‰
 * 
-* ÎÄ¼þÃû³Æ          zf_driver_uart
-* ¹«Ë¾Ãû³Æ          ³É¶¼Öð·É¿Æ¼¼ÓÐÏÞ¹«Ë¾
-* °æ±¾ÐÅÏ¢          ²é¿´ libraries/doc ÎÄ¼þ¼ÐÄÚ version ÎÄ¼þ °æ±¾ËµÃ÷
-* ¿ª·¢»·¾³          MDK 5.38a
-* ÊÊÓÃÆ½Ì¨          MCX Vision
-* µêÆÌÁ´½Ó          https://seekfree.taobao.com/
+* æ–‡ä»¶åç§°          zf_driver_uart
+* å…¬å¸åç§°          æˆéƒ½é€é£žç§‘æŠ€æœ‰é™å…¬å¸
+* ç‰ˆæœ¬ä¿¡æ¯          æŸ¥çœ‹ libraries/doc æ–‡ä»¶å¤¹å†… version æ–‡ä»¶ ç‰ˆæœ¬è¯´æ˜Ž
+* å¼€å‘çŽ¯å¢ƒ          MDK 5.38a
+* é€‚ç”¨å¹³å°          MCX Vision
+* åº—é“ºé“¾æŽ¥          https://seekfree.taobao.com/
 * 
-* ÐÞ¸Ä¼ÇÂ¼
-* ÈÕÆÚ              ×÷Õß                ±¸×¢
+* ä¿®æ”¹è®°å½•
+* æ—¥æœŸ              ä½œè€…                å¤‡æ³¨
 * 2024-04-21        ZSY            first version
 ********************************************************************************************************************/
 #include "zf_driver_uart.h"
 
-// ÓÃ»§´®¿Ú»Øµ÷º¯Êý
+// ç”¨æˆ·ä¸²å£å›žè°ƒå‡½æ•°
 void LP_FLEXCOMM5_IRQHandler(void)
 {
     uint8_t data;
 
     if ((kLPUART_RxDataRegFullFlag)&LPUART_GetStatusFlags(USER_USART))
     {
-        // ½ÓÊÕµ½µÄÊý¾Ý
+        // æŽ¥æ”¶åˆ°çš„æ•°æ®
         data = LPUART_ReadByte(USER_USART);
     }
     LPUART_ClearStatusFlags(USER_USART, kLPUART_RxOverrunFlag);
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ÓÃ»§´®¿Ú×Ö½ÚÊä³ö
-// ²ÎÊýËµÃ÷     c             ÐèÒª·¢ËÍµÄ×Ö½Ú
-// ·µ»Ø²ÎÊý     void        
-// Ê¹ÓÃÊ¾Àý     uart_write_byte(0xA5);                                  // ´®¿Ú1·¢ËÍ0xA5
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     ç”¨æˆ·ä¸²å£å­—èŠ‚è¾“å‡º
+// å‚æ•°è¯´æ˜Ž     c             éœ€è¦å‘é€çš„å­—èŠ‚
+// è¿”å›žå‚æ•°     void        
+// ä½¿ç”¨ç¤ºä¾‹     uart_write_byte(0xA5);                                  // ä¸²å£1å‘é€0xA5
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void user_uart_putchar(char c)
 {
-    while(!(USER_USART->STAT & LPUART_STAT_TDRE_MASK));                 // µÈ´ý·¢ËÍÍê³É
+    while(!(USER_USART->STAT & LPUART_STAT_TDRE_MASK));                 // ç­‰å¾…å‘é€å®Œæˆ
     LPUART_WriteBlocking(USER_USART, (const uint8_t *)&c, 1);
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ´®¿Ú·¢ËÍÊý×é
-// ²ÎÊýËµÃ÷     *buff           Òª·¢ËÍµÄÊý×éµØÖ·
-// ²ÎÊýËµÃ÷     len             ·¢ËÍ³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     user_uart_write_buffer(&a[0], 5);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     ä¸²å£å‘é€æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     *buff           è¦å‘é€çš„æ•°ç»„åœ°å€
+// å‚æ•°è¯´æ˜Ž     len             å‘é€é•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     user_uart_write_buffer(&a[0], 5);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void user_uart_write_buffer (const uint8 *buff, uint32 len)
 {
-    while(!(USER_USART->STAT & LPUART_STAT_TDRE_MASK));                 // µÈ´ý·¢ËÍÍê³É
-    LPUART_WriteBlocking(USER_USART, buff, len);                        // Ð´Èë·¢ËÍÊý¾Ý
+    while(!(USER_USART->STAT & LPUART_STAT_TDRE_MASK));                 // ç­‰å¾…å‘é€å®Œæˆ
+    LPUART_WriteBlocking(USER_USART, buff, len);                        // å†™å…¥å‘é€æ•°æ®
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ´®¿Ú·¢ËÍ×Ö·û´®
-// ²ÎÊýËµÃ÷     *str            Òª·¢ËÍµÄ×Ö·û´®µØÖ·
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     user_uart_write_string("seekfree"); 
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     ä¸²å£å‘é€å­—ç¬¦ä¸²
+// å‚æ•°è¯´æ˜Ž     *str            è¦å‘é€çš„å­—ç¬¦ä¸²åœ°å€
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     user_uart_write_string("seekfree"); 
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void user_uart_write_string (const char *str)
 {
-    while(*str)                                                                 // Ò»Ö±Ñ­»·µ½½áÎ²
+    while(*str)                                                                 // ä¸€ç›´å¾ªçŽ¯åˆ°ç»“å°¾
     {
-        user_uart_putchar(*str ++);                                             // ·¢ËÍÊý¾Ý
+        user_uart_putchar(*str ++);                                             // å‘é€æ•°æ®
     }
 }
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ×Ô¶¨Òåuser_printfº¯Êý
-// ²ÎÊýËµÃ÷     ºÍprintfÓÃ·¨ÏàÍ¬
-// ·µ»Ø²ÎÊý     void        
-// Ê¹ÓÃÊ¾Àý     zf_user_printf("seekfree%d\r\n", 0xA5);                                  // ´®¿Ú1·¢ËÍ0xA5
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     è‡ªå®šä¹‰user_printfå‡½æ•°
+// å‚æ•°è¯´æ˜Ž     å’Œprintfç”¨æ³•ç›¸åŒ
+// è¿”å›žå‚æ•°     void        
+// ä½¿ç”¨ç¤ºä¾‹     zf_user_printf("seekfree%d\r\n", 0xA5);                                  // ä¸²å£1å‘é€0xA5
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void zf_user_printf(const char *format, ...) 
 {
     va_list args;
     va_start(args, format);
 
-    char buffer[64]; // ¼ÙÉè×î´ó×ª»»ºóµÄ×Ö·û´®³¤¶ÈÎª64
+    char buffer[64]; // å‡è®¾æœ€å¤§è½¬æ¢åŽçš„å­—ç¬¦ä¸²é•¿åº¦ä¸º64
     int written = 0;
     while (*format && written < 63) 
     {
         if (*format == '%') 
         {
-            format++; // Ìø¹ý%
+            format++; // è·³è¿‡%
             if (*format == 'd') 
             {
                 int value = va_arg(args, int);
@@ -128,13 +128,13 @@ void zf_user_printf(const char *format, ...)
             } 
             else if (*format == 'c') 
             {
-                char char_value = va_arg(args, int); // charÀàÐÍÔÚva_argÖÐ»á±»ÌáÉýÎªint
+                char char_value = va_arg(args, int); // charç±»åž‹åœ¨va_argä¸­ä¼šè¢«æå‡ä¸ºint
                 user_uart_putchar(char_value);
                 written++;
             } 
             else if (*format == 'f') 
             {
-                float float_value = va_arg(args, double); // ¸¡µãÊýÔÚva_argÖÐ»á±»ÌáÉýÎªdouble
+                float float_value = va_arg(args, double); // æµ®ç‚¹æ•°åœ¨va_argä¸­ä¼šè¢«æå‡ä¸ºdouble
                 float_to_str(float_value, buffer);
                 for (int i = 0; buffer[i] != '\0' && written < 63; i++) 
                 {
@@ -144,7 +144,7 @@ void zf_user_printf(const char *format, ...)
             }
             else
             {
-                format++; // ÒÆ¶¯µ½ÏÂÒ»¸ö×Ö·û
+                format++; // ç§»åŠ¨åˆ°ä¸‹ä¸€ä¸ªå­—ç¬¦
             }
         } 
         else 
@@ -160,10 +160,10 @@ void zf_user_printf(const char *format, ...)
 
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ÓÃ»§´®¿Ú³õÊ¼»¯
-// ·µ»Ø²ÎÊý     void            
-// Ê¹ÓÃÊ¾Àý     uart_init();          
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     ç”¨æˆ·ä¸²å£åˆå§‹åŒ–
+// è¿”å›žå‚æ•°     void            
+// ä½¿ç”¨ç¤ºä¾‹     uart_init();          
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void user_uart_init(void)
 {

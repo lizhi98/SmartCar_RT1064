@@ -1,46 +1,46 @@
 /*********************************************************************************************************************
-* MCX Vision Opensourec Library ����MCX Vision ��Դ�⣩��һ�����ڹٷ� SDK �ӿڵĵ�������Դ��
-* Copyright (c) 2024 SEEKFREE ��ɿƼ�
+* MCX Vision Opensourec Library 即（MCX Vision 开源库）是一个基于官方 SDK 接口的第三方开源库
+* Copyright (c) 2024 SEEKFREE 逐飞科技
 * 
-* ���ļ��� MCX Vision ��Դ���һ����
+* 本文件是 MCX Vision 开源库的一部分
 * 
-* MCX Vision ��Դ�� ���������
-* �����Ը���������������ᷢ���� GPL��GNU General Public License���� GNUͨ�ù�������֤��������
-* �� GPL �ĵ�3�棨�� GPL3.0������ѡ��ģ��κκ����İ汾�����·�����/���޸���
+* MCX Vision 开源库 是免费软件
+* 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公共许可证）的条款
+* 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/或修改它
 * 
-* ����Դ��ķ�����ϣ�����ܷ������ã�����δ�������κεı�֤
-* ����û�������������Ի��ʺ��ض���;�ı�֤
-* ����ϸ����μ� GPL
+* 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+* 甚至没有隐含的适销性或适合特定用途的保证
+* 更多细节请参见 GPL
 * 
-* ��Ӧ�����յ�����Դ���ͬʱ�յ�һ�� GPL �ĸ���
-* ���û�У������<https://www.gnu.org/licenses/>
+* 您应该在收到本开源库的同时收到一份 GPL 的副本
+* 如果没有，请参阅<https://www.gnu.org/licenses/>
 * 
-* ����ע����
-* ����Դ��ʹ�� GPL3.0 ��Դ����֤Э�� ������������Ϊ���İ汾
-* ��������Ӣ�İ��� libraries/doc �ļ����µ� GPL3_permission_statement.txt �ļ���
-* ��ӭ��λʹ�ò����������� ���޸�����ʱ���뱣����ɿƼ��İ�Ȩ����������������
+* 额外注明：
+* 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+* 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+* 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（即本声明）
 * 
-* �ļ�����          zf_common_font
-* ��˾����          �ɶ���ɿƼ����޹�˾
-* �汾��Ϣ          �鿴 libraries/doc �ļ����� version �ļ� �汾˵��
-* ��������          MDK 5.38a
-* ����ƽ̨          MCX Vision
-* ��������          https://seekfree.taobao.com/
+* 文件名称          zf_common_font
+* 公司名称          成都逐飞科技有限公司
+* 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+* 开发环境          MDK 5.38a
+* 适用平台          MCX Vision
+* 店铺链接          https://seekfree.taobao.com/
 * 
-* �޸ļ�¼
-* ����              ����                ��ע
+* 修改记录
+* 日期              作者                备注
 * 2024-04-21        ZSY            first version
 ********************************************************************************************************************/
 #include "zf_common_font.h"
 
 const unsigned char ascii_font_8x16[][16]=
 {
-    // <����> <����ʽ> <����> <8*16>
-    // <���� 8bit Ϊһ������ģ��> <����ȡģ>
+    // <阴码> <列行式> <逆向> <8*16>
+    // <纵向 8bit 为一个数据模型> <横向取模>
 
-    // ��ģ���ݴ����ʽΪ��{byte1, byte2,....byte16}
+    // 字模数据储存格式为：{byte1, byte2,....byte16}
 
-    // ��ģ���������ض�Ӧ��ϵ
+    // 字模数据与像素对应关系
     // byte 1      2      3      4      5      6      7      8
     // bit  [  0]  [  8]  [ 16]  [ 24]  [ 32]  [ 40]  [ 48]  [ 56]
     // bit  [  1]  [  9]  [ 17]  [ 25]  [ 33]  [ 41]  [ 49]  [ 57]
@@ -159,15 +159,15 @@ const unsigned char ascii_font_8x16[][16]=
 };
 
 
-//16λBMP 240*80 ��ɿƼ�logoͼ��ȡģ����
-//Image2LCDȡģѡ������
-//ˮƽɨ��
-//16λ
+//16位BMP 240*80 逐飞科技logo图像取模数据
+//Image2LCD取模选项设置
+//水平扫描
+//16位
 //240*80
-//������ͼ��ͷ����
-//��������
-//�Զ�����
-//��λ��ǰ
+//不包含图像头数据
+//自左至右
+//自顶至底
+//低位在前
 const unsigned char gImage_seekfree_logo[38400] = { /* 0X00,0X10,0XF0,0X00,0X50,0X00,0X01,0X1B, */
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,
 0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,0XFF,

@@ -1,49 +1,49 @@
 /*********************************************************************************************************************
-* RT1064DVL6A Opensourec Library ¼´£¨RT1064DVL6A ¿ªÔ´¿â£©ÊÇÒ»¸ö»ùÓÚ¹Ù·½ SDK ½Ó¿ÚµÄµÚÈý·½¿ªÔ´¿â
-* Copyright (c) 2022 SEEKFREE Öð·É¿Æ¼¼
+* RT1064DVL6A Opensourec Library å³ï¼ˆRT1064DVL6A å¼€æºåº“ï¼‰æ˜¯ä¸€ä¸ªåŸºäºŽå®˜æ–¹ SDK æŽ¥å£çš„ç¬¬ä¸‰æ–¹å¼€æºåº“
+* Copyright (c) 2022 SEEKFREE é€é£žç§‘æŠ€
 * 
-* ±¾ÎÄ¼þÊÇ RT1064DVL6A ¿ªÔ´¿âµÄÒ»²¿·Ö
+* æœ¬æ–‡ä»¶æ˜¯ RT1064DVL6A å¼€æºåº“çš„ä¸€éƒ¨åˆ†
 * 
-* RT1064DVL6A ¿ªÔ´¿â ÊÇÃâ·ÑÈí¼þ
-* Äú¿ÉÒÔ¸ù¾Ý×ÔÓÉÈí¼þ»ù½ð»á·¢²¼µÄ GPL£¨GNU General Public License£¬¼´ GNUÍ¨ÓÃ¹«¹²Ðí¿ÉÖ¤£©µÄÌõ¿î
-* ¼´ GPL µÄµÚ3°æ£¨¼´ GPL3.0£©»ò£¨ÄúÑ¡ÔñµÄ£©ÈÎºÎºóÀ´µÄ°æ±¾£¬ÖØÐÂ·¢²¼ºÍ/»òÐÞ¸ÄËü
+* RT1064DVL6A å¼€æºåº“ æ˜¯å…è´¹è½¯ä»¶
+* æ‚¨å¯ä»¥æ ¹æ®è‡ªç”±è½¯ä»¶åŸºé‡‘ä¼šå‘å¸ƒçš„ GPLï¼ˆGNU General Public Licenseï¼Œå³ GNUé€šç”¨å…¬å…±è®¸å¯è¯ï¼‰çš„æ¡æ¬¾
+* å³ GPL çš„ç¬¬3ç‰ˆï¼ˆå³ GPL3.0ï¼‰æˆ–ï¼ˆæ‚¨é€‰æ‹©çš„ï¼‰ä»»ä½•åŽæ¥çš„ç‰ˆæœ¬ï¼Œé‡æ–°å‘å¸ƒå’Œ/æˆ–ä¿®æ”¹å®ƒ
 * 
-* ±¾¿ªÔ´¿âµÄ·¢²¼ÊÇÏ£ÍûËüÄÜ·¢»Ó×÷ÓÃ£¬µ«²¢Î´¶ÔÆä×÷ÈÎºÎµÄ±£Ö¤
-* ÉõÖÁÃ»ÓÐÒþº¬µÄÊÊÏúÐÔ»òÊÊºÏÌØ¶¨ÓÃÍ¾µÄ±£Ö¤
-* ¸ü¶àÏ¸½ÚÇë²Î¼û GPL
+* æœ¬å¼€æºåº“çš„å‘å¸ƒæ˜¯å¸Œæœ›å®ƒèƒ½å‘æŒ¥ä½œç”¨ï¼Œä½†å¹¶æœªå¯¹å…¶ä½œä»»ä½•çš„ä¿è¯
+* ç”šè‡³æ²¡æœ‰éšå«çš„é€‚é”€æ€§æˆ–é€‚åˆç‰¹å®šç”¨é€”çš„ä¿è¯
+* æ›´å¤šç»†èŠ‚è¯·å‚è§ GPL
 * 
-* ÄúÓ¦¸ÃÔÚÊÕµ½±¾¿ªÔ´¿âµÄÍ¬Ê±ÊÕµ½Ò»·Ý GPL µÄ¸±±¾
-* Èç¹ûÃ»ÓÐ£¬Çë²ÎÔÄ<https://www.gnu.org/licenses/>
+* æ‚¨åº”è¯¥åœ¨æ”¶åˆ°æœ¬å¼€æºåº“çš„åŒæ—¶æ”¶åˆ°ä¸€ä»½ GPL çš„å‰¯æœ¬
+* å¦‚æžœæ²¡æœ‰ï¼Œè¯·å‚é˜…<https://www.gnu.org/licenses/>
 * 
-* ¶îÍâ×¢Ã÷£º
-* ±¾¿ªÔ´¿âÊ¹ÓÃ GPL3.0 ¿ªÔ´Ðí¿ÉÖ¤Ð­Òé ÒÔÉÏÐí¿ÉÉêÃ÷ÎªÒëÎÄ°æ±¾
-* Ðí¿ÉÉêÃ÷Ó¢ÎÄ°æÔÚ libraries/doc ÎÄ¼þ¼ÐÏÂµÄ GPL3_permission_statement.txt ÎÄ¼þÖÐ
-* Ðí¿ÉÖ¤¸±±¾ÔÚ libraries ÎÄ¼þ¼ÐÏÂ ¼´¸ÃÎÄ¼þ¼ÐÏÂµÄ LICENSE ÎÄ¼þ
-* »¶Ó­¸÷Î»Ê¹ÓÃ²¢´«²¥±¾³ÌÐò µ«ÐÞ¸ÄÄÚÈÝÊ±±ØÐë±£ÁôÖð·É¿Æ¼¼µÄ°æÈ¨ÉùÃ÷£¨¼´±¾ÉùÃ÷£©
+* é¢å¤–æ³¨æ˜Žï¼š
+* æœ¬å¼€æºåº“ä½¿ç”¨ GPL3.0 å¼€æºè®¸å¯è¯åè®® ä»¥ä¸Šè®¸å¯ç”³æ˜Žä¸ºè¯‘æ–‡ç‰ˆæœ¬
+* è®¸å¯ç”³æ˜Žè‹±æ–‡ç‰ˆåœ¨ libraries/doc æ–‡ä»¶å¤¹ä¸‹çš„ GPL3_permission_statement.txt æ–‡ä»¶ä¸­
+* è®¸å¯è¯å‰¯æœ¬åœ¨ libraries æ–‡ä»¶å¤¹ä¸‹ å³è¯¥æ–‡ä»¶å¤¹ä¸‹çš„ LICENSE æ–‡ä»¶
+* æ¬¢è¿Žå„ä½ä½¿ç”¨å¹¶ä¼ æ’­æœ¬ç¨‹åº ä½†ä¿®æ”¹å†…å®¹æ—¶å¿…é¡»ä¿ç•™é€é£žç§‘æŠ€çš„ç‰ˆæƒå£°æ˜Žï¼ˆå³æœ¬å£°æ˜Žï¼‰
 * 
-* ÎÄ¼þÃû³Æ          zf_device_ov7725
-* ¹«Ë¾Ãû³Æ          ³É¶¼Öð·É¿Æ¼¼ÓÐÏÞ¹«Ë¾
-* °æ±¾ÐÅÏ¢          ²é¿´ libraries/doc ÎÄ¼þ¼ÐÄÚ version ÎÄ¼þ °æ±¾ËµÃ÷
-* ¿ª·¢»·¾³          IAR 8.32.4 or MDK 5.33
-* ÊÊÓÃÆ½Ì¨          RT1064DVL6A
-* µêÆÌÁ´½Ó          https://seekfree.taobao.com/
+* æ–‡ä»¶åç§°          zf_device_ov7725
+* å…¬å¸åç§°          æˆéƒ½é€é£žç§‘æŠ€æœ‰é™å…¬å¸
+* ç‰ˆæœ¬ä¿¡æ¯          æŸ¥çœ‹ libraries/doc æ–‡ä»¶å¤¹å†… version æ–‡ä»¶ ç‰ˆæœ¬è¯´æ˜Ž
+* å¼€å‘çŽ¯å¢ƒ          IAR 8.32.4 or MDK 5.33
+* é€‚ç”¨å¹³å°          RT1064DVL6A
+* åº—é“ºé“¾æŽ¥          https://seekfree.taobao.com/
 * 
-* ÐÞ¸Ä¼ÇÂ¼
-* ÈÕÆÚ              ×÷Õß                ±¸×¢
+* ä¿®æ”¹è®°å½•
+* æ—¥æœŸ              ä½œè€…                å¤‡æ³¨
 * 2022-09-21        SeekFree            first version
 ********************************************************************************************************************/
 /*********************************************************************************************************************
-* ½ÓÏß¶¨Òå£º
+* æŽ¥çº¿å®šä¹‰ï¼š
 *                   ------------------------------------
-*                   Ä£¿é¹Ü½Å            µ¥Æ¬»ú¹Ü½Å
-*                   TXD/SCL             ²é¿´ zf_device_ov7725.h ÖÐ OV7725_COF_UART_TX »ò OV7725_COF_IIC_SCL ºê¶¨Òå
-*                   RXD/SDA             ²é¿´ zf_device_ov7725.h ÖÐ OV7725_COF_UART_RX »ò OV7725_COF_IIC_SDA ºê¶¨Òå
-*                   PCLK                ²é¿´ zf_device_ov7725.h ÖÐ OV7725_PCLK_PIN ºê¶¨Òå
-*                   VSY                 ²é¿´ zf_device_ov7725.h ÖÐ OV7725_VSYNC_PIN ºê¶¨Òå
-*                   D0-D7               ²é¿´ zf_device_ov7725.h ÖÐ OV7725_DATA_PIN ºê¶¨Òå ´Ó¸Ã¶¨Òå¿ªÊ¼µÄÁ¬Ðø°Ë¸öÒý½Å
-*                   VCC                 3.3VµçÔ´
-*                   GND                 µçÔ´µØ
-*                   ÆäÓàÒý½ÅÐü¿Õ
+*                   æ¨¡å—ç®¡è„š            å•ç‰‡æœºç®¡è„š
+*                   TXD/SCL             æŸ¥çœ‹ zf_device_ov7725.h ä¸­ OV7725_COF_UART_TX æˆ– OV7725_COF_IIC_SCL å®å®šä¹‰
+*                   RXD/SDA             æŸ¥çœ‹ zf_device_ov7725.h ä¸­ OV7725_COF_UART_RX æˆ– OV7725_COF_IIC_SDA å®å®šä¹‰
+*                   PCLK                æŸ¥çœ‹ zf_device_ov7725.h ä¸­ OV7725_PCLK_PIN å®å®šä¹‰
+*                   VSY                 æŸ¥çœ‹ zf_device_ov7725.h ä¸­ OV7725_VSYNC_PIN å®å®šä¹‰
+*                   D0-D7               æŸ¥çœ‹ zf_device_ov7725.h ä¸­ OV7725_DATA_PIN å®å®šä¹‰ ä»Žè¯¥å®šä¹‰å¼€å§‹çš„è¿žç»­å…«ä¸ªå¼•è„š
+*                   VCC                 3.3Vç”µæº
+*                   GND                 ç”µæºåœ°
+*                   å…¶ä½™å¼•è„šæ‚¬ç©º
 *                   ------------------------------------
 ********************************************************************************************************************/
 
@@ -62,43 +62,43 @@
 
 vuint8 ov7725_finish_flag = 0;
 
-// Í¼Ïñ»º³åÇø  Èç¹ûÓÃ»§ÐèÒª·ÃÎÊÍ¼ÏñÊý¾Ý ×îºÃÍ¨¹ýov7725_image_binaryÀ´·ÃÎÊÊý¾Ý£¬×îºÃ²»ÒªÖ±½Ó·ÃÎÊ»º³åÇø
+// å›¾åƒç¼“å†²åŒº  å¦‚æžœç”¨æˆ·éœ€è¦è®¿é—®å›¾åƒæ•°æ® æœ€å¥½é€šè¿‡ov7725_image_binaryæ¥è®¿é—®æ•°æ®ï¼Œæœ€å¥½ä¸è¦ç›´æŽ¥è®¿é—®ç¼“å†²åŒº
 AT_DTCM_SECTION_ALIGN(uint8 ov7725_image_binary1[OV7725_H][OV7725_W / 8], 64);
 AT_DTCM_SECTION_ALIGN(uint8 ov7725_image_binary2[OV7725_H][OV7725_W / 8], 64);
 
-// ÓÃ»§·ÃÎÊÍ¼ÏñÊý¾ÝÖ±½Ó·ÃÎÊÕâ¸öÖ¸Õë±äÁ¿¾Í¿ÉÒÔ
-// ·ÃÎÊ·½Ê½·Ç³£¼òµ¥£¬¿ÉÒÔÖ±½ÓÊ¹ÓÃÏÂ±êµÄ·½Ê½·ÃÎÊ
-// ÀýÈç·ÃÎÊµÚ10ÐÐ 50ÁÐµÄµã£¬ov7725_image_binary[10][50]¾Í¿ÉÒÔÁË
+// ç”¨æˆ·è®¿é—®å›¾åƒæ•°æ®ç›´æŽ¥è®¿é—®è¿™ä¸ªæŒ‡é’ˆå˜é‡å°±å¯ä»¥
+// è®¿é—®æ–¹å¼éžå¸¸ç®€å•ï¼Œå¯ä»¥ç›´æŽ¥ä½¿ç”¨ä¸‹æ ‡çš„æ–¹å¼è®¿é—®
+// ä¾‹å¦‚è®¿é—®ç¬¬10è¡Œ 50åˆ—çš„ç‚¹ï¼Œov7725_image_binary[10][50]å°±å¯ä»¥äº†
 uint8 (*ov7725_image_binary)[OV7725_W / 8];
 
-// ÐèÒªÅäÖÃµ½ÉãÏñÍ·µÄÊý¾Ý ²»ÔÊÐíÔÚÕâÐÞ¸Ä²ÎÊý
+// éœ€è¦é…ç½®åˆ°æ‘„åƒå¤´çš„æ•°æ® ä¸å…è®¸åœ¨è¿™ä¿®æ”¹å‚æ•°
 static uint16 ov7725_set_confing_buffer [OV7725_CONFIG_FINISH][2]=
 {
-    {OV7725_INIT,           0},                                                 // ³õÊ¼»¯ÃüÁî
+    {OV7725_INIT,           0},                                                 // åˆå§‹åŒ–å‘½ä»¤
 
-    {OV7725_RESERVE,        0},                                                 // ±£Áô
-    {OV7725_CONTRAST,       OV7725_CONTRAST_DEF},                               // ãÐÖµÉèÖÃ
-    {OV7725_FPS,            OV7725_FPS_DEF},                                    // Ö¡ÂÊ
-    {OV7725_COL,            OV7725_W},                                          // Í¼Ïñ¿í¶È
-    {OV7725_ROW,            OV7725_H}                                           // Í¼Ïñ¸ß¶È
+    {OV7725_RESERVE,        0},                                                 // ä¿ç•™
+    {OV7725_CONTRAST,       OV7725_CONTRAST_DEF},                               // é˜ˆå€¼è®¾ç½®
+    {OV7725_FPS,            OV7725_FPS_DEF},                                    // å¸§çŽ‡
+    {OV7725_COL,            OV7725_W},                                          // å›¾åƒå®½åº¦
+    {OV7725_ROW,            OV7725_H}                                           // å›¾åƒé«˜åº¦
 };
 
-// ´ÓÉãÏñÍ·ÄÚ²¿»ñÈ¡µ½µÄÅäÖÃÊý¾Ý ²»ÔÊÐíÔÚÕâÐÞ¸Ä²ÎÊý
+// ä»Žæ‘„åƒå¤´å†…éƒ¨èŽ·å–åˆ°çš„é…ç½®æ•°æ® ä¸å…è®¸åœ¨è¿™ä¿®æ”¹å‚æ•°
 static uint16 ov7725_get_confing_buffer [OV7725_CONFIG_FINISH - 1][2]=
 {
-    {OV7725_RESERVE,        0},                                                 // ±£Áô
-    {OV7725_CONTRAST,       0},                                                 // ãÐÖµÉèÖÃ
-    {OV7725_FPS,            0},                                                 // Ö¡ÂÊ
-    {OV7725_COL,            0},                                                 // Í¼Ïñ¿í¶È
-    {OV7725_ROW,            0}                                                  // Í¼Ïñ¸ß¶È
+    {OV7725_RESERVE,        0},                                                 // ä¿ç•™
+    {OV7725_CONTRAST,       0},                                                 // é˜ˆå€¼è®¾ç½®
+    {OV7725_FPS,            0},                                                 // å¸§çŽ‡
+    {OV7725_COL,            0},                                                 // å›¾åƒå®½åº¦
+    {OV7725_ROW,            0}                                                  // å›¾åƒé«˜åº¦
 };
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ÅäÖÃÉãÏñÍ·ÄÚ²¿ÅäÖÃÐÅÏ¢
-// ²ÎÊýËµÃ÷     buff            ·¢ËÍÅäÖÃÐÅÏ¢µÄµØÖ·
-// ·µ»Ø²ÎÊý     uint8           1-Ê§°Ü 0-³É¹¦
-// Ê¹ÓÃÊ¾Àý     if(ov7725_set_config(ov7725_set_confing_buffer)){}
-// ±¸×¢ÐÅÏ¢     ÄÚ²¿µ÷ÓÃ
+// å‡½æ•°ç®€ä»‹     é…ç½®æ‘„åƒå¤´å†…éƒ¨é…ç½®ä¿¡æ¯
+// å‚æ•°è¯´æ˜Ž     buff            å‘é€é…ç½®ä¿¡æ¯çš„åœ°å€
+// è¿”å›žå‚æ•°     uint8           1-å¤±è´¥ 0-æˆåŠŸ
+// ä½¿ç”¨ç¤ºä¾‹     if(ov7725_set_config(ov7725_set_confing_buffer)){}
+// å¤‡æ³¨ä¿¡æ¯     å†…éƒ¨è°ƒç”¨
 //-------------------------------------------------------------------------------------------------------------------
 static uint8 ov7725_set_config (uint16 buff[OV7725_CONFIG_FINISH][2])
 {
@@ -136,17 +136,17 @@ static uint8 ov7725_set_config (uint16 buff[OV7725_CONFIG_FINISH][2])
         system_delay_ms(1);
     }while(OV7725_INIT_TIMEOUT > timeout_count ++);
 
-    // ÒÔÉÏ²¿·Ö¶ÔÉãÏñÍ·ÅäÖÃµÄÊý¾ÝÈ«²¿¶¼»á±£´æÔÚÉãÏñÍ·ÉÏ51µ¥Æ¬»úµÄeepromÖÐ
-    // ÀûÓÃset_exposure_timeº¯Êýµ¥¶ÀÅäÖÃµÄÆØ¹âÊý¾Ý²»´æ´¢ÔÚeepromÖÐ
+    // ä»¥ä¸Šéƒ¨åˆ†å¯¹æ‘„åƒå¤´é…ç½®çš„æ•°æ®å…¨éƒ¨éƒ½ä¼šä¿å­˜åœ¨æ‘„åƒå¤´ä¸Š51å•ç‰‡æœºçš„eepromä¸­
+    // åˆ©ç”¨set_exposure_timeå‡½æ•°å•ç‹¬é…ç½®çš„æ›å…‰æ•°æ®ä¸å­˜å‚¨åœ¨eepromä¸­
     return return_state;
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     »ñÈ¡ÉãÏñÍ·ÄÚ²¿ÅäÖÃÐÅÏ¢
-// ²ÎÊýËµÃ÷     buff            ½ÓÊÕÅäÖÃÐÅÏ¢µÄµØÖ·
-// ·µ»Ø²ÎÊý     uint8           1-Ê§°Ü 0-³É¹¦
-// Ê¹ÓÃÊ¾Àý     if(ov7725_get_config(ov7725_get_confing_buffer)){}
-// ±¸×¢ÐÅÏ¢     ÄÚ²¿µ÷ÓÃ
+// å‡½æ•°ç®€ä»‹     èŽ·å–æ‘„åƒå¤´å†…éƒ¨é…ç½®ä¿¡æ¯
+// å‚æ•°è¯´æ˜Ž     buff            æŽ¥æ”¶é…ç½®ä¿¡æ¯çš„åœ°å€
+// è¿”å›žå‚æ•°     uint8           1-å¤±è´¥ 0-æˆåŠŸ
+// ä½¿ç”¨ç¤ºä¾‹     if(ov7725_get_config(ov7725_get_confing_buffer)){}
+// å¤‡æ³¨ä¿¡æ¯     å†…éƒ¨è°ƒç”¨
 //-------------------------------------------------------------------------------------------------------------------
 static uint8 ov7725_get_config (uint16 buff[OV7725_CONFIG_FINISH - 1][2])
 {
@@ -181,7 +181,7 @@ static uint8 ov7725_get_config (uint16 buff[OV7725_CONFIG_FINISH - 1][2])
             }
             system_delay_ms(1);
         }while(OV7725_INIT_TIMEOUT > timeout_count ++);
-        if(OV7725_INIT_TIMEOUT < timeout_count)                                 // ³¬Ê±
+        if(OV7725_INIT_TIMEOUT < timeout_count)                                 // è¶…æ—¶
         {
             return_state = 1;
             break;
@@ -191,11 +191,11 @@ static uint8 ov7725_get_config (uint16 buff[OV7725_CONFIG_FINISH - 1][2])
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     Ð¡×ê·çÉãÏñÍ·ÄÚ²¿¼Ä´æÆ÷³õÊ¼»¯
-// ²ÎÊýËµÃ÷     void
-// ·µ»Ø²ÎÊý     uint8           1-Ê§°Ü 0-³É¹¦
-// Ê¹ÓÃÊ¾Àý     if(ov7725_iic_init()){}
-// ±¸×¢ÐÅÏ¢     ÄÚ²¿Ê¹ÓÃ ÓÃ»§ÎÞÐèµ÷ÓÃ
+// å‡½æ•°ç®€ä»‹     å°é’»é£Žæ‘„åƒå¤´å†…éƒ¨å¯„å­˜å™¨åˆå§‹åŒ–
+// å‚æ•°è¯´æ˜Ž     void
+// è¿”å›žå‚æ•°     uint8           1-å¤±è´¥ 0-æˆåŠŸ
+// ä½¿ç”¨ç¤ºä¾‹     if(ov7725_iic_init()){}
+// å¤‡æ³¨ä¿¡æ¯     å†…éƒ¨ä½¿ç”¨ ç”¨æˆ·æ— éœ€è°ƒç”¨
 //-------------------------------------------------------------------------------------------------------------------
 static uint8 ov7725_iic_init (void)
 {
@@ -207,7 +207,7 @@ static uint8 ov7725_iic_init (void)
 
     soft_iic_init(&ov7725_iic_struct, OV7725_DEV_ADD, OV7725_COF_IIC_DELAY, OV7725_COF_IIC_SCL, OV7725_COF_IIC_SDA);
 
-    soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_COM7, 0x80);        // ¸´Î»ÉãÏñÍ·
+    soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_COM7, 0x80);        // å¤ä½æ‘„åƒå¤´
     system_delay_ms(50);
 
     do
@@ -215,17 +215,17 @@ static uint8 ov7725_iic_init (void)
         ov7725_idcode = soft_iic_sccb_read_register(&ov7725_iic_struct, OV7725_VER);
         if(OV7725_ID != ov7725_idcode)
         {
-            return_state = 1;                                                   // Ð£ÑéÉãÏñÍ·IDºÅ
+            return_state = 1;                                                   // æ ¡éªŒæ‘„åƒå¤´IDå·
             break;
         }
 
-        // IDºÅÈ·ÈÏÎÞÎó   È»ºóÅäÖÃ¼Ä´æÆ÷
+        // IDå·ç¡®è®¤æ— è¯¯   ç„¶åŽé…ç½®å¯„å­˜å™¨
         soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_COM4         , 0xC1);  
         soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_CLKRC        , 0x01);
         soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_COM2         , 0x03);
         soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_COM3         , 0xD0);
         soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_COM7         , 0x40);
-        soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_COM8         , 0xCE);   // 0xCE:¹Ø±Õ×Ô¶¯ÆØ¹â  0xCF£º¿ªÆô×Ô¶¯ÆØ¹â
+        soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_COM8         , 0xCE);   // 0xCE:å…³é—­è‡ªåŠ¨æ›å…‰  0xCFï¼šå¼€å¯è‡ªåŠ¨æ›å…‰
         soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_HSTART       , 0x3F);
         soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_HSIZE        , 0x50);
         soft_iic_sccb_write_register(&ov7725_iic_struct, OV7725_VSTRT        , 0x03);
@@ -310,11 +310,11 @@ static uint8 ov7725_iic_init (void)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     »ñÈ¡ÉãÏñÍ·¹Ì¼þ ID
-// ²ÎÊýËµÃ÷     void
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     ov7725_uart_get_id();                           // µ÷ÓÃ¸Ãº¯ÊýÇ°ÇëÏÈ³õÊ¼»¯´®¿Ú
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     èŽ·å–æ‘„åƒå¤´å›ºä»¶ ID
+// å‚æ•°è¯´æ˜Ž     void
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     ov7725_uart_get_id();                           // è°ƒç”¨è¯¥å‡½æ•°å‰è¯·å…ˆåˆå§‹åŒ–ä¸²å£
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 uint16 ov7725_uart_get_id (void)
 {
@@ -349,11 +349,11 @@ uint16 ov7725_uart_get_id (void)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     »ñÈ¡ÉãÏñÍ·¹Ì¼þ°æ±¾
-// ²ÎÊýËµÃ÷     void
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     ov7725_get_version();                           // µ÷ÓÃ¸Ãº¯ÊýÇ°ÇëÏÈ³õÊ¼»¯´®¿Ú
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     èŽ·å–æ‘„åƒå¤´å›ºä»¶ç‰ˆæœ¬
+// å‚æ•°è¯´æ˜Ž     void
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     ov7725_get_version();                           // è°ƒç”¨è¯¥å‡½æ•°å‰è¯·å…ˆåˆå§‹åŒ–ä¸²å£
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 uint16 ov7725_get_version (void)
 {
@@ -386,12 +386,12 @@ uint16 ov7725_get_version (void)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-//  @brief      MT9V03XÉãÏñÍ·´®¿ÚÖÐ¶Ïº¯Êý
+//  @brief      MT9V03Xæ‘„åƒå¤´ä¸²å£ä¸­æ–­å‡½æ•°
 //  @param      NULL
 //  @return     void					
 //  @since      v1.0
 //  Sample usage:	
-//  @note       ¸Ãº¯ÊýÔÚISRÎÄ¼þ ´®¿Ú5ÖÐ¶Ï³ÌÐò±»µ÷ÓÃ
+//  @note       è¯¥å‡½æ•°åœ¨ISRæ–‡ä»¶ ä¸²å£5ä¸­æ–­ç¨‹åºè¢«è°ƒç”¨
 //-------------------------------------------------------------------------------------------------------------------
 void ov7725_uart_callback(void)
 {
@@ -407,12 +407,12 @@ void ov7725_uart_callback(void)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-//  @brief      MT9V03XÉãÏñÍ·²É¼¯Íê³ÉÖÐ¶Ïº¯Êý
+//  @brief      MT9V03Xæ‘„åƒå¤´é‡‡é›†å®Œæˆä¸­æ–­å‡½æ•°
 //  @param      NULL
 //  @return     void					
 //  @since      v1.0
 //  Sample usage:	
-//  @note       ¸Ãº¯ÊýÓÉisr.cÖÐµÄCSI_IRQHandlerº¯Êýµ÷ÓÃ
+//  @note       è¯¥å‡½æ•°ç”±isr.cä¸­çš„CSI_IRQHandlerå‡½æ•°è°ƒç”¨
 //-------------------------------------------------------------------------------------------------------------------
 void ov7725_finished_callback(CSI_Type *base, csi_handle_t *handle, status_t status, void *userData)
 {
@@ -421,24 +421,24 @@ void ov7725_finished_callback(CSI_Type *base, csi_handle_t *handle, status_t sta
     {
         if(full_buffer_addr == (uint32)ov7725_image_binary1[0])
         {
-            ov7725_image_binary = ov7725_image_binary1; // image_csi1²É¼¯Íê³É
+            ov7725_image_binary = ov7725_image_binary1; // image_csi1é‡‡é›†å®Œæˆ
         csi_add_empty_buffer(&csi_handle, ov7725_image_binary2[0]);
         }
         else if(full_buffer_addr == (uint32)ov7725_image_binary2[0])
         {
-            ov7725_image_binary = ov7725_image_binary2; // image_csi2²É¼¯Íê³É
+            ov7725_image_binary = ov7725_image_binary2; // image_csi2é‡‡é›†å®Œæˆ
         csi_add_empty_buffer(&csi_handle, ov7725_image_binary1[0]);
         }
-        ov7725_finish_flag = 1;                         // ²É¼¯Íê³É±êÖ¾Î»ÖÃÒ»
+        ov7725_finish_flag = 1;                         // é‡‡é›†å®Œæˆæ ‡å¿—ä½ç½®ä¸€
     }
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     OV7725 ÉãÏñÍ·³õÊ¼»¯
-// ²ÎÊýËµÃ÷     NULL
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     ov7725_init();
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     OV7725 æ‘„åƒå¤´åˆå§‹åŒ–
+// å‚æ•°è¯´æ˜Ž     NULL
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     ov7725_init();
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 uint8 ov7725_init (void)
 {
@@ -446,7 +446,7 @@ uint8 ov7725_init (void)
 
     do
     {
-        set_camera_type(CAMERA_BIN_UART, NULL, NULL, &ov7725_uart_callback);       // ÉèÖÃÁ¬½ÓÉãÏñÍ·ÀàÐÍ
+        set_camera_type(CAMERA_BIN_UART, NULL, NULL, &ov7725_uart_callback);       // è®¾ç½®è¿žæŽ¥æ‘„åƒå¤´ç±»åž‹
         camera_fifo_init();
 
         uart_init(OV7725_COF_UART, OV7725_COF_BAUR, OV7725_COF_UART_RX, OV7725_COF_UART_TX);
@@ -455,16 +455,16 @@ uint8 ov7725_init (void)
         
         fifo_clear(&camera_receiver_fifo);
 
-        // »ñÈ¡ËùÓÐ²ÎÊý
+        // èŽ·å–æ‰€æœ‰å‚æ•°
         if(ov7725_get_config(ov7725_get_confing_buffer))
         {
             system_delay_ms(200);
             set_camera_type(CAMERA_BIN_IIC, NULL, NULL, NULL);
             if(ov7725_iic_init())
             {
-                // Èç¹û³ÌÐòÔÚÊä³öÁË¶ÏÑÔÐÅÏ¢ ²¢ÇÒÌáÊ¾³ö´íÎ»ÖÃÔÚÕâÀï
-                // ÄÇÃ´¾ÍÊÇ IIC ³ö´í²¢³¬Ê±ÍË³öÁË
-                // ¼ì²éÒ»ÏÂ½ÓÏßÓÐÃ»ÓÐÎÊÌâ Èç¹ûÃ»ÎÊÌâ¿ÉÄÜ¾ÍÊÇ»µÁË
+                // å¦‚æžœç¨‹åºåœ¨è¾“å‡ºäº†æ–­è¨€ä¿¡æ¯ å¹¶ä¸”æç¤ºå‡ºé”™ä½ç½®åœ¨è¿™é‡Œ
+                // é‚£ä¹ˆå°±æ˜¯ IIC å‡ºé”™å¹¶è¶…æ—¶é€€å‡ºäº†
+                // æ£€æŸ¥ä¸€ä¸‹æŽ¥çº¿æœ‰æ²¡æœ‰é—®é¢˜ å¦‚æžœæ²¡é—®é¢˜å¯èƒ½å°±æ˜¯åäº†
                 zf_log(0, "OV7725 IIC error.");
                 set_camera_type(NO_CAMERE, NULL, NULL, NULL);
                 return_state = 1;
@@ -473,23 +473,23 @@ uint8 ov7725_init (void)
         }
         else
         {
-            // ÉèÖÃËùÓÐ²ÎÊý
+            // è®¾ç½®æ‰€æœ‰å‚æ•°
             if(ov7725_set_config(ov7725_set_confing_buffer))
             {
-                // Èç¹û³ÌÐòÔÚÊä³öÁË¶ÏÑÔÐÅÏ¢ ²¢ÇÒÌáÊ¾³ö´íÎ»ÖÃÔÚÕâÀï
-                // ÄÇÃ´¾ÍÊÇ´®¿ÚÍ¨ÐÅ³ö´í²¢³¬Ê±ÍË³öÁË
-                // ¼ì²éÒ»ÏÂ½ÓÏßÓÐÃ»ÓÐÎÊÌâ Èç¹ûÃ»ÎÊÌâ¿ÉÄÜ¾ÍÊÇ»µÁË
+                // å¦‚æžœç¨‹åºåœ¨è¾“å‡ºäº†æ–­è¨€ä¿¡æ¯ å¹¶ä¸”æç¤ºå‡ºé”™ä½ç½®åœ¨è¿™é‡Œ
+                // é‚£ä¹ˆå°±æ˜¯ä¸²å£é€šä¿¡å‡ºé”™å¹¶è¶…æ—¶é€€å‡ºäº†
+                // æ£€æŸ¥ä¸€ä¸‹æŽ¥çº¿æœ‰æ²¡æœ‰é—®é¢˜ å¦‚æžœæ²¡é—®é¢˜å¯èƒ½å°±æ˜¯åäº†
                 zf_log(0, "OV7725 set confing error.");
                 set_camera_type(NO_CAMERE, NULL, NULL, NULL);
                 return_state = 1;
                 break;
             }
-            // »ñÈ¡ËùÓÐ²ÎÊý
+            // èŽ·å–æ‰€æœ‰å‚æ•°
             if(ov7725_get_config(ov7725_get_confing_buffer))
             {
-                // Èç¹û³ÌÐòÔÚÊä³öÁË¶ÏÑÔÐÅÏ¢ ²¢ÇÒÌáÊ¾³ö´íÎ»ÖÃÔÚÕâÀï
-                // ÄÇÃ´¾ÍÊÇ´®¿ÚÍ¨ÐÅ³ö´í²¢³¬Ê±ÍË³öÁË
-                // ¼ì²éÒ»ÏÂ½ÓÏßÓÐÃ»ÓÐÎÊÌâ Èç¹ûÃ»ÎÊÌâ¿ÉÄÜ¾ÍÊÇ»µÁË
+                // å¦‚æžœç¨‹åºåœ¨è¾“å‡ºäº†æ–­è¨€ä¿¡æ¯ å¹¶ä¸”æç¤ºå‡ºé”™ä½ç½®åœ¨è¿™é‡Œ
+                // é‚£ä¹ˆå°±æ˜¯ä¸²å£é€šä¿¡å‡ºé”™å¹¶è¶…æ—¶é€€å‡ºäº†
+                // æ£€æŸ¥ä¸€ä¸‹æŽ¥çº¿æœ‰æ²¡æœ‰é—®é¢˜ å¦‚æžœæ²¡é—®é¢˜å¯èƒ½å°±æ˜¯åäº†
                 zf_log(0, "OV7725 get confing error.");
                 set_camera_type(NO_CAMERE, NULL, NULL, NULL);
                 return_state = 1;
@@ -504,7 +504,7 @@ uint8 ov7725_init (void)
         
         
         csi_start(&csi_handle);
-        ov7725_image_binary = ov7725_image_binary1;// ÉèÖÃ³õÖµ
+        ov7725_image_binary = ov7725_image_binary1;// è®¾ç½®åˆå€¼
         
         interrupt_enable(CSI_IRQn);
     }while(0);

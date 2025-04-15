@@ -1,56 +1,56 @@
 /*********************************************************************************************************************
-* RT1064DVL6A Opensourec Library ¼´£¨RT1064DVL6A ¿ªÔ´¿â£©ÊÇÒ»¸ö»ùÓÚ¹Ù·½ SDK ½Ó¿ÚµÄµÚÈý·½¿ªÔ´¿â
-* Copyright (c) 2022 SEEKFREE Öð·É¿Æ¼¼
+* RT1064DVL6A Opensourec Library å³ï¼ˆRT1064DVL6A å¼€æºåº“ï¼‰æ˜¯ä¸€ä¸ªåŸºäºŽå®˜æ–¹ SDK æŽ¥å£çš„ç¬¬ä¸‰æ–¹å¼€æºåº“
+* Copyright (c) 2022 SEEKFREE é€é£žç§‘æŠ€
 * 
-* ±¾ÎÄ¼þÊÇ RT1064DVL6A ¿ªÔ´¿âµÄÒ»²¿·Ö
+* æœ¬æ–‡ä»¶æ˜¯ RT1064DVL6A å¼€æºåº“çš„ä¸€éƒ¨åˆ†
 * 
-* RT1064DVL6A ¿ªÔ´¿â ÊÇÃâ·ÑÈí¼þ
-* Äú¿ÉÒÔ¸ù¾Ý×ÔÓÉÈí¼þ»ù½ð»á·¢²¼µÄ GPL£¨GNU General Public License£¬¼´ GNUÍ¨ÓÃ¹«¹²Ðí¿ÉÖ¤£©µÄÌõ¿î
-* ¼´ GPL µÄµÚ3°æ£¨¼´ GPL3.0£©»ò£¨ÄúÑ¡ÔñµÄ£©ÈÎºÎºóÀ´µÄ°æ±¾£¬ÖØÐÂ·¢²¼ºÍ/»òÐÞ¸ÄËü
+* RT1064DVL6A å¼€æºåº“ æ˜¯å…è´¹è½¯ä»¶
+* æ‚¨å¯ä»¥æ ¹æ®è‡ªç”±è½¯ä»¶åŸºé‡‘ä¼šå‘å¸ƒçš„ GPLï¼ˆGNU General Public Licenseï¼Œå³ GNUé€šç”¨å…¬å…±è®¸å¯è¯ï¼‰çš„æ¡æ¬¾
+* å³ GPL çš„ç¬¬3ç‰ˆï¼ˆå³ GPL3.0ï¼‰æˆ–ï¼ˆæ‚¨é€‰æ‹©çš„ï¼‰ä»»ä½•åŽæ¥çš„ç‰ˆæœ¬ï¼Œé‡æ–°å‘å¸ƒå’Œ/æˆ–ä¿®æ”¹å®ƒ
 * 
-* ±¾¿ªÔ´¿âµÄ·¢²¼ÊÇÏ£ÍûËüÄÜ·¢»Ó×÷ÓÃ£¬µ«²¢Î´¶ÔÆä×÷ÈÎºÎµÄ±£Ö¤
-* ÉõÖÁÃ»ÓÐÒþº¬µÄÊÊÏúÐÔ»òÊÊºÏÌØ¶¨ÓÃÍ¾µÄ±£Ö¤
-* ¸ü¶àÏ¸½ÚÇë²Î¼û GPL
+* æœ¬å¼€æºåº“çš„å‘å¸ƒæ˜¯å¸Œæœ›å®ƒèƒ½å‘æŒ¥ä½œç”¨ï¼Œä½†å¹¶æœªå¯¹å…¶ä½œä»»ä½•çš„ä¿è¯
+* ç”šè‡³æ²¡æœ‰éšå«çš„é€‚é”€æ€§æˆ–é€‚åˆç‰¹å®šç”¨é€”çš„ä¿è¯
+* æ›´å¤šç»†èŠ‚è¯·å‚è§ GPL
 * 
-* ÄúÓ¦¸ÃÔÚÊÕµ½±¾¿ªÔ´¿âµÄÍ¬Ê±ÊÕµ½Ò»·Ý GPL µÄ¸±±¾
-* Èç¹ûÃ»ÓÐ£¬Çë²ÎÔÄ<https://www.gnu.org/licenses/>
+* æ‚¨åº”è¯¥åœ¨æ”¶åˆ°æœ¬å¼€æºåº“çš„åŒæ—¶æ”¶åˆ°ä¸€ä»½ GPL çš„å‰¯æœ¬
+* å¦‚æžœæ²¡æœ‰ï¼Œè¯·å‚é˜…<https://www.gnu.org/licenses/>
 * 
-* ¶îÍâ×¢Ã÷£º
-* ±¾¿ªÔ´¿âÊ¹ÓÃ GPL3.0 ¿ªÔ´Ðí¿ÉÖ¤Ð­Òé ÒÔÉÏÐí¿ÉÉêÃ÷ÎªÒëÎÄ°æ±¾
-* Ðí¿ÉÉêÃ÷Ó¢ÎÄ°æÔÚ libraries/doc ÎÄ¼þ¼ÐÏÂµÄ GPL3_permission_statement.txt ÎÄ¼þÖÐ
-* Ðí¿ÉÖ¤¸±±¾ÔÚ libraries ÎÄ¼þ¼ÐÏÂ ¼´¸ÃÎÄ¼þ¼ÐÏÂµÄ LICENSE ÎÄ¼þ
-* »¶Ó­¸÷Î»Ê¹ÓÃ²¢´«²¥±¾³ÌÐò µ«ÐÞ¸ÄÄÚÈÝÊ±±ØÐë±£ÁôÖð·É¿Æ¼¼µÄ°æÈ¨ÉùÃ÷£¨¼´±¾ÉùÃ÷£©
+* é¢å¤–æ³¨æ˜Žï¼š
+* æœ¬å¼€æºåº“ä½¿ç”¨ GPL3.0 å¼€æºè®¸å¯è¯åè®® ä»¥ä¸Šè®¸å¯ç”³æ˜Žä¸ºè¯‘æ–‡ç‰ˆæœ¬
+* è®¸å¯ç”³æ˜Žè‹±æ–‡ç‰ˆåœ¨ libraries/doc æ–‡ä»¶å¤¹ä¸‹çš„ GPL3_permission_statement.txt æ–‡ä»¶ä¸­
+* è®¸å¯è¯å‰¯æœ¬åœ¨ libraries æ–‡ä»¶å¤¹ä¸‹ å³è¯¥æ–‡ä»¶å¤¹ä¸‹çš„ LICENSE æ–‡ä»¶
+* æ¬¢è¿Žå„ä½ä½¿ç”¨å¹¶ä¼ æ’­æœ¬ç¨‹åº ä½†ä¿®æ”¹å†…å®¹æ—¶å¿…é¡»ä¿ç•™é€é£žç§‘æŠ€çš„ç‰ˆæƒå£°æ˜Žï¼ˆå³æœ¬å£°æ˜Žï¼‰
 * 
-* ÎÄ¼þÃû³Æ          zf_device_imu963ra
-* ¹«Ë¾Ãû³Æ          ³É¶¼Öð·É¿Æ¼¼ÓÐÏÞ¹«Ë¾
-* °æ±¾ÐÅÏ¢          ²é¿´ libraries/doc ÎÄ¼þ¼ÐÄÚ version ÎÄ¼þ °æ±¾ËµÃ÷
-* ¿ª·¢»·¾³          IAR 8.32.4 or MDK 5.33
-* ÊÊÓÃÆ½Ì¨          RT1064DVL6A
-* µêÆÌÁ´½Ó          https://seekfree.taobao.com/
+* æ–‡ä»¶åç§°          zf_device_imu963ra
+* å…¬å¸åç§°          æˆéƒ½é€é£žç§‘æŠ€æœ‰é™å…¬å¸
+* ç‰ˆæœ¬ä¿¡æ¯          æŸ¥çœ‹ libraries/doc æ–‡ä»¶å¤¹å†… version æ–‡ä»¶ ç‰ˆæœ¬è¯´æ˜Ž
+* å¼€å‘çŽ¯å¢ƒ          IAR 8.32.4 or MDK 5.33
+* é€‚ç”¨å¹³å°          RT1064DVL6A
+* åº—é“ºé“¾æŽ¥          https://seekfree.taobao.com/
 * 
-* ÐÞ¸Ä¼ÇÂ¼
-* ÈÕÆÚ              ×÷Õß                ±¸×¢
+* ä¿®æ”¹è®°å½•
+* æ—¥æœŸ              ä½œè€…                å¤‡æ³¨
 * 2022-09-21        SeekFree            first version
 ********************************************************************************************************************/
 /*********************************************************************************************************************
-* ½ÓÏß¶¨Òå£º
+* æŽ¥çº¿å®šä¹‰ï¼š
 *                   ------------------------------------
-*                   Ä£¿é¹Ü½Å            µ¥Æ¬»ú¹Ü½Å
-*                   // Ó²¼þ SPI Òý½Å
-*                   SCL/SPC             ²é¿´ zf_device_imu963ra.h ÖÐ IMU963RA_SPC_PIN ºê¶¨Òå
-*                   SDA/DSI             ²é¿´ zf_device_imu963ra.h ÖÐ IMU963RA_SDI_PIN ºê¶¨Òå
-*                   SA0/SDO             ²é¿´ zf_device_imu963ra.h ÖÐ IMU963RA_SDO_PIN ºê¶¨Òå
-*                   CS                  ²é¿´ zf_device_imu963ra.h ÖÐ IMU963RA_CS_PIN  ºê¶¨Òå
-*                   VCC                 3.3VµçÔ´
-*                   GND                 µçÔ´µØ
-*                   ÆäÓàÒý½ÅÐü¿Õ
+*                   æ¨¡å—ç®¡è„š            å•ç‰‡æœºç®¡è„š
+*                   // ç¡¬ä»¶ SPI å¼•è„š
+*                   SCL/SPC             æŸ¥çœ‹ zf_device_imu963ra.h ä¸­ IMU963RA_SPC_PIN å®å®šä¹‰
+*                   SDA/DSI             æŸ¥çœ‹ zf_device_imu963ra.h ä¸­ IMU963RA_SDI_PIN å®å®šä¹‰
+*                   SA0/SDO             æŸ¥çœ‹ zf_device_imu963ra.h ä¸­ IMU963RA_SDO_PIN å®å®šä¹‰
+*                   CS                  æŸ¥çœ‹ zf_device_imu963ra.h ä¸­ IMU963RA_CS_PIN  å®å®šä¹‰
+*                   VCC                 3.3Vç”µæº
+*                   GND                 ç”µæºåœ°
+*                   å…¶ä½™å¼•è„šæ‚¬ç©º
 
-*                   // Èí¼þ IIC Òý½Å
-*                   SCL/SPC             ²é¿´ zf_device_imu963ra.h ÖÐ IMU963RA_SCL_PIN ºê¶¨Òå
-*                   SDA/DSI             ²é¿´ zf_device_imu963ra.h ÖÐ IMU963RA_SDA_PIN ºê¶¨Òå
-*                   VCC                 3.3VµçÔ´
-*                   GND                 µçÔ´µØ
-*                   ÆäÓàÒý½ÅÐü¿Õ
+*                   // è½¯ä»¶ IIC å¼•è„š
+*                   SCL/SPC             æŸ¥çœ‹ zf_device_imu963ra.h ä¸­ IMU963RA_SCL_PIN å®å®šä¹‰
+*                   SDA/DSI             æŸ¥çœ‹ zf_device_imu963ra.h ä¸­ IMU963RA_SDA_PIN å®å®šä¹‰
+*                   VCC                 3.3Vç”µæº
+*                   GND                 ç”µæºåœ°
+*                   å…¶ä½™å¼•è„šæ‚¬ç©º
 *                   ------------------------------------
 ********************************************************************************************************************/
 
@@ -59,57 +59,57 @@
 
 #include "zf_common_typedef.h"
 
-#define IMU963RA_USE_SOFT_IIC                       (0)                         // Ä¬ÈÏÊ¹ÓÃÓ²¼þ SPI ·½Ê½Çý¶¯
-#if IMU963RA_USE_SOFT_IIC                                                       // ÕâÁ½¶Î ÑÕÉ«Õý³£µÄ²ÅÊÇÕýÈ·µÄ ÑÕÉ«»ÒµÄ¾ÍÊÇÃ»ÓÐÓÃµÄ
-//====================================================Èí¼þ IIC Çý¶¯====================================================
-#define IMU963RA_SOFT_IIC_DELAY                     (100)                       // Èí¼þ IIC µÄÊ±ÖÓÑÓÊ±ÖÜÆÚ ÊýÖµÔ½Ð¡ IIC Í¨ÐÅËÙÂÊÔ½¿ì
-#define IMU963RA_SCL_PIN                            (C23)                       // Èí¼þ IIC SCL Òý½Å Á¬½Ó IMU963RA µÄ SCL Òý½Å
-#define IMU963RA_SDA_PIN                            (C22)                       // Èí¼þ IIC SDA Òý½Å Á¬½Ó IMU963RA µÄ SDA Òý½Å
-//====================================================Èí¼þ IIC Çý¶¯====================================================
+#define IMU963RA_USE_SOFT_IIC                       (0)                         // é»˜è®¤ä½¿ç”¨ç¡¬ä»¶ SPI æ–¹å¼é©±åŠ¨
+#if IMU963RA_USE_SOFT_IIC                                                       // è¿™ä¸¤æ®µ é¢œè‰²æ­£å¸¸çš„æ‰æ˜¯æ­£ç¡®çš„ é¢œè‰²ç°çš„å°±æ˜¯æ²¡æœ‰ç”¨çš„
+//====================================================è½¯ä»¶ IIC é©±åŠ¨====================================================
+#define IMU963RA_SOFT_IIC_DELAY                     (100)                       // è½¯ä»¶ IIC çš„æ—¶é’Ÿå»¶æ—¶å‘¨æœŸ æ•°å€¼è¶Šå° IIC é€šä¿¡é€ŸçŽ‡è¶Šå¿«
+#define IMU963RA_SCL_PIN                            (C23)                       // è½¯ä»¶ IIC SCL å¼•è„š è¿žæŽ¥ IMU963RA çš„ SCL å¼•è„š
+#define IMU963RA_SDA_PIN                            (C22)                       // è½¯ä»¶ IIC SDA å¼•è„š è¿žæŽ¥ IMU963RA çš„ SDA å¼•è„š
+//====================================================è½¯ä»¶ IIC é©±åŠ¨====================================================
 #else
-//====================================================Ó²¼þ SPI Çý¶¯====================================================
-#define IMU963RA_SPI_SPEED                          (10 * 1000 * 1000)          // Ó²¼þ SPI ËÙÂÊ
-#define IMU963RA_SPI                                (SPI_4        )             // Ó²¼þ SPI ºÅ
-#define IMU963RA_SPC_PIN                            (SPI4_SCK_C23 )             // Ó²¼þ SPI SCK Òý½Å
-#define IMU963RA_SDI_PIN                            (SPI4_MOSI_C22)             // Ó²¼þ SPI MOSI Òý½Å
-#define IMU963RA_SDO_PIN                            (SPI4_MISO_C21)             // Ó²¼þ SPI MISO Òý½Å
-//====================================================Ó²¼þ SPI Çý¶¯====================================================
+//====================================================ç¡¬ä»¶ SPI é©±åŠ¨====================================================
+#define IMU963RA_SPI_SPEED                          (10 * 1000 * 1000)          // ç¡¬ä»¶ SPI é€ŸçŽ‡
+#define IMU963RA_SPI                                (SPI_4        )             // ç¡¬ä»¶ SPI å·
+#define IMU963RA_SPC_PIN                            (SPI4_SCK_C23 )             // ç¡¬ä»¶ SPI SCK å¼•è„š
+#define IMU963RA_SDI_PIN                            (SPI4_MOSI_C22)             // ç¡¬ä»¶ SPI MOSI å¼•è„š
+#define IMU963RA_SDO_PIN                            (SPI4_MISO_C21)             // ç¡¬ä»¶ SPI MISO å¼•è„š
+//====================================================ç¡¬ä»¶ SPI é©±åŠ¨====================================================
 #endif
-#define IMU963RA_CS_PIN                             C20                         // CS Æ¬Ñ¡Òý½Å
+#define IMU963RA_CS_PIN                             C20                         // CS ç‰‡é€‰å¼•è„š
 #define IMU963RA_CS(x)                              (x? (gpio_high(IMU963RA_CS_PIN)): (gpio_low(IMU963RA_CS_PIN)))
 
 typedef enum
 {
-    IMU963RA_ACC_SAMPLE_SGN_2G ,                                                // ¼ÓËÙ¶È¼ÆÁ¿³Ì ¡À2G  (ACC = Accelerometer ¼ÓËÙ¶È¼Æ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (G = g ÖØÁ¦¼ÓËÙ¶È g¡Ö9.80 m/s^2)
-    IMU963RA_ACC_SAMPLE_SGN_4G ,                                                // ¼ÓËÙ¶È¼ÆÁ¿³Ì ¡À4G  (ACC = Accelerometer ¼ÓËÙ¶È¼Æ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (G = g ÖØÁ¦¼ÓËÙ¶È g¡Ö9.80 m/s^2)
-    IMU963RA_ACC_SAMPLE_SGN_8G ,                                                // ¼ÓËÙ¶È¼ÆÁ¿³Ì ¡À8G  (ACC = Accelerometer ¼ÓËÙ¶È¼Æ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (G = g ÖØÁ¦¼ÓËÙ¶È g¡Ö9.80 m/s^2)
-    IMU963RA_ACC_SAMPLE_SGN_16G,                                                // ¼ÓËÙ¶È¼ÆÁ¿³Ì ¡À16G (ACC = Accelerometer ¼ÓËÙ¶È¼Æ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (G = g ÖØÁ¦¼ÓËÙ¶È g¡Ö9.80 m/s^2)
+    IMU963RA_ACC_SAMPLE_SGN_2G ,                                                // åŠ é€Ÿåº¦è®¡é‡ç¨‹ Â±2G  (ACC = Accelerometer åŠ é€Ÿåº¦è®¡) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (G = g é‡åŠ›åŠ é€Ÿåº¦ gâ‰ˆ9.80 m/s^2)
+    IMU963RA_ACC_SAMPLE_SGN_4G ,                                                // åŠ é€Ÿåº¦è®¡é‡ç¨‹ Â±4G  (ACC = Accelerometer åŠ é€Ÿåº¦è®¡) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (G = g é‡åŠ›åŠ é€Ÿåº¦ gâ‰ˆ9.80 m/s^2)
+    IMU963RA_ACC_SAMPLE_SGN_8G ,                                                // åŠ é€Ÿåº¦è®¡é‡ç¨‹ Â±8G  (ACC = Accelerometer åŠ é€Ÿåº¦è®¡) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (G = g é‡åŠ›åŠ é€Ÿåº¦ gâ‰ˆ9.80 m/s^2)
+    IMU963RA_ACC_SAMPLE_SGN_16G,                                                // åŠ é€Ÿåº¦è®¡é‡ç¨‹ Â±16G (ACC = Accelerometer åŠ é€Ÿåº¦è®¡) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (G = g é‡åŠ›åŠ é€Ÿåº¦ gâ‰ˆ9.80 m/s^2)
 }imu963ra_acc_sample_config;
 
 typedef enum
 {
-    IMU963RA_GYRO_SAMPLE_SGN_125DPS ,                                           // ÍÓÂÝÒÇÁ¿³Ì ¡À125DPS  (GYRO = Gyroscope ÍÓÂÝÒÇ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (DPS = Degree Per Second ½ÇËÙ¶Èµ¥Î» ¡ã/S)
-    IMU963RA_GYRO_SAMPLE_SGN_250DPS ,                                           // ÍÓÂÝÒÇÁ¿³Ì ¡À250DPS  (GYRO = Gyroscope ÍÓÂÝÒÇ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (DPS = Degree Per Second ½ÇËÙ¶Èµ¥Î» ¡ã/S)
-    IMU963RA_GYRO_SAMPLE_SGN_500DPS ,                                           // ÍÓÂÝÒÇÁ¿³Ì ¡À500DPS  (GYRO = Gyroscope ÍÓÂÝÒÇ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (DPS = Degree Per Second ½ÇËÙ¶Èµ¥Î» ¡ã/S)
-    IMU963RA_GYRO_SAMPLE_SGN_1000DPS,                                           // ÍÓÂÝÒÇÁ¿³Ì ¡À1000DPS (GYRO = Gyroscope ÍÓÂÝÒÇ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (DPS = Degree Per Second ½ÇËÙ¶Èµ¥Î» ¡ã/S)
-    IMU963RA_GYRO_SAMPLE_SGN_2000DPS,                                           // ÍÓÂÝÒÇÁ¿³Ì ¡À2000DPS (GYRO = Gyroscope ÍÓÂÝÒÇ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (DPS = Degree Per Second ½ÇËÙ¶Èµ¥Î» ¡ã/S)
-    IMU963RA_GYRO_SAMPLE_SGN_4000DPS,                                           // ÍÓÂÝÒÇÁ¿³Ì ¡À4000DPS (GYRO = Gyroscope ÍÓÂÝÒÇ) (SGN = signum ´ø·ûºÅÊý ±íÊ¾Õý¸º·¶Î§) (DPS = Degree Per Second ½ÇËÙ¶Èµ¥Î» ¡ã/S)
+    IMU963RA_GYRO_SAMPLE_SGN_125DPS ,                                           // é™€èžºä»ªé‡ç¨‹ Â±125DPS  (GYRO = Gyroscope é™€èžºä»ª) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (DPS = Degree Per Second è§’é€Ÿåº¦å•ä½ Â°/S)
+    IMU963RA_GYRO_SAMPLE_SGN_250DPS ,                                           // é™€èžºä»ªé‡ç¨‹ Â±250DPS  (GYRO = Gyroscope é™€èžºä»ª) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (DPS = Degree Per Second è§’é€Ÿåº¦å•ä½ Â°/S)
+    IMU963RA_GYRO_SAMPLE_SGN_500DPS ,                                           // é™€èžºä»ªé‡ç¨‹ Â±500DPS  (GYRO = Gyroscope é™€èžºä»ª) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (DPS = Degree Per Second è§’é€Ÿåº¦å•ä½ Â°/S)
+    IMU963RA_GYRO_SAMPLE_SGN_1000DPS,                                           // é™€èžºä»ªé‡ç¨‹ Â±1000DPS (GYRO = Gyroscope é™€èžºä»ª) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (DPS = Degree Per Second è§’é€Ÿåº¦å•ä½ Â°/S)
+    IMU963RA_GYRO_SAMPLE_SGN_2000DPS,                                           // é™€èžºä»ªé‡ç¨‹ Â±2000DPS (GYRO = Gyroscope é™€èžºä»ª) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (DPS = Degree Per Second è§’é€Ÿåº¦å•ä½ Â°/S)
+    IMU963RA_GYRO_SAMPLE_SGN_4000DPS,                                           // é™€èžºä»ªé‡ç¨‹ Â±4000DPS (GYRO = Gyroscope é™€èžºä»ª) (SGN = signum å¸¦ç¬¦å·æ•° è¡¨ç¤ºæ­£è´ŸèŒƒå›´) (DPS = Degree Per Second è§’é€Ÿåº¦å•ä½ Â°/S)
 }imu963ra_gyro_sample_config;
 
 typedef enum
 {
-    IMU963RA_MAG_SAMPLE_2G,                                                     // ´ÅÁ¦¼ÆÁ¿³Ì 2G (MAG = Magnetometer ÍÓÂÝÒÇ) (G = Gs ¸ßË¹)
-    IMU963RA_MAG_SAMPLE_8G,                                                     // ´ÅÁ¦¼ÆÁ¿³Ì 8G (MAG = Magnetometer ÍÓÂÝÒÇ) (G = Gs ¸ßË¹)
+    IMU963RA_MAG_SAMPLE_2G,                                                     // ç£åŠ›è®¡é‡ç¨‹ 2G (MAG = Magnetometer é™€èžºä»ª) (G = Gs é«˜æ–¯)
+    IMU963RA_MAG_SAMPLE_8G,                                                     // ç£åŠ›è®¡é‡ç¨‹ 8G (MAG = Magnetometer é™€èžºä»ª) (G = Gs é«˜æ–¯)
 }imu963ra_mag_sample_config;
 
-#define IMU963RA_ACC_SAMPLE_DEFAULT     ( IMU963RA_ACC_SAMPLE_SGN_8G )          // ÔÚÕâÉèÖÃÄ¬ÈÏµÄ ¼ÓËÙ¶È¼Æ ³õÊ¼»¯Á¿³Ì
-#define IMU963RA_GYRO_SAMPLE_DEFAULT    ( IMU963RA_GYRO_SAMPLE_SGN_2000DPS )    // ÔÚÕâÉèÖÃÄ¬ÈÏµÄ ÍÓÂÝÒÇ   ³õÊ¼»¯Á¿³Ì
-#define IMU963RA_MAG_SAMPLE_DEFAULT     ( IMU963RA_MAG_SAMPLE_8G )              // ÔÚÕâÉèÖÃÄ¬ÈÏµÄ ´ÅÁ¦¼Æ   ³õÊ¼»¯Á¿³Ì
+#define IMU963RA_ACC_SAMPLE_DEFAULT     ( IMU963RA_ACC_SAMPLE_SGN_8G )          // åœ¨è¿™è®¾ç½®é»˜è®¤çš„ åŠ é€Ÿåº¦è®¡ åˆå§‹åŒ–é‡ç¨‹
+#define IMU963RA_GYRO_SAMPLE_DEFAULT    ( IMU963RA_GYRO_SAMPLE_SGN_2000DPS )    // åœ¨è¿™è®¾ç½®é»˜è®¤çš„ é™€èžºä»ª   åˆå§‹åŒ–é‡ç¨‹
+#define IMU963RA_MAG_SAMPLE_DEFAULT     ( IMU963RA_MAG_SAMPLE_8G )              // åœ¨è¿™è®¾ç½®é»˜è®¤çš„ ç£åŠ›è®¡   åˆå§‹åŒ–é‡ç¨‹
 
-#define IMU963RA_TIMEOUT_COUNT                      ( 0x00FF )                  // IMU963RA ³¬Ê±¼ÆÊý
+#define IMU963RA_TIMEOUT_COUNT                      ( 0x00FF )                  // IMU963RA è¶…æ—¶è®¡æ•°
 
-//================================================¶¨Òå IMU963RA ÄÚ²¿µØÖ·================================================
-#define IMU963RA_DEV_ADDR                           ( 0x6B )                    // SA0½ÓµØ£º0x6A SA0ÉÏÀ­£º0x6B Ä£¿éÄ¬ÈÏÉÏÀ­
+//================================================å®šä¹‰ IMU963RA å†…éƒ¨åœ°å€================================================
+#define IMU963RA_DEV_ADDR                           ( 0x6B )                    // SA0æŽ¥åœ°ï¼š0x6A SA0ä¸Šæ‹‰ï¼š0x6B æ¨¡å—é»˜è®¤ä¸Šæ‹‰
 #define IMU963RA_SPI_W                              ( 0x00 )
 #define IMU963RA_SPI_R                              ( 0x80 )
 
@@ -195,7 +195,7 @@ typedef enum
 #define IMU963RA_FIFO_DATA_OUT_Z_L                  ( 0x7D )
 #define IMU963RA_FIFO_DATA_OUT_Z_H                  ( 0x7E )
 
-// ¼¯ÏßÆ÷¹¦ÄÜÏà¹Ø¼Ä´æÆ÷ ÐèÒª½«FUNC_CFG_ACCESSµÄSHUB_REG_ACCESSÎ»ÉèÖÃÎª1²ÅÄÜÕýÈ··ÃÎÊ
+// é›†çº¿å™¨åŠŸèƒ½ç›¸å…³å¯„å­˜å™¨ éœ€è¦å°†FUNC_CFG_ACCESSçš„SHUB_REG_ACCESSä½è®¾ç½®ä¸º1æ‰èƒ½æ­£ç¡®è®¿é—®
 #define IMU963RA_SENSOR_HUB_1                       ( 0x02 ) 
 #define IMU963RA_SENSOR_HUB_2                       ( 0x03 ) 
 #define IMU963RA_SENSOR_HUB_3                       ( 0x04 ) 
@@ -230,13 +230,13 @@ typedef enum
 #define IMU963RA_DATAWRITE_SLV0                     ( 0x21 ) 
 #define IMU963RA_STATUS_MASTER                      ( 0x22 )
 
-#define IMU963RA_MAG_ADDR                           ( 0x0D )                    // 7Î»IICµØÖ·
+#define IMU963RA_MAG_ADDR                           ( 0x0D )                    // 7ä½IICåœ°å€
 #define IMU963RA_MAG_OUTX_L                         ( 0x00 )
 #define IMU963RA_MAG_CONTROL1                       ( 0x09 )
 #define IMU963RA_MAG_CONTROL2                       ( 0x0A )
 #define IMU963RA_MAG_FBR                            ( 0x0B )
 #define IMU963RA_MAG_CHIP_ID                        ( 0x0D )
-//================================================¶¨Òå IMU963RA ÄÚ²¿µØÖ·================================================
+//================================================å®šä¹‰ IMU963RA å†…éƒ¨åœ°å€================================================
 
 extern int16 imu963ra_acc_x,  imu963ra_acc_y,  imu963ra_acc_z;
 extern int16 imu963ra_gyro_x, imu963ra_gyro_y, imu963ra_gyro_z;
@@ -248,29 +248,29 @@ void    imu963ra_get_gyro           (void);
 void    imu963ra_get_mag            (void);
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ½« IMU963RA ¼ÓËÙ¶È¼ÆÊý¾Ý×ª»»ÎªÊµ¼ÊÎïÀíÊý¾Ý
-// ²ÎÊýËµÃ÷     acc_value       ÈÎÒâÖáµÄ¼ÓËÙ¶È¼ÆÊý¾Ý
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     float data = imu963ra_acc_transition(imu963ra_acc_x);           // µ¥Î»Îª g(m/s^2)
-// ±¸×¢ÐÅÏ¢
+// å‡½æ•°ç®€ä»‹     å°† IMU963RA åŠ é€Ÿåº¦è®¡æ•°æ®è½¬æ¢ä¸ºå®žé™…ç‰©ç†æ•°æ®
+// å‚æ•°è¯´æ˜Ž     acc_value       ä»»æ„è½´çš„åŠ é€Ÿåº¦è®¡æ•°æ®
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     float data = imu963ra_acc_transition(imu963ra_acc_x);           // å•ä½ä¸º g(m/s^2)
+// å¤‡æ³¨ä¿¡æ¯
 //-------------------------------------------------------------------------------------------------------------------
 #define imu963ra_acc_transition(acc_value)      ((float)(acc_value) / imu963ra_transition_factor[0])
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ½« IMU963RA ÍÓÂÝÒÇÊý¾Ý×ª»»ÎªÊµ¼ÊÎïÀíÊý¾Ý
-// ²ÎÊýËµÃ÷     gyro_value      ÈÎÒâÖáµÄÍÓÂÝÒÇÊý¾Ý
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     float data = imu963ra_gyro_transition(imu963ra_gyro_x);         // µ¥Î»Îª ¡ã/s
-// ±¸×¢ÐÅÏ¢
+// å‡½æ•°ç®€ä»‹     å°† IMU963RA é™€èžºä»ªæ•°æ®è½¬æ¢ä¸ºå®žé™…ç‰©ç†æ•°æ®
+// å‚æ•°è¯´æ˜Ž     gyro_value      ä»»æ„è½´çš„é™€èžºä»ªæ•°æ®
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     float data = imu963ra_gyro_transition(imu963ra_gyro_x);         // å•ä½ä¸º Â°/s
+// å¤‡æ³¨ä¿¡æ¯
 //-------------------------------------------------------------------------------------------------------------------
 #define imu963ra_gyro_transition(gyro_value)    ((float)(gyro_value) / imu963ra_transition_factor[1])
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     ½« IMU963RA ´ÅÁ¦¼ÆÊý¾Ý×ª»»ÎªÊµ¼ÊÎïÀíÊý¾Ý
-// ²ÎÊýËµÃ÷     mag_value       ÈÎÒâÖáµÄ´ÅÁ¦¼ÆÊý¾Ý
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     float data = imu963ra_mag_transition(imu963ra_mag_x);           // µ¥Î»Îª G
-// ±¸×¢ÐÅÏ¢
+// å‡½æ•°ç®€ä»‹     å°† IMU963RA ç£åŠ›è®¡æ•°æ®è½¬æ¢ä¸ºå®žé™…ç‰©ç†æ•°æ®
+// å‚æ•°è¯´æ˜Ž     mag_value       ä»»æ„è½´çš„ç£åŠ›è®¡æ•°æ®
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     float data = imu963ra_mag_transition(imu963ra_mag_x);           // å•ä½ä¸º G
+// å¤‡æ³¨ä¿¡æ¯
 //-------------------------------------------------------------------------------------------------------------------
 #define imu963ra_mag_transition(mag_value)    ((float)(mag_value) / imu963ra_transition_factor[2])
 

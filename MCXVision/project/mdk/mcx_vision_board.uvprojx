@@ -10,13 +10,13 @@
       <TargetName>mcx_vision_board</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6190000::V6.19::ARMCLANG</pCCUsed>
+      <pCCUsed>6230000::V6.23::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>MCXN947VDF:cm33_core0</Device>
           <Vendor>NXP</Vendor>
-          <PackID>NXP.MCXN947_DFP.17.0.0</PackID>
+          <PackID>NXP.MCXN947_DFP.19.0.0</PackID>
           <PackURL>https://mcuxpresso.nxp.com/cmsis_pack/repo/</PackURL>
           <Cpu>CPUTYPE("Cortex-M33") FPU3(SFPU) TZ DSP</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -340,7 +340,7 @@
               <MiscControls>-fno-common  -fdata-sections  -ffreestanding  -fno-builtin  -mthumb  -fshort-enums</MiscControls>
               <Define>DEBUG, CPU_MCXN947VDF_cm33_core0, MCUXPRESSO_SDK,SD_ENABLED,TF_LITE_STATIC_MEMORY,SDK_DEBUGCONSOLE=1,__FPU_PRESENT=1,__USE_CMSIS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\user;..\..\libraries\board;..\..\libraries\zf_drivers;..\..\libraries\zf_devices;..\..\libraries\components\sdmmc\host;..\..\libraries\components\sdmmc\inc;..\..\libraries\components\sdmmc\osa;..\..\libraries\components\sdmmc\sd;..\..\libraries\components\sdmmc\src;..\..\libraries\components\eiq\tensorflow-lite;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro\kernels\neutron;..\..\libraries\components\eiq\tensorflow-lite\third_party\flatbuffers\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\gemmlowp;..\..\libraries\components\eiq\tensorflow-lite\third_party\neutron\common\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\neutron\driver\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\ruy;..\..\libraries\components\eiq\tensorflow-lite\model;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro\kernels;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro;..\..\libraries\sdk_drivers;..\..\libraries\CMSIS;..\..\libraries\CMSIS\Include</IncludePath>
+              <IncludePath>..\user;..\..\libraries\board;..\..\libraries\zf_drivers;..\..\libraries\zf_devices;..\..\libraries\components\sdmmc\host;..\..\libraries\components\sdmmc\inc;..\..\libraries\components\sdmmc\osa;..\..\libraries\components\sdmmc\sd;..\..\libraries\components\sdmmc\src;..\..\libraries\components\eiq\tensorflow-lite;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro\kernels\neutron;..\..\libraries\components\eiq\tensorflow-lite\third_party\flatbuffers\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\gemmlowp;..\..\libraries\components\eiq\tensorflow-lite\third_party\neutron\common\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\neutron\driver\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\ruy;..\..\libraries\components\eiq\tensorflow-lite\model;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro\kernels;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro;..\..\libraries\sdk_drivers;..\..\libraries\CMSIS;..\..\libraries\CMSIS\Include;D:\Users\lizhi\AppData\Local\Arm\Packs\NXP\MCXN947_DFP\19.0.0\**</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

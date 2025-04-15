@@ -26,7 +26,7 @@
 #define USB_HOST_PRINTER_PROTOCOL_UNIDIRECTION (1U)
 /*! @brief Printer class protocol code (Bi-directional interface) */
 #define USB_HOST_PRINTER_PROTOCOL_BIDIRECTION (2U)
-/*! @brief Printer class protocol code (IEEE® 1284.4 compatible bi-directional interface) */
+/*! @brief Printer class protocol code (IEEE┬« 1284.4 compatible bi-directional interface) */
 #define USB_HOST_PRINTER_PROTOCOL_IEEE1284 (3U)
 
 /*! @brief Printer class-specific request (GET_DEVICE_ID) */

@@ -1,71 +1,71 @@
 /*********************************************************************************************************************
-* MCX Vision Opensourec Library ¼´£¨MCX Vision ¿ªÔ´¿â£©ÊÇÒ»¸ö»ùÓÚ¹Ù·½ SDK ½Ó¿ÚµÄµÚÈý·½¿ªÔ´¿â
-* Copyright (c) 2024 SEEKFREE Öð·É¿Æ¼¼
+* MCX Vision Opensourec Library å³ï¼ˆMCX Vision å¼€æºåº“ï¼‰æ˜¯ä¸€ä¸ªåŸºäºŽå®˜æ–¹ SDK æŽ¥å£çš„ç¬¬ä¸‰æ–¹å¼€æºåº“
+* Copyright (c) 2024 SEEKFREE é€é£žç§‘æŠ€
 * 
-* ±¾ÎÄ¼þÊÇ MCX Vision ¿ªÔ´¿âµÄÒ»²¿·Ö
+* æœ¬æ–‡ä»¶æ˜¯ MCX Vision å¼€æºåº“çš„ä¸€éƒ¨åˆ†
 * 
-* MCX Vision ¿ªÔ´¿â ÊÇÃâ·ÑÈí¼þ
-* Äú¿ÉÒÔ¸ù¾Ý×ÔÓÉÈí¼þ»ù½ð»á·¢²¼µÄ GPL£¨GNU General Public License£¬¼´ GNUÍ¨ÓÃ¹«¹²Ðí¿ÉÖ¤£©µÄÌõ¿î
-* ¼´ GPL µÄµÚ3°æ£¨¼´ GPL3.0£©»ò£¨ÄúÑ¡ÔñµÄ£©ÈÎºÎºóÀ´µÄ°æ±¾£¬ÖØÐÂ·¢²¼ºÍ/»òÐÞ¸ÄËü
+* MCX Vision å¼€æºåº“ æ˜¯å…è´¹è½¯ä»¶
+* æ‚¨å¯ä»¥æ ¹æ®è‡ªç”±è½¯ä»¶åŸºé‡‘ä¼šå‘å¸ƒçš„ GPLï¼ˆGNU General Public Licenseï¼Œå³ GNUé€šç”¨å…¬å…±è®¸å¯è¯ï¼‰çš„æ¡æ¬¾
+* å³ GPL çš„ç¬¬3ç‰ˆï¼ˆå³ GPL3.0ï¼‰æˆ–ï¼ˆæ‚¨é€‰æ‹©çš„ï¼‰ä»»ä½•åŽæ¥çš„ç‰ˆæœ¬ï¼Œé‡æ–°å‘å¸ƒå’Œ/æˆ–ä¿®æ”¹å®ƒ
 * 
-* ±¾¿ªÔ´¿âµÄ·¢²¼ÊÇÏ£ÍûËüÄÜ·¢»Ó×÷ÓÃ£¬µ«²¢Î´¶ÔÆä×÷ÈÎºÎµÄ±£Ö¤
-* ÉõÖÁÃ»ÓÐÒþº¬µÄÊÊÏúÐÔ»òÊÊºÏÌØ¶¨ÓÃÍ¾µÄ±£Ö¤
-* ¸ü¶àÏ¸½ÚÇë²Î¼û GPL
+* æœ¬å¼€æºåº“çš„å‘å¸ƒæ˜¯å¸Œæœ›å®ƒèƒ½å‘æŒ¥ä½œç”¨ï¼Œä½†å¹¶æœªå¯¹å…¶ä½œä»»ä½•çš„ä¿è¯
+* ç”šè‡³æ²¡æœ‰éšå«çš„é€‚é”€æ€§æˆ–é€‚åˆç‰¹å®šç”¨é€”çš„ä¿è¯
+* æ›´å¤šç»†èŠ‚è¯·å‚è§ GPL
 * 
-* ÄúÓ¦¸ÃÔÚÊÕµ½±¾¿ªÔ´¿âµÄÍ¬Ê±ÊÕµ½Ò»·Ý GPL µÄ¸±±¾
-* Èç¹ûÃ»ÓÐ£¬Çë²ÎÔÄ<https://www.gnu.org/licenses/>
+* æ‚¨åº”è¯¥åœ¨æ”¶åˆ°æœ¬å¼€æºåº“çš„åŒæ—¶æ”¶åˆ°ä¸€ä»½ GPL çš„å‰¯æœ¬
+* å¦‚æžœæ²¡æœ‰ï¼Œè¯·å‚é˜…<https://www.gnu.org/licenses/>
 * 
-* ¶îÍâ×¢Ã÷£º
-* ±¾¿ªÔ´¿âÊ¹ÓÃ GPL3.0 ¿ªÔ´Ðí¿ÉÖ¤Ð­Òé ÒÔÉÏÐí¿ÉÉêÃ÷ÎªÒëÎÄ°æ±¾
-* Ðí¿ÉÉêÃ÷Ó¢ÎÄ°æÔÚ libraries/doc ÎÄ¼þ¼ÐÏÂµÄ GPL3_permission_statement.txt ÎÄ¼þÖÐ
-* »¶Ó­¸÷Î»Ê¹ÓÃ²¢´«²¥±¾³ÌÐò µ«ÐÞ¸ÄÄÚÈÝÊ±±ØÐë±£ÁôÖð·É¿Æ¼¼µÄ°æÈ¨ÉùÃ÷£¨¼´±¾ÉùÃ÷£©
+* é¢å¤–æ³¨æ˜Žï¼š
+* æœ¬å¼€æºåº“ä½¿ç”¨ GPL3.0 å¼€æºè®¸å¯è¯åè®® ä»¥ä¸Šè®¸å¯ç”³æ˜Žä¸ºè¯‘æ–‡ç‰ˆæœ¬
+* è®¸å¯ç”³æ˜Žè‹±æ–‡ç‰ˆåœ¨ libraries/doc æ–‡ä»¶å¤¹ä¸‹çš„ GPL3_permission_statement.txt æ–‡ä»¶ä¸­
+* æ¬¢è¿Žå„ä½ä½¿ç”¨å¹¶ä¼ æ’­æœ¬ç¨‹åº ä½†ä¿®æ”¹å†…å®¹æ—¶å¿…é¡»ä¿ç•™é€é£žç§‘æŠ€çš„ç‰ˆæƒå£°æ˜Žï¼ˆå³æœ¬å£°æ˜Žï¼‰
 * 
-* ÎÄ¼þÃû³Æ          main
-* ¹«Ë¾Ãû³Æ          ³É¶¼Öð·É¿Æ¼¼ÓÐÏÞ¹«Ë¾
-* °æ±¾ÐÅÏ¢          ²é¿´ libraries/doc ÎÄ¼þ¼ÐÄÚ version ÎÄ¼þ °æ±¾ËµÃ÷
-* ¿ª·¢»·¾³          MDK 5.38a
-* ÊÊÓÃÆ½Ì¨          MCX Vision
-* µêÆÌÁ´½Ó          https://seekfree.taobao.com/
+* æ–‡ä»¶åç§°          main
+* å…¬å¸åç§°          æˆéƒ½é€é£žç§‘æŠ€æœ‰é™å…¬å¸
+* ç‰ˆæœ¬ä¿¡æ¯          æŸ¥çœ‹ libraries/doc æ–‡ä»¶å¤¹å†… version æ–‡ä»¶ ç‰ˆæœ¬è¯´æ˜Ž
+* å¼€å‘çŽ¯å¢ƒ          MDK 5.38a
+* é€‚ç”¨å¹³å°          MCX Vision
+* åº—é“ºé“¾æŽ¥          https://seekfree.taobao.com/
 * 
-* ÐÞ¸Ä¼ÇÂ¼
-* ÈÕÆÚ              ×÷Õß                ±¸×¢
+* ä¿®æ”¹è®°å½•
+* æ—¥æœŸ              ä½œè€…                å¤‡æ³¨
 * 2024-04-21        ZSY            first version
 ********************************************************************************************************************/
 #include "zf_model_process.h"
 #if defined(__cplusplus)
-extern "C" // mianÎÄ¼þÊÇC++ÎÄ¼þ£¬Èç¹ûÐèÒª°üº¬CÓïÑÔµÄÍ·ÎÄ¼þ£¬¾ÍÐèÒªÊ¹ÓÃextern "C"
+extern "C" // mianæ–‡ä»¶æ˜¯C++æ–‡ä»¶ï¼Œå¦‚æžœéœ€è¦åŒ…å«Cè¯­è¨€çš„å¤´æ–‡ä»¶ï¼Œå°±éœ€è¦ä½¿ç”¨extern "C"
 {
 #endif /* __cplusplus */ 
 #include "zf_common_headfile.h"
 
-// ´ò¿ªÐÂµÄ¹¤³Ì»òÕß¹¤³ÌÒÆ¶¯ÁËÎ»ÖÃÎñ±ØÖ´ÐÐÒÔÏÂ²Ù×÷
-// µÚÒ»²½ ¹Ø±ÕÉÏÃæËùÓÐ´ò¿ªµÄÎÄ¼þ
-// µÚ¶þ²½ project->clean  µÈ´ýÏÂ·½½ø¶ÈÌõ×ßÍê
+// æ‰“å¼€æ–°çš„å·¥ç¨‹æˆ–è€…å·¥ç¨‹ç§»åŠ¨äº†ä½ç½®åŠ¡å¿…æ‰§è¡Œä»¥ä¸‹æ“ä½œ
+// ç¬¬ä¸€æ­¥ å…³é—­ä¸Šé¢æ‰€æœ‰æ‰“å¼€çš„æ–‡ä»¶
+// ç¬¬äºŒæ­¥ project->clean  ç­‰å¾…ä¸‹æ–¹è¿›åº¦æ¡èµ°å®Œ
 
-// ºËÐÄ°åÏÂÔØÍê´úÂëÐèÒªÊÖ¶¯¸´Î»£¡£¡£¡
-// ºËÐÄ°åÏÂÔØÍê´úÂëÐèÒªÊÖ¶¯¸´Î»£¡£¡£¡
-// ºËÐÄ°åÏÂÔØÍê´úÂëÐèÒªÊÖ¶¯¸´Î»£¡£¡£¡.
+// æ ¸å¿ƒæ¿ä¸‹è½½å®Œä»£ç éœ€è¦æ‰‹åŠ¨å¤ä½ï¼ï¼ï¼
+// æ ¸å¿ƒæ¿ä¸‹è½½å®Œä»£ç éœ€è¦æ‰‹åŠ¨å¤ä½ï¼ï¼ï¼
+// æ ¸å¿ƒæ¿ä¸‹è½½å®Œä»£ç éœ€è¦æ‰‹åŠ¨å¤ä½ï¼ï¼ï¼.
     
-// Èç¹û³ÌÐòÔËÐÐºó£¬Ä£¿éÉÏµÄCoreµÆÉÁË¸£¬ËµÃ÷³ÌÐò½øÈëÁËHardFault£¬¾ÍÐèÒª¼ì²âÊÇ·ñÓÐÊý×éÔ½½ç£¬ÍâÉèÃ»ÓÐ³õÊ¼»¯£¬ÍâÉèÊ±ÖÓÃ»ÓÐÉèÖÃµÈÇé¿ö
+// å¦‚æžœç¨‹åºè¿è¡ŒåŽï¼Œæ¨¡å—ä¸Šçš„Coreç¯é—ªçƒï¼Œè¯´æ˜Žç¨‹åºè¿›å…¥äº†HardFaultï¼Œå°±éœ€è¦æ£€æµ‹æ˜¯å¦æœ‰æ•°ç»„è¶Šç•Œï¼Œå¤–è®¾æ²¡æœ‰åˆå§‹åŒ–ï¼Œå¤–è®¾æ—¶é’Ÿæ²¡æœ‰è®¾ç½®ç­‰æƒ…å†µ
     
-// ±¾Àý³ÌÊÇ¿ªÔ´¿âÒÆÖ²ÓÃ¿Õ¹¤³Ì
+// æœ¬ä¾‹ç¨‹æ˜¯å¼€æºåº“ç§»æ¤ç”¨ç©ºå·¥ç¨‹
     
 int main(void)
 {
-    // Ê±ÖÓºÍµ÷ÊÔ´®¿Ú-´®¿Ú4³õÊ¼»¯
+    // æ—¶é’Ÿå’Œè°ƒè¯•ä¸²å£-ä¸²å£4åˆå§‹åŒ–
     zf_board_init();
-    // ÓÃ»§´®¿Ú-´®¿Ú5³õÊ¼»¯
+    // ç”¨æˆ·ä¸²å£-ä¸²å£5åˆå§‹åŒ–
     user_uart_init();
-    // ÑÓÊ±300ms
+    // å»¶æ—¶300ms
     system_delay_ms(300);
-    // Ê¹ÓÃC++±àÒëÎÞ·¨Ê¹ÓÃprintf£¬¿ÉÒÔÊ¹ÓÃzf_debug_printfºÍzf_user_printfÌæ´ú
-    zf_debug_printf("debug_uart_init_finish\r\n");  // Ê¹ÓÃµ÷ÊÔ´®¿Ú-´®¿Ú4·¢ËÍÊý¾Ý
-    zf_user_printf("user_uart_init_finish\r\n");    // Ê¹ÓÃÓÃ»§´®¿Ú-´®¿Ú5·¢ËÍÊý¾Ý
+    // ä½¿ç”¨C++ç¼–è¯‘æ— æ³•ä½¿ç”¨printfï¼Œå¯ä»¥ä½¿ç”¨zf_debug_printfå’Œzf_user_printfæ›¿ä»£
+    zf_debug_printf("debug_uart_init_finish\r\n");  // ä½¿ç”¨è°ƒè¯•ä¸²å£-ä¸²å£4å‘é€æ•°æ®
+    zf_user_printf("user_uart_init_finish\r\n");    // ä½¿ç”¨ç”¨æˆ·ä¸²å£-ä¸²å£5å‘é€æ•°æ®
     
-    // ´Ë´¦±àÐ´ÓÃ»§´úÂë ÀýÈçÍâÉè³õÊ¼»¯´úÂëµÈ
+    // æ­¤å¤„ç¼–å†™ç”¨æˆ·ä»£ç  ä¾‹å¦‚å¤–è®¾åˆå§‹åŒ–ä»£ç ç­‰
     while (1)
     {
-        // ´Ë´¦±àÐ´ÐèÒªÑ­»·Ö´ÐÐµÄ´úÂë
+        // æ­¤å¤„ç¼–å†™éœ€è¦å¾ªçŽ¯æ‰§è¡Œçš„ä»£ç 
         system_delay_ms(300);
     }
 }

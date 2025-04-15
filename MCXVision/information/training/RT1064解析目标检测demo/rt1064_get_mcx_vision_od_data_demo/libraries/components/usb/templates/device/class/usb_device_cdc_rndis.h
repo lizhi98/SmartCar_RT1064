@@ -139,14 +139,14 @@
  * @{
  */
 /*! Ethernet (802.3) is not supported for NDIS 6.0 drivers.
- * Note  NDIS 5.x Miniport drivers that conform to the IEEE<sup>®</sup> 802.11 interface must
+ * Note  NDIS 5.x Miniport drivers that conform to the IEEE<sup>┬«</sup> 802.11 interface must
  * use this media type. For more information about the 802.11 interface,
  * see 802.11 Wireless LAN Miniport Drivers.
  */
 #define NDIS_MEDIUM802_3 (0x00000000U)
 /*! Token Ring (802.5) is not supported for NDIS 6.0 drivers.*/
 #define NDIS_MEDIUM802_5 (0x00000001U)
-/*! FDDI is not supported on Windows<sup>®</sup> Vista.*/
+/*! FDDI is not supported on Windows<sup>┬«</sup> Vista.*/
 #define NDIS_MEDIUM_FDDI (0x00000002U)
 /*! WAN*/
 #define NDIS_MEDIUM_WAN (0x00000003U)

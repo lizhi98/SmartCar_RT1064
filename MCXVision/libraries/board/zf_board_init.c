@@ -1,47 +1,47 @@
 /*********************************************************************************************************************
-* MCX Vision Opensourec Library ����MCX Vision ��Դ�⣩��һ�����ڹٷ� SDK �ӿڵĵ�������Դ��
-* Copyright (c) 2024 SEEKFREE ��ɿƼ�
+* MCX Vision Opensourec Library 即（MCX Vision 开源库）是一个基于官方 SDK 接口的第三方开源库
+* Copyright (c) 2024 SEEKFREE 逐飞科技
 * 
-* ���ļ��� MCX Vision ��Դ���һ����
+* 本文件是 MCX Vision 开源库的一部分
 * 
-* MCX Vision ��Դ�� ���������
-* �����Ը���������������ᷢ���� GPL��GNU General Public License���� GNUͨ�ù�������֤��������
-* �� GPL �ĵ�3�棨�� GPL3.0������ѡ��ģ��κκ����İ汾�����·�����/���޸���
+* MCX Vision 开源库 是免费软件
+* 您可以根据自由软件基金会发布的 GPL（GNU General Public License，即 GNU通用公共许可证）的条款
+* 即 GPL 的第3版（即 GPL3.0）或（您选择的）任何后来的版本，重新发布和/或修改它
 * 
-* ����Դ��ķ�����ϣ�����ܷ������ã�����δ�������κεı�֤
-* ����û�������������Ի��ʺ��ض���;�ı�֤
-* ����ϸ����μ� GPL
+* 本开源库的发布是希望它能发挥作用，但并未对其作任何的保证
+* 甚至没有隐含的适销性或适合特定用途的保证
+* 更多细节请参见 GPL
 * 
-* ��Ӧ�����յ�����Դ���ͬʱ�յ�һ�� GPL �ĸ���
-* ���û�У������<https://www.gnu.org/licenses/>
+* 您应该在收到本开源库的同时收到一份 GPL 的副本
+* 如果没有，请参阅<https://www.gnu.org/licenses/>
 * 
-* ����ע����
-* ����Դ��ʹ�� GPL3.0 ��Դ����֤Э�� ������������Ϊ���İ汾
-* ��������Ӣ�İ��� libraries/doc �ļ����µ� GPL3_permission_statement.txt �ļ���
-* ��ӭ��λʹ�ò����������� ���޸�����ʱ���뱣����ɿƼ��İ�Ȩ����������������
+* 额外注明：
+* 本开源库使用 GPL3.0 开源许可证协议 以上许可申明为译文版本
+* 许可申明英文版在 libraries/doc 文件夹下的 GPL3_permission_statement.txt 文件中
+* 欢迎各位使用并传播本程序 但修改内容时必须保留逐飞科技的版权声明（即本声明）
 * 
-* �ļ�����          zf_board_init
-* ��˾����          �ɶ���ɿƼ����޹�˾
-* �汾��Ϣ          �鿴 libraries/doc �ļ����� version �ļ� �汾˵��
-* ��������          MDK 5.38a
-* ����ƽ̨          MCX Vision
-* ��������          https://seekfree.taobao.com/
+* 文件名称          zf_board_init
+* 公司名称          成都逐飞科技有限公司
+* 版本信息          查看 libraries/doc 文件夹内 version 文件 版本说明
+* 开发环境          MDK 5.38a
+* 适用平台          MCX Vision
+* 店铺链接          https://seekfree.taobao.com/
 * 
-* �޸ļ�¼
-* ����              ����                ��ע
+* 修改记录
+* 日期              作者                备注
 * 2024-04-21        ZSY            first version
 ********************************************************************************************************************/
 #include "zf_board_init.h"
 
 
-// DEBUG���ڻص�����
+// DEBUG串口回调函数
 void LP_FLEXCOMM4_IRQHandler(void)
 {
     uint8_t data;
     
     if ((kLPUART_RxDataRegFullFlag)&LPUART_GetStatusFlags(DEBUG_USART))
     {
-        // ���յ�������
+        // 接收到的数据
         data = LPUART_ReadByte(DEBUG_USART);
     }
     LPUART_ClearStatusFlags(DEBUG_USART, kLPUART_RxOverrunFlag);
@@ -50,7 +50,7 @@ void LP_FLEXCOMM4_IRQHandler(void)
 
 void debug_uart_putchar(char c)
 {
-    while(!(DEBUG_USART->STAT & LPUART_STAT_TDRE_MASK));                 // �ȴ��������
+    while(!(DEBUG_USART->STAT & LPUART_STAT_TDRE_MASK));                 // 等待发送完成
     LPUART_WriteBlocking(DEBUG_USART, (const uint8_t *)&c, 1);
 }
 
@@ -79,7 +79,7 @@ void int_to_str(int num, char *str)
         str[i++] = '-';
     }
     str[i] = '\0';
-    // ��ת�ַ���
+    // 反转字符串
     int len = i;
     for (int j = 0; j < len / 2; j++) 
     {
@@ -96,29 +96,29 @@ void float_to_str(float num, char *str)
 
     int_to_str(int_part, str);
 
-    // ����С����
+    // 添加小数点
     int len = strlen(str);
     str[len] = '.';
     str[len + 1] = '\0';
 
-    // ����С������
-    int decimal_part = float_part * 100000; // ������λС��
+    // 处理小数部分
+    int decimal_part = float_part * 100000; // 保留五位小数
     int_to_str(decimal_part, str + len + 1);
 }
 
-// �Զ���debug_printf����
+// 自定义debug_printf函数
 void zf_debug_printf(const char *format, ...) 
 {
     va_list args;
     va_start(args, format);
 
-    char buffer[64]; // �������ת������ַ�������Ϊ64
+    char buffer[64]; // 假设最大转换后的字符串长度为64
     int written = 0;
     while (*format && written < 63) 
     {
         if (*format == '%') 
         {
-            format++; // ����%
+            format++; // 跳过%
             if (*format == 'd') 
             {
                 int value = va_arg(args, int);
@@ -141,13 +141,13 @@ void zf_debug_printf(const char *format, ...)
             } 
             else if (*format == 'c') 
             {
-                char char_value = va_arg(args, int); // char������va_arg�лᱻ����Ϊint
+                char char_value = va_arg(args, int); // char类型在va_arg中会被提升为int
                 debug_uart_putchar(char_value);
                 written++;
             } 
             else if (*format == 'f') 
             {
-                float float_value = va_arg(args, double); // ��������va_arg�лᱻ����Ϊdouble
+                float float_value = va_arg(args, double); // 浮点数在va_arg中会被提升为double
                 float_to_str(float_value, buffer);
                 for (int i = 0; buffer[i] != '\0' && written < 63; i++) 
                 {
@@ -157,7 +157,7 @@ void zf_debug_printf(const char *format, ...)
             }
             else
             {
-                format++; // �ƶ�����һ���ַ�
+                format++; // 移动到下一个字符
             }
         } 
         else 
@@ -253,11 +253,11 @@ void zf_board_init(void)
 
 void HardFault_Handler(void)
 {
-	//Ӳ���Ϸ�  ����������Խ�����ʹ����δ��ʼ�����豸
-	//������ʾ���һ�����⣬��������˵�ҵ������ʼ������ô����Ҫ��HardFault��
-	//�ܶ�����Ϊ�Լ������жϣ�Ȼ�����ж�����ʹ�������裬Ȼ�����ĳ�ʼ��˳�����ȳ�ʼ���ж�Ȼ���ٳ�ʼ������
-	//��ô��������ˣ��жϳ�ʼ�����֮��Ჿ���ж�ֱ�ӽ����жϺ��������������Ҳ������жϺ�������ô�ͻ�����ж�����ʹ�õ������軹û����ʼ��
-	//���Դ����Ҫע���������
+	//硬件上访  可能是数组越界或者使用了未初始化的设备
+	//这里提示大家一个问题，经常有人说我的外设初始化了怎么就是要进HardFault呢
+	//很多是因为自己开了中断，然后在中断里面使用了外设，然后他的初始化顺序是先初始化中断然后再初始化外设
+	//那么问题就来了，中断初始化完成之后会部分中断直接进入中断函数或者满足调节也会进入中断函数，那么就会造成中断里面使用到的外设还没被初始化
+	//所以大家需要注意这个问题
 	while(1)
     {
         gpio_toggle_level(led_core);

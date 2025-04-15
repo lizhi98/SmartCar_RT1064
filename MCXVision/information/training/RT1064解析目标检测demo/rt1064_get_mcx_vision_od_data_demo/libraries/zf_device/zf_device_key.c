@@ -1,46 +1,46 @@
 /*********************************************************************************************************************
-* RT1064DVL6A Opensourec Library ¼´£¨RT1064DVL6A ¿ªÔ´¿â£©ÊÇÒ»¸ö»ùÓÚ¹Ù·½ SDK ½Ó¿ÚµÄµÚÈý·½¿ªÔ´¿â
-* Copyright (c) 2022 SEEKFREE Öð·É¿Æ¼¼
+* RT1064DVL6A Opensourec Library å³ï¼ˆRT1064DVL6A å¼€æºåº“ï¼‰æ˜¯ä¸€ä¸ªåŸºäºŽå®˜æ–¹ SDK æŽ¥å£çš„ç¬¬ä¸‰æ–¹å¼€æºåº“
+* Copyright (c) 2022 SEEKFREE é€é£žç§‘æŠ€
 * 
-* ±¾ÎÄ¼þÊÇ RT1064DVL6A ¿ªÔ´¿âµÄÒ»²¿·Ö
+* æœ¬æ–‡ä»¶æ˜¯ RT1064DVL6A å¼€æºåº“çš„ä¸€éƒ¨åˆ†
 * 
-* RT1064DVL6A ¿ªÔ´¿â ÊÇÃâ·ÑÈí¼þ
-* Äú¿ÉÒÔ¸ù¾Ý×ÔÓÉÈí¼þ»ù½ð»á·¢²¼µÄ GPL£¨GNU General Public License£¬¼´ GNUÍ¨ÓÃ¹«¹²Ðí¿ÉÖ¤£©µÄÌõ¿î
-* ¼´ GPL µÄµÚ3°æ£¨¼´ GPL3.0£©»ò£¨ÄúÑ¡ÔñµÄ£©ÈÎºÎºóÀ´µÄ°æ±¾£¬ÖØÐÂ·¢²¼ºÍ/»òÐÞ¸ÄËü
+* RT1064DVL6A å¼€æºåº“ æ˜¯å…è´¹è½¯ä»¶
+* æ‚¨å¯ä»¥æ ¹æ®è‡ªç”±è½¯ä»¶åŸºé‡‘ä¼šå‘å¸ƒçš„ GPLï¼ˆGNU General Public Licenseï¼Œå³ GNUé€šç”¨å…¬å…±è®¸å¯è¯ï¼‰çš„æ¡æ¬¾
+* å³ GPL çš„ç¬¬3ç‰ˆï¼ˆå³ GPL3.0ï¼‰æˆ–ï¼ˆæ‚¨é€‰æ‹©çš„ï¼‰ä»»ä½•åŽæ¥çš„ç‰ˆæœ¬ï¼Œé‡æ–°å‘å¸ƒå’Œ/æˆ–ä¿®æ”¹å®ƒ
 * 
-* ±¾¿ªÔ´¿âµÄ·¢²¼ÊÇÏ£ÍûËüÄÜ·¢»Ó×÷ÓÃ£¬µ«²¢Î´¶ÔÆä×÷ÈÎºÎµÄ±£Ö¤
-* ÉõÖÁÃ»ÓÐÒþº¬µÄÊÊÏúÐÔ»òÊÊºÏÌØ¶¨ÓÃÍ¾µÄ±£Ö¤
-* ¸ü¶àÏ¸½ÚÇë²Î¼û GPL
+* æœ¬å¼€æºåº“çš„å‘å¸ƒæ˜¯å¸Œæœ›å®ƒèƒ½å‘æŒ¥ä½œç”¨ï¼Œä½†å¹¶æœªå¯¹å…¶ä½œä»»ä½•çš„ä¿è¯
+* ç”šè‡³æ²¡æœ‰éšå«çš„é€‚é”€æ€§æˆ–é€‚åˆç‰¹å®šç”¨é€”çš„ä¿è¯
+* æ›´å¤šç»†èŠ‚è¯·å‚è§ GPL
 * 
-* ÄúÓ¦¸ÃÔÚÊÕµ½±¾¿ªÔ´¿âµÄÍ¬Ê±ÊÕµ½Ò»·Ý GPL µÄ¸±±¾
-* Èç¹ûÃ»ÓÐ£¬Çë²ÎÔÄ<https://www.gnu.org/licenses/>
+* æ‚¨åº”è¯¥åœ¨æ”¶åˆ°æœ¬å¼€æºåº“çš„åŒæ—¶æ”¶åˆ°ä¸€ä»½ GPL çš„å‰¯æœ¬
+* å¦‚æžœæ²¡æœ‰ï¼Œè¯·å‚é˜…<https://www.gnu.org/licenses/>
 * 
-* ¶îÍâ×¢Ã÷£º
-* ±¾¿ªÔ´¿âÊ¹ÓÃ GPL3.0 ¿ªÔ´Ðí¿ÉÖ¤Ð­Òé ÒÔÉÏÐí¿ÉÉêÃ÷ÎªÒëÎÄ°æ±¾
-* Ðí¿ÉÉêÃ÷Ó¢ÎÄ°æÔÚ libraries/doc ÎÄ¼þ¼ÐÏÂµÄ GPL3_permission_statement.txt ÎÄ¼þÖÐ
-* Ðí¿ÉÖ¤¸±±¾ÔÚ libraries ÎÄ¼þ¼ÐÏÂ ¼´¸ÃÎÄ¼þ¼ÐÏÂµÄ LICENSE ÎÄ¼þ
-* »¶Ó­¸÷Î»Ê¹ÓÃ²¢´«²¥±¾³ÌÐò µ«ÐÞ¸ÄÄÚÈÝÊ±±ØÐë±£ÁôÖð·É¿Æ¼¼µÄ°æÈ¨ÉùÃ÷£¨¼´±¾ÉùÃ÷£©
+* é¢å¤–æ³¨æ˜Žï¼š
+* æœ¬å¼€æºåº“ä½¿ç”¨ GPL3.0 å¼€æºè®¸å¯è¯åè®® ä»¥ä¸Šè®¸å¯ç”³æ˜Žä¸ºè¯‘æ–‡ç‰ˆæœ¬
+* è®¸å¯ç”³æ˜Žè‹±æ–‡ç‰ˆåœ¨ libraries/doc æ–‡ä»¶å¤¹ä¸‹çš„ GPL3_permission_statement.txt æ–‡ä»¶ä¸­
+* è®¸å¯è¯å‰¯æœ¬åœ¨ libraries æ–‡ä»¶å¤¹ä¸‹ å³è¯¥æ–‡ä»¶å¤¹ä¸‹çš„ LICENSE æ–‡ä»¶
+* æ¬¢è¿Žå„ä½ä½¿ç”¨å¹¶ä¼ æ’­æœ¬ç¨‹åº ä½†ä¿®æ”¹å†…å®¹æ—¶å¿…é¡»ä¿ç•™é€é£žç§‘æŠ€çš„ç‰ˆæƒå£°æ˜Žï¼ˆå³æœ¬å£°æ˜Žï¼‰
 * 
-* ÎÄ¼þÃû³Æ          zf_device_key
-* ¹«Ë¾Ãû³Æ          ³É¶¼Öð·É¿Æ¼¼ÓÐÏÞ¹«Ë¾
-* °æ±¾ÐÅÏ¢          ²é¿´ libraries/doc ÎÄ¼þ¼ÐÄÚ version ÎÄ¼þ °æ±¾ËµÃ÷
-* ¿ª·¢»·¾³          IAR 8.32.4 or MDK 5.33
-* ÊÊÓÃÆ½Ì¨          RT1064DVL6A
-* µêÆÌÁ´½Ó          https://seekfree.taobao.com/
+* æ–‡ä»¶åç§°          zf_device_key
+* å…¬å¸åç§°          æˆéƒ½é€é£žç§‘æŠ€æœ‰é™å…¬å¸
+* ç‰ˆæœ¬ä¿¡æ¯          æŸ¥çœ‹ libraries/doc æ–‡ä»¶å¤¹å†… version æ–‡ä»¶ ç‰ˆæœ¬è¯´æ˜Ž
+* å¼€å‘çŽ¯å¢ƒ          IAR 8.32.4 or MDK 5.33
+* é€‚ç”¨å¹³å°          RT1064DVL6A
+* åº—é“ºé“¾æŽ¥          https://seekfree.taobao.com/
 * 
-* ÐÞ¸Ä¼ÇÂ¼
-* ÈÕÆÚ              ×÷Õß                ±¸×¢
+* ä¿®æ”¹è®°å½•
+* æ—¥æœŸ              ä½œè€…                å¤‡æ³¨
 * 2022-09-21        SeekFree            first version
 ********************************************************************************************************************/
 /*********************************************************************************************************************
-* ½ÓÏß¶¨Òå£º
+* æŽ¥çº¿å®šä¹‰ï¼š
 *                   ------------------------------------
-*                   Ä£¿é¹Ü½Å            µ¥Æ¬»ú¹Ü½Å
-*                   // Ò»°ãÊÇÖ÷°å°´¼ü¶ÔÓ¦µÄÒý½Å
-*                   KEY1/S1             ²é¿´ zf_device_key.h ÖÐ KEY_LIST[0]
-*                   KEY2/S2             ²é¿´ zf_device_key.h ÖÐ KEY_LIST[1]
-*                   KEY3/S3             ²é¿´ zf_device_key.h ÖÐ KEY_LIST[2]
-*                   KEY4/S4             ²é¿´ zf_device_key.h ÖÐ KEY_LIST[3]
+*                   æ¨¡å—ç®¡è„š            å•ç‰‡æœºç®¡è„š
+*                   // ä¸€èˆ¬æ˜¯ä¸»æ¿æŒ‰é”®å¯¹åº”çš„å¼•è„š
+*                   KEY1/S1             æŸ¥çœ‹ zf_device_key.h ä¸­ KEY_LIST[0]
+*                   KEY2/S2             æŸ¥çœ‹ zf_device_key.h ä¸­ KEY_LIST[1]
+*                   KEY3/S3             æŸ¥çœ‹ zf_device_key.h ä¸­ KEY_LIST[2]
+*                   KEY4/S4             æŸ¥çœ‹ zf_device_key.h ä¸­ KEY_LIST[3]
 *                   ------------------------------------
 ********************************************************************************************************************/
 
@@ -48,25 +48,25 @@
 
 #include "zf_device_key.h"
 
-static uint32               scanner_period = 0;                                 // °´¼üµÄÉ¨ÃèÖÜÆÚ
-static uint32               key_press_time[KEY_NUMBER];                         // °´¼üÐÅºÅ³ÖÐøÊ±³¤
-static key_state_enum       key_state[KEY_NUMBER];                              // °´¼ü×´Ì¬
+static uint32               scanner_period = 0;                                 // æŒ‰é”®çš„æ‰«æå‘¨æœŸ
+static uint32               key_press_time[KEY_NUMBER];                         // æŒ‰é”®ä¿¡å·æŒç»­æ—¶é•¿
+static key_state_enum       key_state[KEY_NUMBER];                              // æŒ‰é”®çŠ¶æ€
 
 static const gpio_pin_enum  key_index[KEY_NUMBER] = KEY_LIST;
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     °´¼ü×´Ì¬É¨Ãè
-// ²ÎÊýËµÃ÷     void
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     key_scanner();
-// ±¸×¢ÐÅÏ¢     Õâ¸öº¯Êý·ÅÔÚÖ÷Ñ­»·»òÕß PIT ÖÐ¶ÏÖÐ
+// å‡½æ•°ç®€ä»‹     æŒ‰é”®çŠ¶æ€æ‰«æ
+// å‚æ•°è¯´æ˜Ž     void
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     key_scanner();
+// å¤‡æ³¨ä¿¡æ¯     è¿™ä¸ªå‡½æ•°æ”¾åœ¨ä¸»å¾ªçŽ¯æˆ–è€… PIT ä¸­æ–­ä¸­
 //-------------------------------------------------------------------------------------------------------------------
 void key_scanner (void)
 {
     uint8 i = 0;
     for(i = 0; KEY_NUMBER > i; i ++)
     {
-        if(KEY_RELEASE_LEVEL != gpio_get_level(key_index[i]))                   // °´¼ü°´ÏÂ
+        if(KEY_RELEASE_LEVEL != gpio_get_level(key_index[i]))                   // æŒ‰é”®æŒ‰ä¸‹
         {
             key_press_time[i] ++;
             if(KEY_LONG_PRESS_PERIOD / scanner_period <= key_press_time[i])
@@ -74,7 +74,7 @@ void key_scanner (void)
                 key_state[i] = KEY_LONG_PRESS;
             }
         }
-        else                                                                    // °´¼üÊÍ·Å
+        else                                                                    // æŒ‰é”®é‡Šæ”¾
         {
             if((KEY_LONG_PRESS != key_state[i]) && (KEY_MAX_SHOCK_PERIOD / scanner_period <= key_press_time[i]))
             {
@@ -90,11 +90,11 @@ void key_scanner (void)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     »ñÈ¡°´¼ü×´Ì¬
-// ²ÎÊýËµÃ÷     key_n           °´¼üË÷Òý
-// ·µ»Ø²ÎÊý     key_state_enum  °´¼ü×´Ì¬
-// Ê¹ÓÃÊ¾Àý     key_get_state(KEY_1);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     èŽ·å–æŒ‰é”®çŠ¶æ€
+// å‚æ•°è¯´æ˜Ž     key_n           æŒ‰é”®ç´¢å¼•
+// è¿”å›žå‚æ•°     key_state_enum  æŒ‰é”®çŠ¶æ€
+// ä½¿ç”¨ç¤ºä¾‹     key_get_state(KEY_1);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 key_state_enum key_get_state (key_index_enum key_n)
 {
@@ -102,11 +102,11 @@ key_state_enum key_get_state (key_index_enum key_n)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     Çå³ý¶ÔÓ¦°´¼ü×´Ì¬
-// ²ÎÊýËµÃ÷     key_n           °´¼üË÷Òý
-// ·µ»Ø²ÎÊý     void            ÎÞ
-// Ê¹ÓÃÊ¾Àý     key_clear_state(KEY_1);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     æ¸…é™¤å¯¹åº”æŒ‰é”®çŠ¶æ€
+// å‚æ•°è¯´æ˜Ž     key_n           æŒ‰é”®ç´¢å¼•
+// è¿”å›žå‚æ•°     void            æ— 
+// ä½¿ç”¨ç¤ºä¾‹     key_clear_state(KEY_1);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void key_clear_state (key_index_enum key_n)
 {
@@ -114,11 +114,11 @@ void key_clear_state (key_index_enum key_n)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     Çå³ýËùÓÐ°´¼ü×´Ì¬
-// ²ÎÊýËµÃ÷     void            ÎÞ
-// ·µ»Ø²ÎÊý     void            ÎÞ
-// Ê¹ÓÃÊ¾Àý     key_clear_all_state();
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     æ¸…é™¤æ‰€æœ‰æŒ‰é”®çŠ¶æ€
+// å‚æ•°è¯´æ˜Ž     void            æ— 
+// è¿”å›žå‚æ•°     void            æ— 
+// ä½¿ç”¨ç¤ºä¾‹     key_clear_all_state();
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void key_clear_all_state (void)
 {
@@ -129,11 +129,11 @@ void key_clear_all_state (void)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     °´¼ü³õÊ¼»¯
-// ²ÎÊýËµÃ÷     period          °´¼üÉ¨ÃèÖÜÆÚ ÒÔºÁÃëÎªµ¥Î»
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     key_init(10);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     æŒ‰é”®åˆå§‹åŒ–
+// å‚æ•°è¯´æ˜Ž     period          æŒ‰é”®æ‰«æå‘¨æœŸ ä»¥æ¯«ç§’ä¸ºå•ä½
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     key_init(10);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void key_init (uint32 period)
 {

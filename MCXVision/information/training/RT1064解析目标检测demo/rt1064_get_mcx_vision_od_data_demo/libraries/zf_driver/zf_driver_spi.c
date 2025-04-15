@@ -1,35 +1,35 @@
 /*********************************************************************************************************************
-* RT1064DVL6A Opensourec Library ¼´£¨RT1064DVL6A ¿ªÔ´¿â£©ÊÇÒ»¸ö»ùÓÚ¹Ù·½ SDK ½Ó¿ÚµÄµÚÈý·½¿ªÔ´¿â
-* Copyright (c) 2022 SEEKFREE Öð·É¿Æ¼¼
+* RT1064DVL6A Opensourec Library å³ï¼ˆRT1064DVL6A å¼€æºåº“ï¼‰æ˜¯ä¸€ä¸ªåŸºäºŽå®˜æ–¹ SDK æŽ¥å£çš„ç¬¬ä¸‰æ–¹å¼€æºåº“
+* Copyright (c) 2022 SEEKFREE é€é£žç§‘æŠ€
 * 
-* ±¾ÎÄ¼þÊÇ RT1064DVL6A ¿ªÔ´¿âµÄÒ»²¿·Ö
+* æœ¬æ–‡ä»¶æ˜¯ RT1064DVL6A å¼€æºåº“çš„ä¸€éƒ¨åˆ†
 * 
-* RT1064DVL6A ¿ªÔ´¿â ÊÇÃâ·ÑÈí¼þ
-* Äú¿ÉÒÔ¸ù¾Ý×ÔÓÉÈí¼þ»ù½ð»á·¢²¼µÄ GPL£¨GNU General Public License£¬¼´ GNUÍ¨ÓÃ¹«¹²Ðí¿ÉÖ¤£©µÄÌõ¿î
-* ¼´ GPL µÄµÚ3°æ£¨¼´ GPL3.0£©»ò£¨ÄúÑ¡ÔñµÄ£©ÈÎºÎºóÀ´µÄ°æ±¾£¬ÖØÐÂ·¢²¼ºÍ/»òÐÞ¸ÄËü
+* RT1064DVL6A å¼€æºåº“ æ˜¯å…è´¹è½¯ä»¶
+* æ‚¨å¯ä»¥æ ¹æ®è‡ªç”±è½¯ä»¶åŸºé‡‘ä¼šå‘å¸ƒçš„ GPLï¼ˆGNU General Public Licenseï¼Œå³ GNUé€šç”¨å…¬å…±è®¸å¯è¯ï¼‰çš„æ¡æ¬¾
+* å³ GPL çš„ç¬¬3ç‰ˆï¼ˆå³ GPL3.0ï¼‰æˆ–ï¼ˆæ‚¨é€‰æ‹©çš„ï¼‰ä»»ä½•åŽæ¥çš„ç‰ˆæœ¬ï¼Œé‡æ–°å‘å¸ƒå’Œ/æˆ–ä¿®æ”¹å®ƒ
 * 
-* ±¾¿ªÔ´¿âµÄ·¢²¼ÊÇÏ£ÍûËüÄÜ·¢»Ó×÷ÓÃ£¬µ«²¢Î´¶ÔÆä×÷ÈÎºÎµÄ±£Ö¤
-* ÉõÖÁÃ»ÓÐÒþº¬µÄÊÊÏúÐÔ»òÊÊºÏÌØ¶¨ÓÃÍ¾µÄ±£Ö¤
-* ¸ü¶àÏ¸½ÚÇë²Î¼û GPL
+* æœ¬å¼€æºåº“çš„å‘å¸ƒæ˜¯å¸Œæœ›å®ƒèƒ½å‘æŒ¥ä½œç”¨ï¼Œä½†å¹¶æœªå¯¹å…¶ä½œä»»ä½•çš„ä¿è¯
+* ç”šè‡³æ²¡æœ‰éšå«çš„é€‚é”€æ€§æˆ–é€‚åˆç‰¹å®šç”¨é€”çš„ä¿è¯
+* æ›´å¤šç»†èŠ‚è¯·å‚è§ GPL
 * 
-* ÄúÓ¦¸ÃÔÚÊÕµ½±¾¿ªÔ´¿âµÄÍ¬Ê±ÊÕµ½Ò»·Ý GPL µÄ¸±±¾
-* Èç¹ûÃ»ÓÐ£¬Çë²ÎÔÄ<https://www.gnu.org/licenses/>
+* æ‚¨åº”è¯¥åœ¨æ”¶åˆ°æœ¬å¼€æºåº“çš„åŒæ—¶æ”¶åˆ°ä¸€ä»½ GPL çš„å‰¯æœ¬
+* å¦‚æžœæ²¡æœ‰ï¼Œè¯·å‚é˜…<https://www.gnu.org/licenses/>
 * 
-* ¶îÍâ×¢Ã÷£º
-* ±¾¿ªÔ´¿âÊ¹ÓÃ GPL3.0 ¿ªÔ´Ðí¿ÉÖ¤Ð­Òé ÒÔÉÏÐí¿ÉÉêÃ÷ÎªÒëÎÄ°æ±¾
-* Ðí¿ÉÉêÃ÷Ó¢ÎÄ°æÔÚ libraries/doc ÎÄ¼þ¼ÐÏÂµÄ GPL3_permission_statement.txt ÎÄ¼þÖÐ
-* Ðí¿ÉÖ¤¸±±¾ÔÚ libraries ÎÄ¼þ¼ÐÏÂ ¼´¸ÃÎÄ¼þ¼ÐÏÂµÄ LICENSE ÎÄ¼þ
-* »¶Ó­¸÷Î»Ê¹ÓÃ²¢´«²¥±¾³ÌÐò µ«ÐÞ¸ÄÄÚÈÝÊ±±ØÐë±£ÁôÖð·É¿Æ¼¼µÄ°æÈ¨ÉùÃ÷£¨¼´±¾ÉùÃ÷£©
+* é¢å¤–æ³¨æ˜Žï¼š
+* æœ¬å¼€æºåº“ä½¿ç”¨ GPL3.0 å¼€æºè®¸å¯è¯åè®® ä»¥ä¸Šè®¸å¯ç”³æ˜Žä¸ºè¯‘æ–‡ç‰ˆæœ¬
+* è®¸å¯ç”³æ˜Žè‹±æ–‡ç‰ˆåœ¨ libraries/doc æ–‡ä»¶å¤¹ä¸‹çš„ GPL3_permission_statement.txt æ–‡ä»¶ä¸­
+* è®¸å¯è¯å‰¯æœ¬åœ¨ libraries æ–‡ä»¶å¤¹ä¸‹ å³è¯¥æ–‡ä»¶å¤¹ä¸‹çš„ LICENSE æ–‡ä»¶
+* æ¬¢è¿Žå„ä½ä½¿ç”¨å¹¶ä¼ æ’­æœ¬ç¨‹åº ä½†ä¿®æ”¹å†…å®¹æ—¶å¿…é¡»ä¿ç•™é€é£žç§‘æŠ€çš„ç‰ˆæƒå£°æ˜Žï¼ˆå³æœ¬å£°æ˜Žï¼‰
 * 
-* ÎÄ¼þÃû³Æ          zf_driver_spi
-* ¹«Ë¾Ãû³Æ          ³É¶¼Öð·É¿Æ¼¼ÓÐÏÞ¹«Ë¾
-* °æ±¾ÐÅÏ¢          ²é¿´ libraries/doc ÎÄ¼þ¼ÐÄÚ version ÎÄ¼þ °æ±¾ËµÃ÷
-* ¿ª·¢»·¾³          IAR 8.32.4 or MDK 5.33
-* ÊÊÓÃÆ½Ì¨          RT1064DVL6A
-* µêÆÌÁ´½Ó          https://seekfree.taobao.com/
+* æ–‡ä»¶åç§°          zf_driver_spi
+* å…¬å¸åç§°          æˆéƒ½é€é£žç§‘æŠ€æœ‰é™å…¬å¸
+* ç‰ˆæœ¬ä¿¡æ¯          æŸ¥çœ‹ libraries/doc æ–‡ä»¶å¤¹å†… version æ–‡ä»¶ ç‰ˆæœ¬è¯´æ˜Ž
+* å¼€å‘çŽ¯å¢ƒ          IAR 8.32.4 or MDK 5.33
+* é€‚ç”¨å¹³å°          RT1064DVL6A
+* åº—é“ºé“¾æŽ¥          https://seekfree.taobao.com/
 * 
-* ÐÞ¸Ä¼ÇÂ¼
-* ÈÕÆÚ              ×÷Õß                ±¸×¢
+* ä¿®æ”¹è®°å½•
+* æ—¥æœŸ              ä½œè€…                å¤‡æ³¨
 * 2022-09-21        SeekFree            first version
 ********************************************************************************************************************/
 
@@ -43,7 +43,7 @@
 #include "zf_driver_spi.h"
 
 
-#define LPSPI_PIN_CONF              SPEED_100MHZ | KEEPER_EN | DSE_R0_6 //ÅäÖÃSPIÒý½ÅÄ¬ÈÏÅäÖÃ
+#define LPSPI_PIN_CONF              SPEED_100MHZ | KEEPER_EN | DSE_R0_6 //é…ç½®SPIå¼•è„šé»˜è®¤é…ç½®
 #define LPSPI_CLK_DIV               3
 #define LPSPI_CLK_SRC               2
 
@@ -114,11 +114,11 @@ void spi_write(spi_index_enum spi_n, const uint8 *txdata, uint8 *rxdata, uint32 
     uint32 transfer_status;
     lpspi_transfer_t transfer;
 
-    zf_assert(0 < length);                                                          // ¶ÏÑÔ×Ö½ÚÊý²»Îª0
+    zf_assert(0 < length);                                                          // æ–­è¨€å­—èŠ‚æ•°ä¸ä¸º0
     
-    if(SPI_8BIT == bit)                                                             // ´Ë²ÎÊýÖ»Õë¶Ô·¢ËÍ
+    if(SPI_8BIT == bit)                                                             // æ­¤å‚æ•°åªé’ˆå¯¹å‘é€
     {
-        spi_index[spi_n]->TCR = ((spi_index[spi_n]->TCR & 0xFFFFF000) | (8 - 1));   // ×îÐ¡ÉèÖÃµÄÖ¡´óÐ¡Îª8Î»
+        spi_index[spi_n]->TCR = ((spi_index[spi_n]->TCR & 0xFFFFF000) | (8 - 1));   // æœ€å°è®¾ç½®çš„å¸§å¤§å°ä¸º8ä½
     }
     else if(SPI_16BIT == bit)
     {
@@ -143,12 +143,12 @@ void spi_write(spi_index_enum spi_n, const uint8 *txdata, uint8 *rxdata, uint32 
 
 #ifndef SPI_SPEED_PRIORITY
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI 8bit Êý¾Ý¶ÁÐ´
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     data            Êý¾Ý
-// ·µ»Ø²ÎÊý     uint8           ¶ÁÈ¡µÄÊý¾Ý
-// Ê¹ÓÃÊ¾Àý     spi_8bit_data_handler(spi_n, 5);
-// ±¸×¢ÐÅÏ¢     ÄÚ²¿µ÷ÓÃ
+// å‡½æ•°ç®€ä»‹     SPI 8bit æ•°æ®è¯»å†™
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     data            æ•°æ®
+// è¿”å›žå‚æ•°     uint8           è¯»å–çš„æ•°æ®
+// ä½¿ç”¨ç¤ºä¾‹     spi_8bit_data_handler(spi_n, 5);
+// å¤‡æ³¨ä¿¡æ¯     å†…éƒ¨è°ƒç”¨
 //-------------------------------------------------------------------------------------------------------------------
 static uint8 spi_8bit_data_handler (spi_index_enum spi_n, const uint8 data)
 {
@@ -158,12 +158,12 @@ static uint8 spi_8bit_data_handler (spi_index_enum spi_n, const uint8 data)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI 16bit Êý¾Ý¶ÁÐ´
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     data            Êý¾Ý
-// ·µ»Ø²ÎÊý     uint16          ¶ÁÈ¡µÄÊý¾Ý
-// Ê¹ÓÃÊ¾Àý     spi_16bit_data_handler(spi_n, 5);
-// ±¸×¢ÐÅÏ¢     ÄÚ²¿µ÷ÓÃ
+// å‡½æ•°ç®€ä»‹     SPI 16bit æ•°æ®è¯»å†™
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     data            æ•°æ®
+// è¿”å›žå‚æ•°     uint16          è¯»å–çš„æ•°æ®
+// ä½¿ç”¨ç¤ºä¾‹     spi_16bit_data_handler(spi_n, 5);
+// å¤‡æ³¨ä¿¡æ¯     å†…éƒ¨è°ƒç”¨
 //-------------------------------------------------------------------------------------------------------------------
 static uint16 spi_16bit_data_handler (spi_index_enum spi_n, const uint16 data)
 {
@@ -174,13 +174,13 @@ static uint16 spi_16bit_data_handler (spi_index_enum spi_n, const uint16 data)
 #endif
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿ÚÐ´ 8bit Êý×é
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     *data           Êý¾Ý´æ·Å»º³åÇø
-// ²ÎÊýËµÃ÷     length          »º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_write_8bit_array(SPI_1, data, 64);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£å†™ 8bit æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     *data           æ•°æ®å­˜æ”¾ç¼“å†²åŒº
+// å‚æ•°è¯´æ˜Ž     length          ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_write_8bit_array(SPI_1, data, 64);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_write_8bit_array (spi_index_enum spi_n, const uint8 *data, uint32 length)
 {
@@ -196,12 +196,12 @@ void spi_write_8bit_array (spi_index_enum spi_n, const uint8 *data, uint32 lengt
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿ÚÐ´ 8bit Êý¾Ý
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     data            Êý¾Ý
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_write_8bit(SPI_1, 0x11);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£å†™ 8bit æ•°æ®
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     data            æ•°æ®
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_write_8bit(SPI_1, 0x11);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_write_8bit (spi_index_enum spi_n, const uint8 data)
 {
@@ -213,12 +213,12 @@ void spi_write_8bit (spi_index_enum spi_n, const uint8 data)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿ÚÐ´ 16bit Êý¾Ý
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     data            Êý¾Ý
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_write_16bit(SPI_1, 0x1101);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£å†™ 16bit æ•°æ®
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     data            æ•°æ®
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_write_16bit(SPI_1, 0x1101);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_write_16bit (spi_index_enum spi_n, const uint16 data)
 {
@@ -230,13 +230,13 @@ void spi_write_16bit (spi_index_enum spi_n, const uint16 data)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿ÚÐ´ 16bit Êý×é
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     *data           Êý¾Ý´æ·Å»º³åÇø
-// ²ÎÊýËµÃ÷     length             »º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_write_16bit_array(SPI_1, data, 64);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£å†™ 16bit æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     *data           æ•°æ®å­˜æ”¾ç¼“å†²åŒº
+// å‚æ•°è¯´æ˜Ž     length             ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_write_16bit_array(SPI_1, data, 64);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_write_16bit_array (spi_index_enum spi_n, const uint16 *data, uint32 length)
 {
@@ -252,13 +252,13 @@ void spi_write_16bit_array (spi_index_enum spi_n, const uint16 *data, uint32 len
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿ÚÏò´«¸ÐÆ÷µÄ¼Ä´æÆ÷Ð´ 8bit Êý¾Ý
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ²ÎÊýËµÃ÷     data            Êý¾Ý
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_write_8bit_register(SPI_1, 0x11, 0x01);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£å‘ä¼ æ„Ÿå™¨çš„å¯„å­˜å™¨å†™ 8bit æ•°æ®
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// å‚æ•°è¯´æ˜Ž     data            æ•°æ®
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_write_8bit_register(SPI_1, 0x11, 0x01);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_write_8bit_register (spi_index_enum spi_n, const uint8 register_name, const uint8 data)
 {
@@ -272,14 +272,14 @@ void spi_write_8bit_register (spi_index_enum spi_n, const uint8 register_name, c
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿ÚÏò´«¸ÐÆ÷µÄ¼Ä´æÆ÷Ð´ 8bit Êý×é
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ²ÎÊýËµÃ÷     *data           Êý¾Ý´æ·Å»º³åÇø
-// ²ÎÊýËµÃ÷     length             »º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_write_8bit_registers(SPI_1, 0x11, data, 32);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£å‘ä¼ æ„Ÿå™¨çš„å¯„å­˜å™¨å†™ 8bit æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// å‚æ•°è¯´æ˜Ž     *data           æ•°æ®å­˜æ”¾ç¼“å†²åŒº
+// å‚æ•°è¯´æ˜Ž     length             ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_write_8bit_registers(SPI_1, 0x11, data, 32);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_write_8bit_registers (spi_index_enum spi_n, const uint8 register_name, const uint8 *data, uint32 length)
 {
@@ -297,13 +297,13 @@ void spi_write_8bit_registers (spi_index_enum spi_n, const uint8 register_name, 
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿ÚÏò´«¸ÐÆ÷µÄ¼Ä´æÆ÷Ð´ 16bit Êý¾Ý
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ²ÎÊýËµÃ÷     data            Êý¾Ý
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_write_16bit_register(SPI_1, 0x1011, 0x0101);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£å‘ä¼ æ„Ÿå™¨çš„å¯„å­˜å™¨å†™ 16bit æ•°æ®
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// å‚æ•°è¯´æ˜Ž     data            æ•°æ®
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_write_16bit_register(SPI_1, 0x1011, 0x0101);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_write_16bit_register (spi_index_enum spi_n, const uint16 register_name, const uint16 data)
 {
@@ -317,14 +317,14 @@ void spi_write_16bit_register (spi_index_enum spi_n, const uint16 register_name,
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿ÚÏò´«¸ÐÆ÷µÄ¼Ä´æÆ÷Ð´ 16bit Êý×é
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ²ÎÊýËµÃ÷     *data           Êý¾Ý´æ·Å»º³åÇø
-// ²ÎÊýËµÃ÷     length             »º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_write_16bit_registers(SPI_1, 0x1011, data, 32);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£å‘ä¼ æ„Ÿå™¨çš„å¯„å­˜å™¨å†™ 16bit æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// å‚æ•°è¯´æ˜Ž     *data           æ•°æ®å­˜æ”¾ç¼“å†²åŒº
+// å‚æ•°è¯´æ˜Ž     length             ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_write_16bit_registers(SPI_1, 0x1011, data, 32);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_write_16bit_registers (spi_index_enum spi_n, const uint16 register_name, const uint16 *data, uint32 length)
 {
@@ -342,12 +342,12 @@ void spi_write_16bit_registers (spi_index_enum spi_n, const uint16 register_name
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú¶Á 8bit Êý¾Ý
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ·µ»Ø²ÎÊý     uint8           Êý¾Ý
-// Ê¹ÓÃÊ¾Àý     spi_read_8bit(SPI_1);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£è¯» 8bit æ•°æ®
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// è¿”å›žå‚æ•°     uint8           æ•°æ®
+// ä½¿ç”¨ç¤ºä¾‹     spi_read_8bit(SPI_1);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 uint8 spi_read_8bit (spi_index_enum spi_n)
 {
@@ -361,13 +361,13 @@ uint8 spi_read_8bit (spi_index_enum spi_n)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú¶Á 8bit Êý×é
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     *data           Êý¾Ý´æ·Å»º³åÇø
-// ²ÎÊýËµÃ÷     length             ·¢ËÍ»º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_read_8bit_array(SPI_1, data, 64);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£è¯» 8bit æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     *data           æ•°æ®å­˜æ”¾ç¼“å†²åŒº
+// å‚æ•°è¯´æ˜Ž     length             å‘é€ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_read_8bit_array(SPI_1, data, 64);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_read_8bit_array (spi_index_enum spi_n, uint8 *data, uint32 length)
 {
@@ -383,12 +383,12 @@ void spi_read_8bit_array (spi_index_enum spi_n, uint8 *data, uint32 length)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú¶Á 16bit Êý¾Ý
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ·µ»Ø²ÎÊý     uint16          Êý¾Ý
-// Ê¹ÓÃÊ¾Àý     spi_read_16bit(SPI_1);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£è¯» 16bit æ•°æ®
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// è¿”å›žå‚æ•°     uint16          æ•°æ®
+// ä½¿ç”¨ç¤ºä¾‹     spi_read_16bit(SPI_1);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 uint16 spi_read_16bit (spi_index_enum spi_n)
 {
@@ -402,13 +402,13 @@ uint16 spi_read_16bit (spi_index_enum spi_n)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú¶Á 16bit Êý×é
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     *data           Êý¾Ý´æ·Å»º³åÇø
-// ²ÎÊýËµÃ÷     length             ·¢ËÍ»º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_read_16bit_array(SPI_1, data, 64);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£è¯» 16bit æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     *data           æ•°æ®å­˜æ”¾ç¼“å†²åŒº
+// å‚æ•°è¯´æ˜Ž     length             å‘é€ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_read_16bit_array(SPI_1, data, 64);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_read_16bit_array (spi_index_enum spi_n, uint16 *data, uint32 length)
 {
@@ -424,12 +424,12 @@ void spi_read_16bit_array (spi_index_enum spi_n, uint16 *data, uint32 length)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú´Ó´«¸ÐÆ÷µÄ¼Ä´æÆ÷¶Á 8bit Êý¾Ý
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ·µ»Ø²ÎÊý     uint8           Êý¾Ý
-// Ê¹ÓÃÊ¾Àý     spi_read_8bit_register(SPI_1, 0x11);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£ä»Žä¼ æ„Ÿå™¨çš„å¯„å­˜å™¨è¯» 8bit æ•°æ®
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// è¿”å›žå‚æ•°     uint8           æ•°æ®
+// ä½¿ç”¨ç¤ºä¾‹     spi_read_8bit_register(SPI_1, 0x11);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 uint8 spi_read_8bit_register (spi_index_enum spi_n, const uint8 register_name)
 {
@@ -446,14 +446,14 @@ uint8 spi_read_8bit_register (spi_index_enum spi_n, const uint8 register_name)
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú´Ó´«¸ÐÆ÷µÄ¼Ä´æÆ÷¶Á 8bit Êý×é
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ²ÎÊýËµÃ÷     *data           Êý¾Ý´æ·Å»º³åÇø
-// ²ÎÊýËµÃ÷     length             ·¢ËÍ»º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_read_8bit_registers(SPI_1, 0x11, data, 32);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£ä»Žä¼ æ„Ÿå™¨çš„å¯„å­˜å™¨è¯» 8bit æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// å‚æ•°è¯´æ˜Ž     *data           æ•°æ®å­˜æ”¾ç¼“å†²åŒº
+// å‚æ•°è¯´æ˜Ž     length             å‘é€ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_read_8bit_registers(SPI_1, 0x11, data, 32);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_read_8bit_registers (spi_index_enum spi_n, const uint8 register_name, uint8 *data, uint32 length)
 {
@@ -471,12 +471,12 @@ void spi_read_8bit_registers (spi_index_enum spi_n, const uint8 register_name, u
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú´Ó´«¸ÐÆ÷µÄ¼Ä´æÆ÷¶Á 16bit Êý¾Ý
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ·µ»Ø²ÎÊý     uint16          Êý¾Ý
-// Ê¹ÓÃÊ¾Àý     spi_read_16bit_register(SPI_1, 0x1011);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£ä»Žä¼ æ„Ÿå™¨çš„å¯„å­˜å™¨è¯» 16bit æ•°æ®
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// è¿”å›žå‚æ•°     uint16          æ•°æ®
+// ä½¿ç”¨ç¤ºä¾‹     spi_read_16bit_register(SPI_1, 0x1011);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 uint16 spi_read_16bit_register (spi_index_enum spi_n, const uint16 register_name)
 {
@@ -492,14 +492,14 @@ uint16 spi_read_16bit_register (spi_index_enum spi_n, const uint16 register_name
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú´Ó´«¸ÐÆ÷µÄ¼Ä´æÆ÷¶Á 16bit Êý×é
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     register_name   ¼Ä´æÆ÷µØÖ·
-// ²ÎÊýËµÃ÷     *data           Êý¾Ý´æ·Å»º³åÇø
-// ²ÎÊýËµÃ÷     length             ·¢ËÍ»º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_read_16bit_registers(SPI_1, 0x1101, data, 32);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£ä»Žä¼ æ„Ÿå™¨çš„å¯„å­˜å™¨è¯» 16bit æ•°ç»„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     register_name   å¯„å­˜å™¨åœ°å€
+// å‚æ•°è¯´æ˜Ž     *data           æ•°æ®å­˜æ”¾ç¼“å†²åŒº
+// å‚æ•°è¯´æ˜Ž     length             å‘é€ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_read_16bit_registers(SPI_1, 0x1101, data, 32);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_read_16bit_registers (spi_index_enum spi_n, const uint16 register_name, uint16 *data, uint32 length)
 {
@@ -517,14 +517,14 @@ void spi_read_16bit_registers (spi_index_enum spi_n, const uint16 register_name,
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI 8bit Êý¾Ý´«Êä ·¢ËÍÓë½ÓÊÕÊý¾ÝÊÇÍ¬Ê±½øÐÐµÄ
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     write_buffer    ·¢ËÍµÄÊý¾Ý»º³åÇøµØÖ·
-// ²ÎÊýËµÃ÷     read_buffer     ·¢ËÍÊý¾ÝÊ±½ÓÊÕµ½µÄÊý¾ÝµÄ´æ´¢µØÖ·(²»ÐèÒª½ÓÊÕÔò´« NULL)
-// ²ÎÊýËµÃ÷     length             »º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_transfer_8bit(SPI_1, buf, buf, 1);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI 8bit æ•°æ®ä¼ è¾“ å‘é€ä¸ŽæŽ¥æ”¶æ•°æ®æ˜¯åŒæ—¶è¿›è¡Œçš„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     write_buffer    å‘é€çš„æ•°æ®ç¼“å†²åŒºåœ°å€
+// å‚æ•°è¯´æ˜Ž     read_buffer     å‘é€æ•°æ®æ—¶æŽ¥æ”¶åˆ°çš„æ•°æ®çš„å­˜å‚¨åœ°å€(ä¸éœ€è¦æŽ¥æ”¶åˆ™ä¼  NULL)
+// å‚æ•°è¯´æ˜Ž     length             ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_transfer_8bit(SPI_1, buf, buf, 1);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_transfer_8bit (spi_index_enum spi_n, const uint8 *write_buffer, uint8 *read_buffer, uint32 length)
 {
@@ -542,14 +542,14 @@ void spi_transfer_8bit (spi_index_enum spi_n, const uint8 *write_buffer, uint8 *
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI 16bit Êý¾Ý´«Êä ·¢ËÍÓë½ÓÊÕÊý¾ÝÊÇÍ¬Ê±½øÐÐµÄ
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     write_buffer    ·¢ËÍµÄÊý¾Ý»º³åÇøµØÖ·
-// ²ÎÊýËµÃ÷     read_buffer     ·¢ËÍÊý¾ÝÊ±½ÓÊÕµ½µÄÊý¾ÝµÄ´æ´¢µØÖ·(²»ÐèÒª½ÓÊÕÔò´« NULL)
-// ²ÎÊýËµÃ÷     length             »º³åÇø³¤¶È
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_transfer_16bit(SPI_1, buf, buf, 1);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI 16bit æ•°æ®ä¼ è¾“ å‘é€ä¸ŽæŽ¥æ”¶æ•°æ®æ˜¯åŒæ—¶è¿›è¡Œçš„
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     write_buffer    å‘é€çš„æ•°æ®ç¼“å†²åŒºåœ°å€
+// å‚æ•°è¯´æ˜Ž     read_buffer     å‘é€æ•°æ®æ—¶æŽ¥æ”¶åˆ°çš„æ•°æ®çš„å­˜å‚¨åœ°å€(ä¸éœ€è¦æŽ¥æ”¶åˆ™ä¼  NULL)
+// å‚æ•°è¯´æ˜Ž     length             ç¼“å†²åŒºé•¿åº¦
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_transfer_16bit(SPI_1, buf, buf, 1);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_transfer_16bit (spi_index_enum spi_n, const uint16 *write_buffer, uint16 *read_buffer, uint32 length)
 {
@@ -567,24 +567,24 @@ void spi_transfer_16bit (spi_index_enum spi_n, const uint16 *write_buffer, uint1
 }
 
 //-------------------------------------------------------------------------------------------------------------------
-// º¯Êý¼ò½é     SPI ½Ó¿Ú³õÊ¼»¯
-// ²ÎÊýËµÃ÷     spi_n           SPI Ä£¿éºÅ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_index_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     mode            SPI Ä£Ê½ ²ÎÕÕ zf_driver_spi.h ÄÚ spi_mode_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     baud            ÉèÖÃ SPI µÄ²¨ÌØÂÊ ²»³¬¹ýÏµÍ³Ê±ÖÓµÄÒ»°ë ²¿·ÖËÙÂÊ»á±»ÊÊÅä³ÉÏà½üµÄËÙÂÊ
-// ²ÎÊýËµÃ÷     sck_pin         Ñ¡Ôñ SCK Òý½Å ²ÎÕÕ zf_driver_spi.h ÄÚ spi_sck_pin_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     mosi_pin        Ñ¡Ôñ MOSI Òý½Å ²ÎÕÕ zf_driver_spi.h ÄÚ spi_mosi_pin_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     miso_pin        Ñ¡Ôñ MISO Òý½Å ²ÎÕÕ zf_driver_spi.h ÄÚ spi_miso_pin_enum Ã¶¾ÙÌå¶¨Òå
-// ²ÎÊýËµÃ÷     cs_pin          Ñ¡Ôñ CS Òý½Å ²ÎÕÕ zf_driver_spi.h ÄÚ spi_cs_pin_enum Ã¶¾ÙÌå¶¨Òå
-// ·µ»Ø²ÎÊý     void
-// Ê¹ÓÃÊ¾Àý     spi_init(SPI_1, 0, 1*1000*1000, SPI1_SCK_D12, SPI1_MOSI_D14, SPI1_MISO_D15, SPI1_CS0_D13);
-// ±¸×¢ÐÅÏ¢     
+// å‡½æ•°ç®€ä»‹     SPI æŽ¥å£åˆå§‹åŒ–
+// å‚æ•°è¯´æ˜Ž     spi_n           SPI æ¨¡å—å· å‚ç…§ zf_driver_spi.h å†… spi_index_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     mode            SPI æ¨¡å¼ å‚ç…§ zf_driver_spi.h å†… spi_mode_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     baud            è®¾ç½® SPI çš„æ³¢ç‰¹çŽ‡ ä¸è¶…è¿‡ç³»ç»Ÿæ—¶é’Ÿçš„ä¸€åŠ éƒ¨åˆ†é€ŸçŽ‡ä¼šè¢«é€‚é…æˆç›¸è¿‘çš„é€ŸçŽ‡
+// å‚æ•°è¯´æ˜Ž     sck_pin         é€‰æ‹© SCK å¼•è„š å‚ç…§ zf_driver_spi.h å†… spi_sck_pin_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     mosi_pin        é€‰æ‹© MOSI å¼•è„š å‚ç…§ zf_driver_spi.h å†… spi_mosi_pin_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     miso_pin        é€‰æ‹© MISO å¼•è„š å‚ç…§ zf_driver_spi.h å†… spi_miso_pin_enum æžšä¸¾ä½“å®šä¹‰
+// å‚æ•°è¯´æ˜Ž     cs_pin          é€‰æ‹© CS å¼•è„š å‚ç…§ zf_driver_spi.h å†… spi_cs_pin_enum æžšä¸¾ä½“å®šä¹‰
+// è¿”å›žå‚æ•°     void
+// ä½¿ç”¨ç¤ºä¾‹     spi_init(SPI_1, 0, 1*1000*1000, SPI1_SCK_D12, SPI1_MOSI_D14, SPI1_MISO_D15, SPI1_CS0_D13);
+// å¤‡æ³¨ä¿¡æ¯     
 //-------------------------------------------------------------------------------------------------------------------
 void spi_init (spi_index_enum spi_n, spi_mode_enum mode, uint32 baud, spi_sck_pin_enum sck_pin, spi_mosi_pin_enum mosi_pin, spi_miso_pin_enum miso_pin, spi_cs_pin_enum cs_pin)
 {
-    zf_assert(spi_n == (sck_pin / 16));                                         // sck_pin  Óë spi_n Æ¥Åä
-    zf_assert(spi_n == (mosi_pin / 16));                                        // mosi_pin Óë spi_n Æ¥Åä
-    zf_assert(spi_n == (miso_pin / 16) || (miso_pin == SPI_MISO_NULL));         // miso_pin Óë spi_n Æ¥Åä
-    zf_assert(spi_n == (cs_pin / 16) || (cs_pin == SPI_CS_NULL));               // cs_pin   Óë spi_n Æ¥Åä
+    zf_assert(spi_n == (sck_pin / 16));                                         // sck_pin  ä¸Ž spi_n åŒ¹é…
+    zf_assert(spi_n == (mosi_pin / 16));                                        // mosi_pin ä¸Ž spi_n åŒ¹é…
+    zf_assert(spi_n == (miso_pin / 16) || (miso_pin == SPI_MISO_NULL));         // miso_pin ä¸Ž spi_n åŒ¹é…
+    zf_assert(spi_n == (cs_pin / 16) || (cs_pin == SPI_CS_NULL));               // cs_pin   ä¸Ž spi_n åŒ¹é…
     
     if(SPI_CS_NULL == cs_pin)
     {
@@ -601,7 +601,7 @@ void spi_init (spi_index_enum spi_n, spi_mode_enum mode, uint32 baud, spi_sck_pi
     
     spi_iomuxc(spi_n, sck_pin, mosi_pin, miso_pin, cs_pin);
 
-    CLOCK_SetMux(kCLOCK_LpspiMux, LPSPI_CLK_SRC);    //Ñ¡ÔñPLL2×÷ÎªLPSPIÊ±ÖÓÔ´
+    CLOCK_SetMux(kCLOCK_LpspiMux, LPSPI_CLK_SRC);    //é€‰æ‹©PLL2ä½œä¸ºLPSPIæ—¶é’Ÿæº
     CLOCK_SetDiv(kCLOCK_LpspiDiv, LPSPI_CLK_DIV);
     
     LPSPI_MasterGetDefaultConfig(&masterConfig);
@@ -641,15 +641,15 @@ void spi_init (spi_index_enum spi_n, spi_mode_enum mode, uint32 baud, spi_sck_pi
     masterConfig.betweenTransferDelayInNanoSec = 1000000000 / masterConfig.baudRate;
     src_clock = (CLOCK_GetFreq(kCLOCK_SysPllClk) / (LPSPI_CLK_DIV + 1U));
     
-    LPSPI_MasterInit(spi_index[spi_n], &masterConfig, src_clock);//µÚÒ»´Î³õÊ¼»¯±ãÓÚ´ò¿ªÊ±ÖÓ
-    LPSPI_Reset(spi_index[spi_n]);                               //¸´Î»ÍâÉè
-    LPSPI_MasterInit(spi_index[spi_n], &masterConfig, src_clock);//ÖØÐÂ³õÊ¼»¯ÉèÖÃÕýÈ·µÄ²ÎÊý
+    LPSPI_MasterInit(spi_index[spi_n], &masterConfig, src_clock);//ç¬¬ä¸€æ¬¡åˆå§‹åŒ–ä¾¿äºŽæ‰“å¼€æ—¶é’Ÿ
+    LPSPI_Reset(spi_index[spi_n]);                               //å¤ä½å¤–è®¾
+    LPSPI_MasterInit(spi_index[spi_n], &masterConfig, src_clock);//é‡æ–°åˆå§‹åŒ–è®¾ç½®æ­£ç¡®çš„å‚æ•°
     
     LPSPI_Enable(spi_index[spi_n], false);
     spi_index[spi_n]->CFGR1 &= (~LPSPI_CFGR1_NOSTALL_MASK);
     LPSPI_Enable(spi_index[spi_n], true);
 
-    LPSPI_FlushFifo(spi_index[spi_n], true, true);                       //Ë¢ÐÂFIFO
-    LPSPI_ClearStatusFlags(spi_index[spi_n], kLPSPI_AllStatusFlag);      //Çå³ý×´Ì¬±êÖ¾
-    LPSPI_DisableInterrupts(spi_index[spi_n], kLPSPI_AllInterruptEnable);//¹Ø±ÕÖÐ¶Ï
+    LPSPI_FlushFifo(spi_index[spi_n], true, true);                       //åˆ·æ–°FIFO
+    LPSPI_ClearStatusFlags(spi_index[spi_n], kLPSPI_AllStatusFlag);      //æ¸…é™¤çŠ¶æ€æ ‡å¿—
+    LPSPI_DisableInterrupts(spi_index[spi_n], kLPSPI_AllInterruptEnable);//å…³é—­ä¸­æ–­
 }
