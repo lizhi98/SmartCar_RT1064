@@ -58,7 +58,8 @@ Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
 };
 
 // TARGET MOTION
-int32       target_speed_magnitude;
+int32       target_speed_magnitude = 0;
+MotionMode  motion_mode = LINE_FOLLOW;
 
 // 启动所有电机PWM通道输出，占空比为0，方向为逆时针
 void motor_all_init(void){
@@ -172,9 +173,13 @@ void motor_encoder_pit_call(void){
 void rotation_pid_calc(){
     // 车体自转PID计算
     volatile double out = 0.;
-
-    // 从图像获取offset
-    rotation_pid.offset = search_result.offset;
+    if(motion_mode == LINE_FOLLOW){
+        // 巡线模式，从图像获取offset
+        rotation_pid.offset = search_result.offset;
+    }else if(motion_mode == PUSH_BOX){
+        // 推箱子模式，从图像获取offset
+        rotation_pid.offset = 0; // TODO
+    }
     // 比例
     out += (double) (rotation_pid.KP * rotation_pid.offset);
     // 积分
@@ -204,12 +209,20 @@ void rotation_pid_pit_init(void){
 
 // 车运动解算函数
 void target_motion_calc(void){
-
+    // 初始化前进速度，左移速度
+    double speed_front = 0.0;
+    double speed_left  = 0.0;
+    // 初始化三个电机速度缓存
     int32   motor_left_speed    = 0,
             motor_right_speed   = 0,
             motor_rear_speed    = 0;
-
-    double speed_front  =   (double)target_speed_magnitude;
+    // 前进速度
+    if(motion_mode == LINE_FOLLOW){
+        speed_front  =   (double)target_speed_magnitude;
+    }else if(motion_mode == PUSH_BOX){
+        speed_front  =   0;
+        speed_left   =   0;
+    }
 
     motor_left_speed    =   (int32) (-speed_front * COS_PI_D_6);
     motor_right_speed   =   (int32) (speed_front  * COS_PI_D_6);

@@ -16,14 +16,14 @@
         <TargetCommonOption>
           <Device>MCXN947VDF:cm33_core0</Device>
           <Vendor>NXP</Vendor>
-          <PackID>NXP.MCXN947_DFP.19.0.0</PackID>
+          <PackID>NXP.MCXN947_DFP.17.0.0</PackID>
           <PackURL>https://mcuxpresso.nxp.com/cmsis_pack/repo/</PackURL>
-          <Cpu>CPUTYPE("Cortex-M33") FPU3(SFPU) TZ DSP</Cpu>
+          <Cpu>IRAM(0x20000000,0x060000) IRAM2(0x20060000,0x8000) IROM(0x03000000,0x040000) IROM2(0x13000000,0x040000) XRAM(0x30060000,0x8000) XRAM2(0x04000000,0x018000) XRAM3(0x14000000,0x018000) XROM(0x00000000,0x100000) XROM2(0x00100000,0x100000) XROM3(0x10000000,0x100000) CPUTYPE("Cortex-M33") FPU3(SFPU) DSP TZ CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll></FlashDriverDll>
+          <FlashDriverDll>UL2V8M(-S0 -C0 -P0 -FD20000000 -FC1000 -FN4 -FF0MCXN9XX_2048 -FS00 -FL0200000 -FF1MCXN9XX_2048_S -FS110000000 -FL1200000 -FF2MCXN9XX_W25Q64 -FS280000000 -FL2800000 -FF3MCXN9XX_W25Q64_S -FS390000000 -FL3800000 -FP0($$Device:MCXN947VDF$devices\MCXN947\arm\MCXN9XX_2048.FLM) -FP1($$Device:MCXN947VDF$devices\MCXN947\arm\MCXN9XX_2048_S.FLM) -FP2($$Device:MCXN947VDF$devices\MCXN947\arm\MCXN9XX_W25Q64.FLM) -FP3($$Device:MCXN947VDF$devices\MCXN947\arm\MCXN9XX_W25Q64_S.FLM))</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:MCXN947VNL$fsl_device_registers.h</RegisterFile>
+          <RegisterFile>$$Device:MCXN947VDF$devices\MCXN947\fsl_device_registers.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -33,7 +33,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:MCXN947VNL$MCXN947_cm33_core0.xml</SFDFile>
+          <SFDFile>$$Device:MCXN947VDF$devices\MCXN947\MCXN947_cm33_core0.xml</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -179,16 +179,16 @@
             <mOS>0</mOS>
             <uocRom>0</uocRom>
             <uocRam>0</uocRam>
-            <hadIROM>0</hadIROM>
-            <hadIRAM>0</hadIRAM>
-            <hadXRAM>0</hadXRAM>
+            <hadIROM>1</hadIROM>
+            <hadIRAM>1</hadIRAM>
+            <hadXRAM>1</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
             <nBranchProt>0</nBranchProt>
-            <hadIRAM2>0</hadIRAM2>
-            <hadIROM2>0</hadIROM2>
+            <hadIRAM2>1</hadIRAM2>
+            <hadIROM2>1</hadIROM2>
             <StupSel>16</StupSel>
             <useUlib>0</useUlib>
             <EndSel>0</EndSel>
@@ -211,8 +211,8 @@
             <Ra1Chk>0</Ra1Chk>
             <Ra2Chk>0</Ra2Chk>
             <Ra3Chk>0</Ra3Chk>
-            <Im1Chk>0</Im1Chk>
-            <Im2Chk>0</Im2Chk>
+            <Im1Chk>1</Im1Chk>
+            <Im2Chk>1</Im2Chk>
             <OnChipMemories>
               <Ocm1>
                 <Type>0</Type>
@@ -246,8 +246,8 @@
               </Ocm6>
               <IRAM>
                 <Type>0</Type>
-                <StartAddress>0x10000000</StartAddress>
-                <Size>0x100000</Size>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x60000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
@@ -256,8 +256,8 @@
               </IROM>
               <XRAM>
                 <Type>1</Type>
-                <StartAddress>0x20000000</StartAddress>
-                <Size>0x68000</Size>
+                <StartAddress>0x30060000</StartAddress>
+                <Size>0x8000</Size>
               </XRAM>
               <OCR_RVCT1>
                 <Type>1</Type>
@@ -271,8 +271,8 @@
               </OCR_RVCT2>
               <OCR_RVCT3>
                 <Type>1</Type>
-                <StartAddress>0x0</StartAddress>
-                <Size>0x0</Size>
+                <StartAddress>0x10000000</StartAddress>
+                <Size>0x100000</Size>
               </OCR_RVCT3>
               <OCR_RVCT4>
                 <Type>1</Type>
@@ -286,8 +286,8 @@
               </OCR_RVCT5>
               <OCR_RVCT6>
                 <Type>0</Type>
-                <StartAddress>0x20000000</StartAddress>
-                <Size>0x68000</Size>
+                <StartAddress>0x30060000</StartAddress>
+                <Size>0x8000</Size>
               </OCR_RVCT6>
               <OCR_RVCT7>
                 <Type>0</Type>
@@ -301,13 +301,13 @@
               </OCR_RVCT8>
               <OCR_RVCT9>
                 <Type>0</Type>
-                <StartAddress>0x10000000</StartAddress>
-                <Size>0x100000</Size>
+                <StartAddress>0x20000000</StartAddress>
+                <Size>0x60000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
-                <StartAddress>0x10100000</StartAddress>
-                <Size>0x100000</Size>
+                <StartAddress>0x20060000</StartAddress>
+                <Size>0x8000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
             <RvctStartVector></RvctStartVector>
@@ -340,7 +340,7 @@
               <MiscControls>-fno-common  -fdata-sections  -ffreestanding  -fno-builtin  -mthumb  -fshort-enums</MiscControls>
               <Define>DEBUG, CPU_MCXN947VDF_cm33_core0, MCUXPRESSO_SDK,SD_ENABLED,TF_LITE_STATIC_MEMORY,SDK_DEBUGCONSOLE=1,__FPU_PRESENT=1,__USE_CMSIS</Define>
               <Undefine></Undefine>
-              <IncludePath>..\user;..\..\libraries\board;..\..\libraries\zf_drivers;..\..\libraries\zf_devices;..\..\libraries\components\sdmmc\host;..\..\libraries\components\sdmmc\inc;..\..\libraries\components\sdmmc\osa;..\..\libraries\components\sdmmc\sd;..\..\libraries\components\sdmmc\src;..\..\libraries\components\eiq\tensorflow-lite;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro\kernels\neutron;..\..\libraries\components\eiq\tensorflow-lite\third_party\flatbuffers\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\gemmlowp;..\..\libraries\components\eiq\tensorflow-lite\third_party\neutron\common\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\neutron\driver\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\ruy;..\..\libraries\components\eiq\tensorflow-lite\model;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro\kernels;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro;..\..\libraries\sdk_drivers;..\..\libraries\CMSIS;..\..\libraries\CMSIS\Include;D:\Users\lizhi\AppData\Local\Arm\Packs\NXP\MCXN947_DFP\19.0.0\**</IncludePath>
+              <IncludePath>..\user;..\..\libraries\board;..\..\libraries\zf_drivers;..\..\libraries\zf_devices;..\..\libraries\components\sdmmc\host;..\..\libraries\components\sdmmc\inc;..\..\libraries\components\sdmmc\osa;..\..\libraries\components\sdmmc\sd;..\..\libraries\components\sdmmc\src;..\..\libraries\components\eiq\tensorflow-lite;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro\kernels\neutron;..\..\libraries\components\eiq\tensorflow-lite\third_party\flatbuffers\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\gemmlowp;..\..\libraries\components\eiq\tensorflow-lite\third_party\neutron\common\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\neutron\driver\include;..\..\libraries\components\eiq\tensorflow-lite\third_party\ruy;..\..\libraries\components\eiq\tensorflow-lite\model;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro\kernels;..\..\libraries\components\eiq\tensorflow-lite\tensorflow\lite\micro;..\..\libraries\sdk_drivers;..\..\libraries\CMSIS;..\..\libraries\CMSIS\Include;D:\Users\lizhi\AppData\Local\Arm\Packs\NXP\MCXN947_DFP\17.0.0\components\**;D:\Users\lizhi\AppData\Local\Arm\Packs\NXP\MCXN947_DFP\17.0.0\devices\**</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1071,6 +1071,16 @@
   </Targets>
 
   <RTE>
+    <packages>
+      <filter>
+        <targetInfos/>
+      </filter>
+      <package name="MCXN947_DFP" vendor="NXP" version="17.0.0">
+        <targetInfos>
+          <targetInfo name="mcx_vision_board" versionMatchMode="fixed"/>
+        </targetInfos>
+      </package>
+    </packages>
     <apis/>
     <components/>
     <files>

@@ -32,10 +32,12 @@
 * 2024-04-21        ZSY            first version
 ********************************************************************************************************************/
 #include "zf_model_process.h"
-#if defined(__cplusplus)
+
+// #if defined(__cplusplus)
 extern "C" // mian文件是C++文件，如果需要包含C语言的头文件，就需要使用extern "C"
 {
-#endif /* __cplusplus */ 
+// #endif /* __cplusplus */ 
+
 #include "zf_common_headfile.h"
 
 // 打开新的工程或者工程移动了位置务必执行以下操作
@@ -69,7 +71,7 @@ int main(void)
         system_delay_ms(300);
     }
 }
-
-#if defined(__cplusplus)
 }
-#endif /* __cplusplus */
+    // // #if defined(__cplusplus)
+    // }
+    // // #endif

@@ -80,6 +80,14 @@ typedef struct _Motor
              MotorPID *          PID;
 } Motor;
 
+// MOTION MODE
+typedef enum _MotionMode{
+    LINE_FOLLOW,
+    PUSH_BOX,
+}MotionMode;
+
+extern MotionMode motion_mode;
+
 // MOTOR
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 extern Rotation_PID rotation_pid;
