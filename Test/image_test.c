@@ -10,7 +10,7 @@
 
 const int COLORS[] = { '0', '7', '2', '3', '6' };
 const char *TRACK_DISPLAY[] = { "None", "Left", "Right", "Both" };
-const char *ELEMENT_DISPLAY[] = { "Normal", "CurveLeft", "CurveRight", "Zebra" };
+const char *ELEMENT_DISPLAY[] = { "Normal", "CurveLeft", "CurveRight", "Zebra", "LoopLeft", "LoopRight", "Cross" };
 
 int main(int argc, char *argv[]) {
     FILE* fp_data = fopen(argv[1], "r");
@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
 	SearchResult search_result = search(image);
     clock_t end_time = clock();
 
+    printf("\x1B[2J\x1B[H\n");
     for (int i = Y_BD_MIN; i < HEIGHT; i ++) {
         printf("%03d ", i);
         for (int j = 0; j < WIDTH; j ++) {
@@ -34,10 +35,8 @@ int main(int argc, char *argv[]) {
         }
         printf("\n");
     }
-	printf("[threshold = %d]\n", threshold);
     printf("[offset = %f]\n", search_result.offset);
     printf("[time = %dms]\n", (end_time - start_time) * 1000 / CLOCKS_PER_SEC);
-    printf("[track = %s]\n", TRACK_DISPLAY[search_result.track]);
     printf("[element = %s]\n", ELEMENT_DISPLAY[search_result.element_type]);
 
     return 0;

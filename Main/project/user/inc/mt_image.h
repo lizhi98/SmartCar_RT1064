@@ -30,21 +30,14 @@ typedef enum ElementType_t {
     CurveLeft,
     CurveRight,
     Zebra,
+    LoopLeft,
+    LoopRight,
+    Cross,
 } ElementType;
-
-typedef enum {
-    None,
-    Left,
-    Right,
-    Both
-} Track;
 
 typedef struct {
     float offset;
     ElementType element_type;
-#ifdef IMAGE_DEBUG
-    Track track;
-#endif
 } SearchResult;
 
 void process_image(Image image);
@@ -69,8 +62,9 @@ extern uint8 otsu_threshold;
 #define BOUND_APP 4
 #define MID_LINE 3
 
-#define Y_BD_MIN 45
-#define DX_BD_MAX 4
+#define Y_BD_MIN 35
+#define Y_BD_NORMAL_MIN 95
+#define DX_BD_MAX 5
 #define DX_M_MAX 2
 #define BD_LENGTH 85
 #define LOST_COUNT_MAX 5
