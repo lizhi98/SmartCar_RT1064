@@ -1,11 +1,8 @@
 #include "zf_common_headfile.h"
-// 打开新的工程或者工程移动了位置务必执行以下操作
-// 第一步 关闭上面所有打开的文件
-// 第二步 project->clean  等待下方进度条走完
-// 本例程是开源库移植用空工程
+
 #include "main.h"
 
-#define HOST_DEBUG 1
+#define HOST_DEBUG 0
 
 // 图像处理时间记录
 uint32 image_process_time_start = 0;
@@ -23,6 +20,8 @@ int main(void)
 
     // UART TO OpenART mini 初始化
     // TODO
+    // UART TO MCX_Vision 初始化
+    hardware_init_flag += mcx_init_wait();
 
     // 摄像头初始化
     hardware_init_flag += mt_camera_init();
@@ -83,12 +82,9 @@ int main(void)
         }
             // 计算图像处理时间
             image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;
-            // 根据结果判断前进速度
-            
+            // 运动解算        
             target_motion_calc();
 
     }
 }
-
-
 

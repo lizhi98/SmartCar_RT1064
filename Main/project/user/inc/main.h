@@ -11,6 +11,8 @@
 #include "icm42688.h"
 #include "mt_image.h"
 #include "menu.h"
+#include "MCX_Vision.h"
+#include "OpenMV.h"
 
 #define WIFI_SPI_SEND_INTERVAL 200
 // 图像处理时间记录

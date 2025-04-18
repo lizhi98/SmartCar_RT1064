@@ -4,5 +4,7 @@
 #include "motor.h"
 #include "gyroscope.h"
 #include "correspond.h"
+#include "MCX_Vision.h"
+#include "OpenMV.h"
 
 #endif

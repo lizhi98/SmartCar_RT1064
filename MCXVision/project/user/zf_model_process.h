@@ -31,12 +31,13 @@
 * 日期              作者                备注
 * 2024-04-21        ZSY            first version
 ********************************************************************************************************************/
+
 #ifndef _zf_model_process_h_
 #define _zf_model_process_h_
 
-#if defined(__cplusplus)
+#if defined(__cplusplus) && ! defined(VSCODE)
 extern "C" {
-#endif /* __cplusplus */ 
+#endif /* __cplusplus */
 #include "zf_common_headfile.h"
 
     
@@ -47,7 +48,7 @@ void ezh_copy_slice_to_model_input(uint32_t idx, uint32_t cam_slice_buffer, uint
 void zf_model_init(void);
 void zf_model_run(void);
 
-#if defined(__cplusplus)
+#if defined(__cplusplus) && ! defined(VSCODE)
 }
 #endif /* __cplusplus */
 #endif

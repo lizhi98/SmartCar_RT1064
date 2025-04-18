@@ -49,7 +49,7 @@ void LPUART1_IRQHandler(void)
         debug_interrupr_handler();                      // 调用 debug 串口接收处理函数 数据会被 debug 环形缓冲区读取
     #endif                                              // 如果修改了 DEBUG_UART_INDEX 那这段代码需要放到对应的串口中断去
     }
-        
+
     LPUART_ClearStatusFlags(LPUART1, kLPUART_RxOverrunFlag);    // 不允许删除
 }
 
@@ -81,8 +81,8 @@ void LPUART4_IRQHandler(void)
     {
         // 接收中断 
         flexio_camera_uart_handler();
-        
-        gnss_uart_callback();
+        mcx_receive_data_call();
+        // gnss_uart_callback();
     }
         
     LPUART_ClearStatusFlags(LPUART4, kLPUART_RxOverrunFlag);    // 不允许删除

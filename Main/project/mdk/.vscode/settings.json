@@ -47,6 +47,8 @@
         "menu.h": "c",
         "zf_device_key.h": "c",
         "stdlib.h": "c",
-        "zf_driver_soft_spi.h": "c"
+        "zf_driver_soft_spi.h": "c",
+        "mcx_vision.h": "c",
+        "zf_common_fifo.h": "c"
     }
 }

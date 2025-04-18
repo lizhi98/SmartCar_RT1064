@@ -5,6 +5,15 @@
         "fsl_gpio.h": "c",
         "zf_device_config.h": "c",
         "zf_driver_ezh.h": "c",
-        "zf_driver_gpio.h": "c"
-    }
+        "zf_driver_gpio.h": "c",
+        "zf_device_ips200.h": "c",
+        "zf_driver_uart.h": "c",
+        "zf_common_headfile.h": "c",
+        "rt1064.h": "c",
+        "cube_detection.h": "c",
+        "zf_common_typedef.h": "c"
+    },
+    "C_Cpp.default.defines": [
+        "_VSCODE"
+    ]
 }

@@ -138,7 +138,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -408,6 +408,26 @@
               <FileName>smartcar_used19.tflite</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\smartcar_used19.tflite</FilePath>
+            </File>
+            <File>
+              <FileName>RT1064.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\RT1064.c</FilePath>
+            </File>
+            <File>
+              <FileName>RT1064.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\RT1064.h</FilePath>
+            </File>
+            <File>
+              <FileName>cube_detection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\cube_detection.c</FilePath>
+            </File>
+            <File>
+              <FileName>cube_detection.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\cube_detection.h</FilePath>
             </File>
           </Files>
         </Group>

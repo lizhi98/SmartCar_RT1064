@@ -32,6 +32,7 @@
 * 2024-04-21        ZSY            first version
 ********************************************************************************************************************/
 #include "zf_driver_uart.h"
+#include "RT1064.h"
 
 // 用户串口回调函数
 void LP_FLEXCOMM5_IRQHandler(void)
@@ -41,7 +42,7 @@ void LP_FLEXCOMM5_IRQHandler(void)
     if ((kLPUART_RxDataRegFullFlag)&LPUART_GetStatusFlags(USER_USART))
     {
         // 接收到的数据
-        data = LPUART_ReadByte(USER_USART);
+        rt1064_uart_receive_callback(LPUART_ReadByte(USER_USART)); // 调用接收回调函数
     }
     LPUART_ClearStatusFlags(USER_USART, kLPUART_RxOverrunFlag);
 }
