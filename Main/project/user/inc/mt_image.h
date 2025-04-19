@@ -38,14 +38,14 @@ typedef enum ElementType_t {
 typedef struct {
     float offset;
     ElementType element_type;
-} SearchResult;
+} ImageResult;
 
 void process_image(Image image);
 uint8 otsu_calc_threshold(Image image, uint8 min, uint8 max);
 void otsu_binarize_image(Image image, uint8 threshould);
-SearchResult search(Image image);
+void search(Image image);
 
-extern SearchResult search_result;
+extern ImageResult image_result;
 extern uint8 otsu_threshold;
 
 #define OSTU_COUNTER_MAX 10
@@ -63,7 +63,7 @@ extern uint8 otsu_threshold;
 #define MID_LINE 3
 
 #define Y_BD_MIN 35
-#define Y_BD_NORMAL_MIN 95
+#define Y_BD_NORMAL_MIN 80
 #define DX_BD_MAX 5
 #define DX_M_MAX 2
 #define BD_LENGTH 85

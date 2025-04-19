@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-SearchResult search_result;
+ImageResult image_result;
 
 uint8 otsu_counter = 0;
 uint8 otsu_threshold = 0;
@@ -30,7 +30,7 @@ void process_image(Image image) {
         otsu_counter = OSTU_COUNTER_MAX;
     }
     otsu_binarize_image(image_buffer, otsu_threshold);
-	search_result = search(image_buffer);
+	search(image_buffer);
 }
 
 uint8 otsu_calc_threshold(Image image, uint8 min, uint8 max) {
@@ -83,7 +83,7 @@ const uint8 STD_WIDTH[] = {
     14, 13, 12, 
 };
 
-SearchResult search(Image image) {
+void search(Image image) {
 #ifdef IMAGE_DEBUG
 #define SET_IMG(x, y, T) do { \
     image[y][x] = T; \
@@ -102,9 +102,8 @@ SearchResult search(Image image) {
                 change_count ++;
             }
             if (change_count > 9) {
-                SearchResult result = { 0 };
-                result.element_type = Zebra;
-                return result;
+                image_result.element_type = Zebra;
+                return;
             }
         }
     }
@@ -155,11 +154,12 @@ SearchResult search(Image image) {
             if (ml_set) {
                 xl = ml * (dy - dy0l) + xls[dy0l];
                 li = image[y][xl];
+                l_segs ++;
                 SET_IMG(xl, y, BOUND_APP);
             }
         }
         else if (xl) {
-            if (! l_unset && dy - dy0l && dx >= 0 && dx <= DX_M_MAX) {
+            if (! l_unset && dy - dy0l && dx > 0 && dx <= DX_M_MAX) {
                 ml = (float) (xl - xls[dy0l]) / (dy - dy0l);
                 ml_set = true;
             }
@@ -167,13 +167,7 @@ SearchResult search(Image image) {
             SET_IMG(xl, y, BOUND);
         }
         xls[dy] = xl;
-        if (li == EMPTY) {
-            l_empty = true;
-        }
-        else if (l_empty) {
-            l_empty = false;
-            l_segs ++;
-        }
+        l_empty = li == EMPTY;
         left$:
 
         for (dx = 0; image[y][xr] == EMPTY; dx --, xr --)
@@ -195,11 +189,12 @@ SearchResult search(Image image) {
             if (mr_set) {
                 xr = mr * (dy - dy0r) + xrs[dy0r];
                 ri = image[y][xr];
+                r_segs ++;
                 SET_IMG(xr, y, BOUND_APP);
             }
         }
         else if (xr != X_MAX) {
-            if (! r_unset && dy - dy0r && dx <= 0 && dx >= - DX_M_MAX) {
+            if (! r_unset && dy - dy0r && dx < 0 && dx >= - DX_M_MAX) {
                 mr = (float) (xr - xrs[dy0r]) / (dy - dy0r);
                 mr_set = true;
             }
@@ -207,14 +202,9 @@ SearchResult search(Image image) {
             SET_IMG(xr, y, BOUND);
         }
         xrs[dy] = xr;
-        if (ri == EMPTY) {
-            r_empty = true;
-        }
-        else if (r_empty) {
-            r_empty = false;
-            r_segs ++;
-        }
+        r_empty = ri == EMPTY;
         right$:
+        ;
     }
 
     for (uint8 dy = 0; dy <= Y_MAX - Y_BD_MIN; dy ++) {
@@ -227,20 +217,19 @@ SearchResult search(Image image) {
         SET_IMG(xm, Y_MAX - dy, MID_LINE);
     }
 
-    SearchResult result = { 0 };
-
-    printf("%d %d\n", l_segs, r_segs);
-
-    if (l_segs == 2 && r_segs) {
-        result.element_type = Cross;
+    if (l_segs >= 2 && r_segs >= 2) {
+        image_result.element_type = Cross;
     }
     else if (l_segs >= 3) {
-        result.element_type = LoopLeft;
+        image_result.element_type = LoopLeft;
     }
     else if (r_segs >= 3) {
-        result.element_type = LoopRight;
+        image_result.element_type = LoopRight;
     }
+    else if (image_result.element_type == LoopLeft || image_result.element_type == LoopRight) {
 
-    return result;
+    }
+    else {
+        image_result.element_type = Normal;
+    }
 }
-
