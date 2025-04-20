@@ -11,7 +11,7 @@ uint32 image_process_time = 0;
 int main(void)
 {
     clock_init(SYSTEM_CLOCK_600M);  // 不可删除
-    debug_init();                   // 调试端口初始化
+    // debug_init();                   // 调试端口初始化
     // =====================外设初始化开始=========================
     // 硬件初始化正常标志位         1-初始化失败 0-初始化成功
     uint8 hardware_init_flag = 0;
@@ -22,7 +22,8 @@ int main(void)
     // TODO
     // UART TO MCX_Vision 初始化
     hardware_init_flag += mcx_init_wait();
-
+    mcx_receive_data_interrupt_enable(); // MCX_Vision 接收中断使能
+    pit_ms_init(PIT_CH3, 20); // MCX_Vision 定时器初始化
     // 摄像头初始化
     hardware_init_flag += mt_camera_init();
     // 陀螺仪初始化
@@ -58,32 +59,39 @@ int main(void)
     // 主循环准备
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
-    target_speed_magnitude = 700;
+    
+    // target_speed_magnitude = 700;
 
     // 主循环
     while(1) {
         // 定时发送速度信息
         if (timer_get(GPT_TIM_1) > WIFI_SPI_SEND_INTERVAL) {
-            timer_clear(GPT_TIM_1);
+            // timer_clear(GPT_TIM_1);
 #if HOST_DEBUG == 1
             correspond_send_info_to_host();
 #endif
         }
 
         // 计算图像处理时间
-        image_process_time_start = timer_get(GPT_TIM_1);
         // 图像处理、发送与运动解算
         if (mt9v03x_finish_flag) {
+
+            image_process_time_start = timer_get(GPT_TIM_1);
+            // system_delay_ms(1000);
+            
             process_image(mt9v03x_image);
+            char buffer[32];
+            sprintf(buffer,"%1d,%4d,%4d,%ld    ",cube_info.state,cube_info.x_offset,cube_info.y_offset,image_process_time);
+            ips200_show_string(0, 0, buffer);
 #if HOST_DEBUG == 1
         //seekfree_assistant_camera_send();
 #endif
+            image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;
             mt9v03x_finish_flag = 0;
         }
-            // 计算图像处理时间
-            image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;
-            // 运动解算        
-            target_motion_calc();
+        // 计算图像处理时间
+        // 运动解算        
+        target_motion_calc();
 
     }
 }

@@ -2203,7 +2203,7 @@ pll_error_t CLOCK_SetPLL1Freq(const pll_setup_t *pSetup)
     /* Unlock SPLLLOCK_CNFG register */
     SCG0->TRIM_LOCK = 0x5a5a0001;
 
-    /* Configure lock time of APLL stable, value = 500Î¼s/x+300, where x is the period of clk_ref (clk_in/N). */
+    /* Configure lock time of APLL stable, value = 500ÃƒÆ’Ã‚Å½Ãƒâ€šÃ‚Â¼s/x+300, where x is the period of clk_ref (clk_in/N). */
     inRate = CLOCK_GetPLL1InClockRate();
     prediv = findPll1PreDiv();
     /* Adjust input clock */

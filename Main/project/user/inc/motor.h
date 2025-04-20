@@ -8,6 +8,8 @@
 #include "zf_driver_pit.h"
 #include "math.h"
 #include "mt_image.h"
+#include "MCX_Vision.h"
+#include "OpenMV.h"
 
 #define MOTOR_H_PI      3.14159
 #define COS_PI_D_6      0.86603

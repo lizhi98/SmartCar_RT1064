@@ -175,10 +175,10 @@ void rotation_pid_calc(){
     volatile double out = 0.;
     if(motion_mode == LINE_FOLLOW){
         // 巡线模式，从图像获取offset
-        rotation_pid.offset = search_result.offset;
+        rotation_pid.offset = image_result.offset;
     }else if(motion_mode == PUSH_BOX){
         // 推箱子模式，从图像获取offset
-        rotation_pid.offset = 0; // TODO
+        rotation_pid.offset = cube_info.x_offset; // TODO
     }
     // 比例
     out += (double) (rotation_pid.KP * rotation_pid.offset);
@@ -216,9 +216,27 @@ void target_motion_calc(void){
     int32   motor_left_speed    = 0,
             motor_right_speed   = 0,
             motor_rear_speed    = 0;
-    // 前进速度
+
     if(motion_mode == LINE_FOLLOW){
-        speed_front  =   (double)target_speed_magnitude;
+        switch (image_result.element_type)
+        {
+        case Normal:
+        case Cross:
+            speed_front = (double)800;
+            break;
+        case Zebra:
+            speed_front = 0;
+            break;
+        case CurveLeft:
+        case CurveRight:
+        case LoopLeft:
+        case LoopRight:
+            speed_front = (double)700;
+            break;
+        default:
+            break;
+        }
+        speed_left = 0.;
     }else if(motion_mode == PUSH_BOX){
         speed_front  =   0;
         speed_left   =   0;

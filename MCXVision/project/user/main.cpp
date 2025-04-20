@@ -29,11 +29,26 @@ int main(void)
     rt1064_uart_init_wait(); // 等待RT1064模块唤醒
     scc8660_init();
     // ================外设初始化================
-
     while (1)
     {   
+        cube_info.state = CUBE_OUTSIDE_VIEW; // 立方体状态为不在视野内
         if(scc8660_finish){
+            int center_x, center_y;
+            find_red_cube_center(scc8660_image, &center_x, &center_y);
+            
+            if (center_x != -1) {
+                // 使用检测到的坐标
+                // cube_info.x_offset = center_x - (SCC8660_W / 2); // 计算偏移量
+                // cube_info.y_offset = center_y - (SCC8660_H / 2); // 计算偏移量
+                cube_info.x_offset = center_x; // 计算偏移量
+                cube_info.y_offset = center_y; // 计算偏移量
+                ips200_draw_line(center_x - 5, center_y, center_x + 5, center_y, RGB565_YELLOW); // 绘制红色横线
+                ips200_draw_line(center_x, center_y - 5, center_x, center_y + 5, RGB565_YELLOW); // 绘制红色竖线
+            }
+            
+            rt1064_uart_send_cube_info(); // 发送数据
             ips200_show_scc8660(scc8660_image);
+            // ips200_show_string(0,0,(char *)&rt1064_uart_write_buffer[0]);
             scc8660_finish = 0;
         }
 

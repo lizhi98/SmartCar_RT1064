@@ -62,19 +62,19 @@ typedef volatile int16      vint16;                                             
 typedef volatile int32      vint32;                                             // 易变性修饰 有符号 32 bits
 typedef volatile int64      vint64;                                             // 易变性修饰 有符号 64 bits
 
-typedef struct {                                
-  __IO uint32_t     EZHB_BOOT;                           
-  __IO uint32_t     EZHB_CTRL;                           
-  __I  uint32_t     reserve1;                           
-  __I  uint32_t     EZHB_SP;                             
-  __IO uint32_t     reserve2;                     
-  __IO uint32_t     reserve3;                
-  __IO uint32_t     reserve4;                 
-  __IO uint32_t     reserve5;                 
-  __IO uint32_t     EZHB_ARM2EZH;                        
-  __IO uint32_t     reserve6;                        
-  __IO uint32_t     reserve7;                     
- } EZH_ARCH_B_CON_Type;
+//typedef struct {                                
+//  __IO uint32_t     EZHB_BOOT;                           
+//  __IO uint32_t     EZHB_CTRL;                           
+//  __I  uint32_t     reserve1;                           
+//  __I  uint32_t     EZHB_SP;                             
+//  __IO uint32_t     reserve2;                     
+//  __IO uint32_t     reserve3;                
+//  __IO uint32_t     reserve4;                 
+//  __IO uint32_t     reserve5;                 
+//  __IO uint32_t     EZHB_ARM2EZH;                        
+//  __IO uint32_t     reserve6;                        
+//  __IO uint32_t     reserve7;                     
+// } EZH_ARCH_B_CON_Type;
 
 typedef struct _smartdma_camera_params
 {

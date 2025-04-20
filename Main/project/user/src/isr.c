@@ -33,7 +33,8 @@ void PIT_IRQHandler(void)
     
     if(pit_flag_get(PIT_CH3))
     {
-        correspond_host_cmd_pit_call();
+        mcx_cube_data_handle_pit_call();
+        // correspond_host_cmd_pit_call();
         pit_flag_clear(PIT_CH3);
     }
 
@@ -81,7 +82,7 @@ void LPUART4_IRQHandler(void)
     {
         // 接收中断 
         flexio_camera_uart_handler();
-        mcx_receive_data_call();
+        mcx_receive_data_callback();
         // gnss_uart_callback();
     }
         
