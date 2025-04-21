@@ -49,6 +49,7 @@
         "stdlib.h": "c",
         "zf_driver_soft_spi.h": "c",
         "mcx_vision.h": "c",
-        "zf_common_fifo.h": "c"
+        "zf_common_fifo.h": "c",
+        "seekfree_assistant_interface.h": "c"
     }
 }

@@ -12,7 +12,7 @@ void PIT_IRQHandler(void)
 {
     if(pit_flag_get(PIT_CH0))
     {
-        gyroscope_pit_call();
+        gyroscope_pit_callback();
 
         pit_flag_clear(PIT_CH0);
     }

@@ -14,7 +14,7 @@
 #include "MCX_Vision.h"
 #include "OpenMV.h"
 
-#define WIFI_SPI_SEND_INTERVAL 200
+#define WIFI_SPI_SEND_INTERVAL 100
 // 图像处理时间记录
 extern uint32 image_process_time_start;
 extern uint32 image_process_time;

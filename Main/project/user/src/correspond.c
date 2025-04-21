@@ -109,9 +109,8 @@ void correspond_send_info_to_host(){
     );
 #elif CORRESPOND_SEND_INFO_MODE == 2
     sprintf(wifi_uart_send_buffer_temp, 
-        "%lf,%lf,%lf,%lf,%lf,%lf\n",
-        gyroscope_processed_data.x,  gyroscope_processed_data.y, gyroscope_processed_data.z,    // 陀螺仪角度
-        gyroscope_processed_data.vx, gyroscope_processed_data.vy, gyroscope_processed_data.vz  // 陀螺仪速度
+        "%f,%f,%f\n",
+        ICM42688.gyro_z, gyroscope_result.angle_z,gyro_z_offset  // 陀螺仪数据
     );
 #endif
     wifi_uart_send_buffer((uint8 *)wifi_uart_send_buffer_temp, strlen(wifi_uart_send_buffer_temp));
@@ -123,7 +122,7 @@ void correspond_host_cmd_pit_init(void){
 
 uint8 correspond_host_cmd_init(void){
     return (wifi_uart_init(WIFI_SSID,WIFI_PASS,WIFI_UART_STATION) || 
-            wifi_uart_connect_tcp_servers(HOST_IP,WIFI_UART_HOST_PORT,WIFI_UART_SERIANET));
+            wifi_uart_connect_udp_client(HOST_IP,WIFI_UART_HOST_PORT,WIFI_UART_LOCAL_PORT,WIFI_UART_SERIANET));
 }
 
 // ================CORRESPOND_IMAGE_SEND(WIFI_SPI)====================

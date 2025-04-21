@@ -3,6 +3,8 @@ extern "C" // mian文件是C++文件，如果需要包含C语言的头文件，�
 {
 #endif /* __cplusplus */ 
 
+// #define LED_ON
+
 #include "zf_device_ips200.h"
 #include "zf_device_scc8660.h"
 #include "zf_driver_uart.h"
@@ -15,6 +17,7 @@ extern "C" // mian文件是C++文件，如果需要包含C语言的头文件，�
 
 int main(void)
 {
+    
     // 时钟和调试串口-串口4初始化
     zf_board_init();
     // 延时300ms
@@ -22,9 +25,15 @@ int main(void)
     // 使用C++编译无法使用printf，可以使用zf_debug_printf和zf_user_printf替代
     // zf_debug_printf("debug_uart_init_finish\r\n");  // 使用调试串口-串口4发送数据
     // zf_user_printf("user_uart_init_finish\r\n");    // 使用用户串口-串口5发送数据
-
+    // gpio_struct gpio_led_red =      {GPIO2, 8u};
+    // gpio_struct gpio_led_green =    {GPIO2, 9u};
+    // gpio_struct gpio_led_blue =     {GPIO2, 10u};
     // ================外设初始化================
-    
+#if defined(LED_ON)
+    // 打开照明LED
+    gpio_struct gpio_led_white =    {GPIO2, 11u};   
+    gpio_init(gpio_led_white, GPO, 0, PULL_UP);
+#endif
     ips200_init(); // 初始化IPS200模块
     rt1064_uart_init_wait(); // 等待RT1064模块唤醒
     scc8660_init();
