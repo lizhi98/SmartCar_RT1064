@@ -70,7 +70,7 @@ void otsu_binarize_image(Image image, uint8 threshould) {
 }
 
 const uint8 STD_WIDTH[] = {
-    // Y_BD_MIN ~ Y_MAX
+    // Y_SEARCH_MIN ~ Y_MAX
     71, 70, 69, 68, 68, 67, 66, 65,
     64, 64, 63, 62, 61, 61, 60, 59,
     58, 58, 57, 56, 55, 55, 54, 53,
@@ -80,8 +80,12 @@ const uint8 STD_WIDTH[] = {
     33, 32, 31, 30, 30, 29, 28, 27,
     26, 26, 25, 24, 23, 23, 22, 21,
     20, 19, 19, 18, 17, 16, 15, 15,
-    14, 13, 12, 
+    14, 13, 12, 11, 10,  9,  8,  7,
 };
+
+double calc_kw_by_m(double m) {
+    return sqrt(m * m + 1);
+}
 
 void search(Image image) {
 #ifdef IMAGE_DEBUG
@@ -91,12 +95,14 @@ void search(Image image) {
 #else
 #define SET_IMG(x, y, T)
 #endif
+    ElementType el = image_result.element_type;
+    bool el_normal = el <= Normal;
 
     // Zebra detection
     if (image[Y_MAX][0] != ROAD) {
         uint8 CURR = ROAD;
         uint8 change_count = 0;
-        for (uint8 x = 1; x < X_MAX; x ++) {
+        for (uint8 x = X_MIN; x <= X_MAX; x ++) {
             if (image[Y_MAX][x] != CURR) {
                 CURR = image[Y_MAX][x];
                 change_count ++;
@@ -106,44 +112,69 @@ void search(Image image) {
                 return;
             }
         }
+        if (el == Zebra) image_result.element_type = Normal;
     }
 
-    uint8 xl, xr, xm, y;
-    uint8 li, ri;
+    uint8 xl, xr, xm, y, y_bd_min;
     int8 dx, dy;
     uint8 xls[BD_LENGTH] = { 0 }, xrs[BD_LENGTH] = { 0 };
-    float ml, mr;
+    double ml, mr;
     bool ml_set = false, mr_set = false;
 
     uint8 dy0l = 0, dy0r = 0;
     bool l_unset = true, r_unset = true;
 
-    bool l_empty = false, r_empty = false;
-    uint8 l_segs = 1, r_segs = 1;
+    uint8 l_ng_count = 0, r_ng_count = 0;
+    uint8 l_g_count = BD_G_COUNT_MAX, r_g_count = BD_G_COUNT_MAX;
+    bool l_ng = true, r_ng = true, l_lost = false, r_lost = false;
+    uint8 l_segs = 0, r_segs = 0;
+    uint16 sw = 0;
+    uint8 w = 0;
+    double so = 0;
 
     // Find the bottom
-    for (xl = 0; xl < X_MID && image[Y_MAX][xl] != ROAD; xl ++);
-    xls[0] = xl;
-    SET_IMG(xl, Y_MAX, BOUND);
-    for (xr = X_MAX; xr > X_MID && image[Y_MAX][xr] != ROAD; xr --);
-    xrs[0] = xr;
-    SET_IMG(xr, Y_MAX, BOUND);
+    if (el == LoopLeft || el == LoopLeftAfter || el == RampLeft) l_lost = true;
+    else {
+        for (y = Y_MAX; image[y][X_MIN] == ROAD && y > Y_BOTTOM_MIN; y --);
+        if (y == Y_BOTTOM_MIN) l_lost = l_ng = true;
+        else {
+            for (xl = X_MIN; xl < X_MID && image[Y_MAX][xl] != ROAD; xl ++);
+            xls[0] = xl;
+            SET_IMG(xl, y, BOUND);
+        }
+    }
+
+    if (el == LoopRight) r_lost = true;
+    else {
+        for (y = Y_MAX; image[y][X_MAX] == ROAD && y > Y_BOTTOM_MIN; y --);
+        if (y == Y_BOTTOM_MIN) r_lost = r_ng = true;
+        else {
+            if (el == LoopLeft || el == LoopLeftAfter || el == RampLeft)
+                for (xr = X_MID; image[y][xr + 1] != EMPTY; xr ++);
+            else
+                for (xr = X_MAX; xr > X_MID && image[Y_MAX][xr] != ROAD; xr --);
+            xrs[0] = xr;
+            SET_IMG(xr, Y_MAX, BOUND);
+        }
+    }
 
     // Find the bounds
-    for (y = Y_MAX - 1, dx = 0, dy = 1; y >= Y_BD_MIN; y --, dy ++) {
-        if (y == Y_BD_NORMAL_MIN && ! l_empty && ! r_empty && l_segs == 1 && r_segs == 1) {
+    if (el == LoopLeftAfter || el == RampLeft) y_bd_min = Y_BD_EARLY_MIN;
+    else y_bd_min = Y_BD_MIN;
+    for (y = Y_MAX - 1, dx = 0, dy = 1; y >= y_bd_min; y --, dy ++) {
+        if (y == Y_NORMAL_MIN && el_normal && ! l_ng_count && ! r_ng_count && l_segs == 1 && r_segs == 1) {
             break;
         }
 
+        if (l_lost) goto left$;
         for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++)
-            if (dx == DX_BD_MAX) { xl -= dx; break; }
-        if (! dx) for (; image[y][xl - 1] == ROAD; dx --, xl --)
-            if (dx == - DX_BD_MAX) { xl -= dx; break; }
+            if (dx == DX_BD_MAX) { xl -= DX_BD_MAX; break; }
+        if (! dx && xl != X_MIN) for (; image[y][xl - 1] == ROAD && xl > X_MIN; dx --, xl --)
+            if (dx == - DX_BD_MAX) { xl += DX_BD_MAX; break; }
 
-        if (xl == 0) {
+        if (xl == X_MIN) {
             l_unset = true;
-            l_empty = true;
-            goto left$;
+            goto left_ng;
         }
         if (l_unset) {
             dy0l = dy;
@@ -153,32 +184,58 @@ void search(Image image) {
         if (abs(dx) == DX_BD_MAX) {
             if (ml_set) {
                 xl = ml * (dy - dy0l) + xls[dy0l];
-                li = image[y][xl];
-                l_segs ++;
+                xls[dy] = xl;
                 SET_IMG(xl, y, BOUND_APP);
+                goto left_ng;
             }
         }
-        else if (xl) {
-            if (! l_unset && dy - dy0l && dx > 0 && dx <= DX_M_MAX) {
-                ml = (float) (xl - xls[dy0l]) / (dy - dy0l);
+        else if (xl != X_MIN) {
+            if (! l_unset && dy - dy0l && dx > 0 && dx <= DX_M_MAX && xl - xrs[dy0l]) {
+                ml = (double) (xl - xls[dy0l]) / (dy - dy0l);
                 ml_set = true;
             }
-            li = image[y][xl];
+            xls[dy] = xl;
             SET_IMG(xl, y, BOUND);
+            if (l_ng_count) {
+                l_ng_count = 0;
+                if (y > Y_STRICT_G_MAX) l_g_count = BD_G_COUNT_MAX;
+                else goto left_g;
+            }
+            else if (l_g_count) {
+                if (-- l_g_count == 0) goto left_g;
+            }
         }
-        xls[dy] = xl;
-        l_empty = li == EMPTY;
+        goto left$;
+
+        left_g:
+        if (l_ng) {
+            l_ng = false;
+            l_segs ++;
+        }
+        goto left$;
+
+        left_ng:
+        l_g_count = 0;
+        if (++ l_ng_count == BD_NG_COUNT_MAX) l_ng = true;
         left$:
 
+        if (r_lost) goto right$;
         for (dx = 0; image[y][xr] == EMPTY; dx --, xr --)
-            if (dx == - DX_BD_MAX) { xr -= dx; break; }
-        if (! dx) for (; image[y][xr + 1] == ROAD; dx ++, xr ++)
-            if (dx == DX_BD_MAX) { xr -= dx; break; }
+            if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; break; }
+        if (! dx && xr != X_MAX) {
+            if (image[y][xr + 1] == ROAD) {
+                if (el == RampLeft) break;
+                while (true) {
+                    dx ++, xr ++;
+                    if (image[y][xr + 1] != ROAD) break;
+                    if (dx == DX_BD_MAX) { xr -= DX_BD_MAX; break; }
+                }
+            }
+        }
 
         if (xr == X_MAX) {
-            r_empty = true;
             r_unset = true;
-            goto right$;
+            goto right_ng;
         }
         else if (r_unset) {
             dy0r = dy;
@@ -186,50 +243,164 @@ void search(Image image) {
         }
 
         if (abs(dx) == DX_BD_MAX) {
+            if (el == LoopLeftAfter || el == RampLeft) break;
             if (mr_set) {
                 xr = mr * (dy - dy0r) + xrs[dy0r];
-                ri = image[y][xr];
-                r_segs ++;
+                xrs[dy] = xr;
                 SET_IMG(xr, y, BOUND_APP);
+                goto right_ng;
             }
         }
         else if (xr != X_MAX) {
-            if (! r_unset && dy - dy0r && dx < 0 && dx >= - DX_M_MAX) {
-                mr = (float) (xr - xrs[dy0r]) / (dy - dy0r);
+            if (! r_unset && dy - dy0r && dx < 0 && dx >= - DX_M_MAX && xr - xrs[dy0r]) {
+                mr = (double) (xr - xrs[dy0r]) / (dy - dy0r);
                 mr_set = true;
             }
-            ri = image[y][xr];
+            xrs[dy] = xr;
             SET_IMG(xr, y, BOUND);
+            if (r_ng_count) {
+                r_ng_count = 0;
+                if (y > Y_STRICT_G_MAX) r_g_count = BD_G_COUNT_MAX;
+                else goto right_g;
+            }
+            else if (r_g_count) {
+                if (-- r_g_count == 0) goto right_g;
+            }
         }
-        xrs[dy] = xr;
-        r_empty = ri == EMPTY;
+        goto right$;
+
+        right_g:
+        if (r_ng) {
+            r_ng = false;
+            r_segs ++;
+        }
+        goto right$;
+
+        right_ng:
+        r_g_count = 0;
+        if (++ r_ng_count == BD_NG_COUNT_MAX) r_ng = true;
         right$:
         ;
     }
 
-    for (uint8 dy = 0; dy <= Y_MAX - Y_BD_MIN; dy ++) {
+    if (el != Cross) goto cross$;
+    cross:
+    for (y = Y_CROSS_TOP_MIN; ; y ++) {
+        break;
+    }
+    cross$:
+
+    // Analyze element type
+    if (el_normal) {
+        if (l_segs >= 3) {
+            image_result.element_type = LoopLeftBefore;
+        }
+        else if (l_segs >= 2 && r_segs >= 2) {
+            image_result.element_type = CrossBefore;
+        }
+        goto mid;
+    }
+
+    if (el == CrossBefore) {
+        if (l_segs < 2 && r_segs < 2) {
+            el = image_result.element_type = Cross;
+            goto cross;
+        }
+        goto mid;
+    }
+
+    if (el == LoopLeftBefore) {
+        if (l_segs < 3) image_result.element_type = LoopLeft;
+        goto mid;
+    }
+
+    if (el == LoopLeft) {
+        for (y = Y_LOOP_END_MIN; image[y][X_LOOP_END_LEFT] == ROAD; y ++);
+        for (xl = X_LOOP_END_LEFT; image[y][xl + 1] != ROAD; xl ++);
+        for (dx = 0; y <= Y_MAX; y ++) {
+            for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++);
+            if (! dx) for (; image[y][xl - 1] != EMPTY; dx --, xl --)
+                if (dx == - DX_BD_MAX) {
+                    xl += DX_BD_MAX;
+                    SET_IMG(xl, y, SPECIAL);
+                    goto loop_left_corner$;
+                }
+        }
+        loop_left_corner$:
+        ;
+        if (y > Y_MAX) {
+            image_result.element_type = LoopLeftAfter;
+            goto ramp_left;
+        }
+        else {
+            uint8 yc = y;
+            double m = (double) (xrs[0] - xl) / (Y_MAX - yc);
+            for (dy = 0, y = yc + 1; y <= Y_MAX; y ++, dy ++) {
+                if (y <= Y_MID_LINE_MIN) continue;
+                xr = xl + m * dy;
+                SET_IMG(xr, y, BOUND_APP);
+                w = STD_WIDTH[Y_MAX - y];
+                xm = xr - w;
+                so += (xm - X_MID) * w;
+                sw += w;
+                SET_IMG(xm, y, MID_LINE);
+            }
+            image_result.offset = so / sw + xm - X_MID;
+            goto mid$;
+        }
+    }
+
+    if (image_result.element_type == LoopLeftAfter && y >= Y_BD_EARLY_MIN) {
+        image_result.element_type = RampLeft;
+    }
+
+    ramp_left:
+    if (image_result.element_type == RampLeft) {
+        if (! r_lost && y < Y_BD_EARLY_MIN) {
+            image_result.element_type = Normal;
+            goto mid;
+        }
+        for (y = Y_RAMP_TOP_MIN; image[y][X_MIN] == EMPTY; y ++);
+        SET_IMG(X_MIN, y, SPECIAL);
+        uint8 xc = xrs[0] ? (xrs[0] + X_MIN) >> 1 : X_MID;
+        uint8 yc = (y + Y_MAX) >> 1;
+        double m = (double) xc / (Y_MAX - yc);
+        so = 0;
+        for (dy = 0, y = Y_MAX; y >= yc && y >= Y_MID_LINE_MIN; y --, dy ++) {
+            xm = xc - m * dy;
+            SET_IMG(xm, y, MID_LINE);
+            so += xm - X_MID;
+        }
+        image_result.offset = so / (Y_MAX - y);
+        goto mid$;
+    }
+
+    // Calculate midline
+    mid:
+    uint8 dy_max = Y_MAX - max(y_bd_min, Y_MID_LINE_MIN);
+    for (uint8 dy = 0; dy <= dy_max; dy ++) {
         xl = xls[dy];
         xr = xrs[dy];
         if (! xl && ! xr) continue;
-        if (! xl) xm = xr - STD_WIDTH[dy];
-        else if (! xr) xm = xl + STD_WIDTH[dy];
-        else xm = (xl + xr) >> 1;
+        if (! xl) {
+            w = STD_WIDTH[dy];
+            xm = xr - w;
+        }
+        else if (! xr) {
+            w = STD_WIDTH[dy];
+            xm = xl + w;
+        }
+        else {
+            w = xr - xl;
+            xm = (xl + xr) >> 1;
+        }
+        so += (xm - X_MID) * w;
+        sw += w;
         SET_IMG(xm, Y_MAX - dy, MID_LINE);
     }
+    image_result.offset = so / sw;
 
-    if (l_segs >= 2 && r_segs >= 2) {
-        image_result.element_type = Cross;
-    }
-    else if (l_segs >= 3) {
-        image_result.element_type = LoopLeft;
-    }
-    else if (r_segs >= 3) {
-        image_result.element_type = LoopRight;
-    }
-    else if (image_result.element_type == LoopLeft || image_result.element_type == LoopRight) {
+    mid$:
 
-    }
-    else {
-        image_result.element_type = Normal;
-    }
+    SET_IMG(X_MID + (int8) (image_result.offset), Y_MAX, SPECIAL);
 }

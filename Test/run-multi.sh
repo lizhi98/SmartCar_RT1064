@@ -11,26 +11,31 @@ interval=${INTERVAL:-0}
 
 do_restore_cursor=1
 msg=
+data=
+ctrl=
 
-usage="
+usage="Usage:
 Space Pause
 ←/→   Prev/Next
 ↑/↓   Speed up/down
 c     Compile & rerun
+r     Reset data & rerun
+e     Set element type
 g     Goto
+o     Show original image
+x/y   Highlight x/y
 h     Help
 q     Quit
 "
 
 run_frame() {
-  show_msg
-  data="$(./run.sh ${frames[frame_i]} "$data" 2>&1 >/dev/tty)"
+  append_msg "Running"
+  data="$(./run.sh ${frames[frame_i]} "$data" "$ctrl" 2>&1 >/dev/tty)"
+  pop_msg
   if [[ $? != 0 ]]; then
-    clear_screen
     paused=1
 		msg=Paused
   fi
-  show_msg
 }
 
 get_key() {
@@ -90,8 +95,20 @@ set_msg() {
   show_msg
 }
 
+append_ctrl() {
+  ctrl="$ctrl$1;"
+}
+
 append_msg() {
-  set_msg "$msg"$'\n'"$1"
+  if [ -z "$msg" ]; then
+    set_msg "$1"
+  else
+    set_msg "$msg"$'\n'"$1"
+  fi
+}
+
+pop_msg() {
+  set_msg "$(sed '$d' <<< "$msg")"
 }
 
 while true; do
@@ -153,13 +170,56 @@ while true; do
           append_msg "Compile Error"
         fi
         ;;
+      (r)
+        set_msg "Data reset"
+        clear_screen
+        data=
+        run_frame
+        ;;
       (q)
         exit 0
+        ;;
+      (e)
+        input_msg "Element type: " el
+        if [[ "$el" =~ ^[0-9]+$ ]]; then
+          set_msg "Element type <- $el"
+          clear_screen
+          data="$(sed "s/element = [0-9]\\+/element = $el/" <<< "$data")"
+          run_frame
+        else
+          set_msg "Invalid element type"
+        fi
+        ;;
+      (x)
+        input_msg "Highlight: x = " x
+        if [[ "$x" =~ ^[0-9]+$ ]] && [ "$x" -ge 0 ] && [ "$x" -le 187 ]; then
+          append_ctrl "x:$x"
+          run_frame
+        else
+          set_msg "Invalid x"
+        fi
+        ;;
+      (y)
+        input_msg "Highlight: y = " y
+        if [[ "$y" =~ ^[0-9]+$ ]] && [ "$y" -ge 35 ] && [ "$y" -le 119 ]; then
+          append_ctrl "y:$y"
+          run_frame
+        else
+          set_msg "Invalid y"
+        fi
+        ;;
+      (o)
+        append_ctrl "o:1"
+        run_frame
+        ;;
+      (0)
+        ctrl=
+        run_frame
         ;;
       (g)
         input_msg "Goto: " new_i
 
-        if [[ $new_i =~ ^[0-9]+$ ]] && [ "$new_i" -gt 0 ] && [ "$new_i" -le $# ]; then
+        if [[ "$new_i" =~ ^[0-9]+$ ]] && [ "$new_i" -gt 0 ] && [ "$new_i" -le $# ]; then
           frame_i=$((new_i - 1))
           msg="Goto $new_i"
           run_frame
@@ -179,5 +239,9 @@ while true; do
     get_key
   done
 
-  frame_i=$((frame_i + 1))
+  if [[ $frame_i -lt $# ]]; then
+    frame_i=$((frame_i + 1))
+  else
+    frame_i=1
+  fi
 done

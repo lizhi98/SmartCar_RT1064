@@ -255,14 +255,14 @@ template<typename T> class Vector {
   T *data() { return reinterpret_cast<T *>(Data()); }
 
   template<typename K> return_type LookupByKey(K key) const {
-    void *search_result = std::bsearch(
+    void *image_result = std::bsearch(
         &key, Data(), size(), IndirectHelper<T>::element_stride, KeyCompare<K>);
 
-    if (!search_result) {
+    if (!image_result) {
       return nullptr;  // Key not found.
     }
 
-    const uint8_t *element = reinterpret_cast<const uint8_t *>(search_result);
+    const uint8_t *element = reinterpret_cast<const uint8_t *>(image_result);
 
     return IndirectHelper<T>::Read(element, 0);
   }
