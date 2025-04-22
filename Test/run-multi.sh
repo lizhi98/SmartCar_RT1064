@@ -171,6 +171,10 @@ while true; do
         fi
         ;;
       (r)
+        clear_screen
+        run_frame
+        ;;
+      (R)
         set_msg "Data reset"
         clear_screen
         data=

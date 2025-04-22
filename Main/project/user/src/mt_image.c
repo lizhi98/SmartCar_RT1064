@@ -315,8 +315,10 @@ void search(Image image) {
     }
 
     if (el == LoopLeft) {
-        for (y = Y_LOOP_END_MIN; image[y][X_LOOP_END_LEFT] == ROAD; y ++);
-        for (xl = X_LOOP_END_LEFT; image[y][xl + 1] != ROAD; xl ++);
+        y ++;
+        for (xl = xr; image[y][xl] != ROAD; xl --);
+        for (; image[y][xl - 1] == ROAD; xl --);
+        SET_IMG(xl, y, MID_LINE);
         for (dx = 0; y <= Y_MAX; y ++) {
             for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++);
             if (! dx) for (; image[y][xl - 1] != EMPTY; dx --, xl --)
