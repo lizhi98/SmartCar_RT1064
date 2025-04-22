@@ -316,8 +316,8 @@ void search(Image image) {
 
     if (el == LoopLeft) {
         y ++;
-        for (xl = xr; image[y][xl] != ROAD; xl --);
-        for (; image[y][xl - 1] == ROAD; xl --);
+        for (xl = xr ? xr : X_MAX; image[y][xl] != ROAD && xl >= X_MIN; xl --);
+        for (; image[y][xl - 1] == ROAD && xl >= X_MIN; xl --);
         SET_IMG(xl, y, MID_LINE);
         for (dx = 0; y <= Y_MAX; y ++) {
             for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++);
@@ -336,8 +336,8 @@ void search(Image image) {
         }
         else {
             uint8 yc = y;
-            double m = (double) (xrs[0] - xl) / (Y_MAX - yc);
-            for (dy = 0, y = yc + 1; y <= Y_MAX; y ++, dy ++) {
+            double m = (double) ((xrs[0] ? xrs[0] : X_MAX) - xl) / (Y_MAX - yc);
+            for (dy = 1, y = yc + 1; y <= Y_MAX; y ++, dy ++) {
                 if (y <= Y_MID_LINE_MIN) continue;
                 xr = xl + m * dy;
                 SET_IMG(xr, y, BOUND_APP);
@@ -347,7 +347,7 @@ void search(Image image) {
                 sw += w;
                 SET_IMG(xm, y, MID_LINE);
             }
-            image_result.offset = so / sw + xm - X_MID;
+            image_result.offset = so / sw - xm + X_MID;
             goto mid$;
         }
     }
