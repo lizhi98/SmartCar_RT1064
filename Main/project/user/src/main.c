@@ -42,7 +42,7 @@ int main(void)
     hardware_init_flag += correspond_host_cmd_init();
     // correspond_host_cmd_pit_init();
     // 图传初始化
-    // correspond_image_send_init();
+    correspond_image_send_init();
 #endif
     // 主循环计时器初始化
     timer_init(GPT_TIM_1, TIMER_MS);
@@ -61,7 +61,7 @@ int main(void)
     timer_start(GPT_TIM_1);
 
     // target_speed_magnitude = 700;
-    motion_control.motion_mode = CUBE_ANGLE_POSITION_LEFT; // 运动模式初始化
+    motion_control.motion_mode = LINE_FOLLOW; // 运动模式初始化
     // 主循环
     while(1) {
         // 定时发送速度信息
@@ -80,7 +80,7 @@ int main(void)
             process_image(mt9v03x_image);
             
 #if HOST_DEBUG == 1
-        //seekfree_assistant_camera_send();
+        seekfree_assistant_camera_send();
 #endif
             image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;          // 计算图像处理时间
             mt9v03x_finish_flag = 0;

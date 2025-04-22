@@ -34,7 +34,7 @@ MotorPID motor_rear_pid = {
 
 // 角速度PID
 RotationPID rotation_pid = {
-    .KP = -3.0,          .KI = -0.05,        .KD = -1.5,
+    .KP = -3.0,          .KI = -0.01,        .KD = -0.8,
     .last_offset = 0,    .sum_offset = 0,    .offset = 0,
 };
 
@@ -247,20 +247,16 @@ void translation_pid_calc(void){
         {
         case Normal:
         case Cross:
-            translation_pid.front_speed_out = 800;
+            translation_pid.front_speed_out = 600;
             break;
         case Zebra:
             translation_pid.front_speed_out = 0;
             break;
-        case CurveLeft:
-        case CurveRight:
-        case LoopLeft:
-        case LoopRight:
-            translation_pid.front_speed_out = 700;
-            break;
         default:
+            translation_pid.front_speed_out = 500;
             break;
         }
+        // translation_pid.front_speed_out = 200;
         translation_pid.left_speed_out = 0;
 
         // PID积分清零
@@ -346,11 +342,11 @@ void target_motion_calc(void){
     // }else{
     //     motion_control.motion_mode = CUBE_DISTANCE_POSITION;
     // }
-    if(motion_control.motion_mode == CUBE_ANGLE_POSITION_LEFT && motion_control.last_motion_mode != CUBE_ANGLE_POSITION_LEFT){
-        motion_control.line_gyro_angle_z = gyroscope_result.angle_z;
-    }else if(motion_control.motion_mode == CUBE_ANGLE_POSITION_RIGHT && motion_control.last_motion_mode != CUBE_ANGLE_POSITION_RIGHT){
-        motion_control.line_gyro_angle_z = gyroscope_result.angle_z;
-    }
+    // if(motion_control.motion_mode == CUBE_ANGLE_POSITION_LEFT && motion_control.last_motion_mode != CUBE_ANGLE_POSITION_LEFT){
+    //     motion_control.line_gyro_angle_z = gyroscope_result.angle_z;
+    // }else if(motion_control.motion_mode == CUBE_ANGLE_POSITION_RIGHT && motion_control.last_motion_mode != CUBE_ANGLE_POSITION_RIGHT){
+    //     motion_control.line_gyro_angle_z = gyroscope_result.angle_z;
+    // }
     // ====================电机速度解算====================
     // 初始化三个电机速度缓存
     int32   motor_left_speed    = 0,

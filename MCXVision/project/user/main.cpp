@@ -32,7 +32,7 @@ int main(void)
 #if defined(LED_ON)
     // 打开照明LED
     gpio_struct gpio_led_white =    {GPIO2, 11u};   
-    gpio_init(gpio_led_white, GPO, 0, PULL_UP);
+    // gpio_init(gpio_led_white, GPO, 0, PULL_UP);
 #endif
     ips200_init(); // 初始化IPS200模块
     rt1064_uart_init_wait(); // 等待RT1064模块唤醒
