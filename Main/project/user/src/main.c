@@ -36,7 +36,7 @@ int main(void)
     // 编码器初始化
     encoder_all_init();
     motor_encoder_pit_init();
-    rotation_pid_pit_init();    
+    motion_pid_pit_init();    
 #if HOST_DEBUG == 1
     // 上位机控制初始化
     hardware_init_flag += correspond_host_cmd_init();
@@ -44,7 +44,7 @@ int main(void)
     // 图传初始化
     // correspond_image_send_init();
 #endif
-    // 计时器初始化
+    // 主循环计时器初始化
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
 
@@ -61,7 +61,7 @@ int main(void)
     timer_start(GPT_TIM_1);
 
     // target_speed_magnitude = 700;
-
+    motion_control.motion_mode = CUBE_ANGLE_POSITION_LEFT; // 运动模式初始化
     // 主循环
     while(1) {
         // 定时发送速度信息
@@ -75,19 +75,17 @@ int main(void)
         // 计算图像处理时间
         // 图像处理、发送与运动解算
         if (mt9v03x_finish_flag) {
-
             image_process_time_start = timer_get(GPT_TIM_1);
-
             
             process_image(mt9v03x_image);
             
 #if HOST_DEBUG == 1
         //seekfree_assistant_camera_send();
 #endif
-            image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;
+            image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;          // 计算图像处理时间
             mt9v03x_finish_flag = 0;
         }
-        // 计算图像处理时间
+
         // 运动解算        
         target_motion_calc();
 

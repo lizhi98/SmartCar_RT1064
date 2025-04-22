@@ -18,22 +18,24 @@
 #define SIN_PI_D_3      0.86603
 
 // MOTOR PWM
-#define MOTOR_PWM_FREQUENCY     17000
-#define MOTOR_PWM_DUTY_MAX      4500
+#define MOTOR_PWM_FREQUENCY         17000
+#define MOTOR_PWM_DUTY_MAX          5000
 
 // SPEED PID
-#define SUM_WRONG_MAX           4500
-#define MOTOR_PID_PIT           PIT_CH2
-#define MOTOR_PID_PIT_TIME      20
+#define SUM_WRONG_MAX               5000
+#define MOTOR_PID_PIT               PIT_CH2
+#define MOTOR_PID_PIT_TIME          20
 
 // ENCODER
-#define MOTOR_ENCODER_PIT       PIT_CH2
-#define MOTOR_ENCODER_PIT_TIME  20
+#define MOTOR_ENCODER_PIT           PIT_CH2
+#define MOTOR_ENCODER_PIT_TIME      20
 
-// ROTATION PID
-#define SUM_OFFSET_MAX          40
-#define ROTATION_PID_PIT        PIT_CH1
-#define ROTATION_PID_PIT_TIME   10
+// MOTION PID
+#define MOTION_PID_PIT              PIT_CH1
+#define MOTION_PID_PIT_TIME         10
+
+#define ROTATION_SUM_OFFSET_MAX     400
+#define TRANSLATION_SUM_OFFSET_MAX  40
 
 typedef enum _MotorIndex
 {
@@ -50,7 +52,7 @@ typedef struct _Encoder
     encoder_channel2_enum   encoder_channel_2;
 } Encoder;
 
-typedef struct _Rotation_PID{
+typedef struct _RotationPID{
     volatile float KP;
     volatile float KI;
     volatile float KD;
@@ -58,7 +60,25 @@ typedef struct _Rotation_PID{
     volatile int32 last_offset;
     volatile int32 sum_offset;
     volatile int32 wl_out;
-} Rotation_PID;
+} RotationPID;
+
+typedef struct _TranslationPID{
+             float front_KP;
+             float front_KI;
+             float front_KD;
+    volatile int32 front_offset;
+    volatile int32 front_last_offset;
+    volatile int32 front_sum_offset;
+    volatile int32 front_speed_out;
+
+             float left_KP;
+             float left_KI;
+             float left_KD;
+    volatile int32 left_offset;
+    volatile int32 left_last_offset;
+    volatile int32 left_sum_offset;
+    volatile int32 left_speed_out;
+} TranslationPID;
 
 typedef struct _MotorPID
 {
@@ -85,16 +105,30 @@ typedef struct _Motor
 // MOTION MODE
 typedef enum _MotionMode{
     LINE_FOLLOW,
-    PUSH_BOX,
+    CUBE_DISTANCE_POSITION,
+    CUBE_IDENTIFY,
+    CUBE_ANGLE_POSITION_LEFT,
+    CUBE_ANGLE_POSITION_RIGHT,
+    CUBE_PUSH,
+    LINE_BACK,
 }MotionMode;
 
-extern MotionMode motion_mode;
+typedef struct _MotionControl
+{
+    volatile MotionMode  motion_mode;
+    volatile MotionMode  last_motion_mode;
+    volatile float       line_gyro_angle_z;
+             vint32      line_distance; // 当前距离赛道内部的距离
+}MotionControl;
 
 // MOTOR
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
-extern Rotation_PID rotation_pid;
+// PID
+extern RotationPID      rotation_pid;
+extern TranslationPID   translation_pid;
+
 // TARGET MOTION
-extern int32       target_speed_magnitude;
+extern MotionControl motion_control;
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);
@@ -110,8 +144,11 @@ void motor_pid_pit_init(void);
 void motor_pid_calc_apply(MotorIndex index);
 void motor_pid_pit_call(void);
 
+// MOTION PID Control
+void motion_pid_pit_init(void);
+void motion_pid_callback(void);
 void rotation_pid_calc(void);
-void rotation_pid_pit_init(void);
+void translation_pid_calc(void);
 
 // Motor encoder
 void motor_encoder_pit_init(void);

@@ -27,7 +27,7 @@
 *SOFTWARE.
 */
 #include "icm42688.h"
-ICM42688_CONFIG_STRUCT ICM42688_CONFIG={GYRO_250DPS,GYRO_ODR_100HZ,ACC_8G,ACC_ODR_500HZ,_2st,Bandwidth_Factor_4,_2st,Bandwidth_Factor_4,Bias_On_Chip_Off};
+ICM42688_CONFIG_STRUCT ICM42688_CONFIG={GYRO_1000DPS,GYRO_ODR_100HZ,ACC_8G,ACC_ODR_500HZ,_2st,Bandwidth_Factor_4,_2st,Bandwidth_Factor_4,Bias_On_Chip_Off};
 float Gyro_Sensitivity,Acc_Sensitivity;
 ICM42688_RAW_DATA ICM42688_RAW;
 ICM42688_real_data ICM42688;

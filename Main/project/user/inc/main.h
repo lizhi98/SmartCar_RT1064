@@ -4,7 +4,7 @@
 #include "stdio.h"
 
 #include "correspond.h"
-#include "motor.h"
+#include "motion_control.h"
 #include "screen.h"
 #include "gyroscope.h"
 #include "mt_camera.h"

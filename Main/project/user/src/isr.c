@@ -19,7 +19,7 @@ void PIT_IRQHandler(void)
     
     if(pit_flag_get(PIT_CH1))
     {
-        rotation_pid_calc();
+        motion_pid_callback();
 
         pit_flag_clear(PIT_CH1);
     }

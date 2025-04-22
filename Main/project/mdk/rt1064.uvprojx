@@ -10,7 +10,7 @@
       <TargetName>nor_sdram_zf_dtcm</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6220000::V6.22::ARMCLANG</pCCUsed>
+      <pCCUsed>6230000::V6.23::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -405,11 +405,6 @@
               <FilePath>..\user\src\gyroscope.c</FilePath>
             </File>
             <File>
-              <FileName>motor.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\user\src\motor.c</FilePath>
-            </File>
-            <File>
               <FileName>mt_camera.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\user\src\mt_camera.c</FilePath>
@@ -444,6 +439,11 @@
               <FileType>1</FileType>
               <FilePath>..\user\src\OpenMV.c</FilePath>
             </File>
+            <File>
+              <FileName>motion_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\motion_control.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -468,11 +468,6 @@
               <FileName>main.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\inc\main.h</FilePath>
-            </File>
-            <File>
-              <FileName>motor.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\inc\motor.h</FilePath>
             </File>
             <File>
               <FileName>mt_camera.h</FileName>
@@ -508,6 +503,11 @@
               <FileName>OpenMV.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\inc\OpenMV.h</FilePath>
+            </File>
+            <File>
+              <FileName>motion_control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\motion_control.h</FilePath>
             </File>
           </Files>
         </Group>

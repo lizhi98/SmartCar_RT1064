@@ -11,22 +11,14 @@ GyroscopeResult gyroscope_result = {0}; // 陀螺仪积分数据
 
 void gyroscope_init(void){
 
-    // 配置初始化结构体
+    // 初始化icm42688
     icm42688_init(&ICM42688_CONFIG);
 
 }
 
 
 void gyroscope_data_process(void) {
-    // static float filtered_gyro_z = 0.0f; // 滤波后的 Z 轴角速度
-    // const float alpha = 0.1f; // 滤波系数，范围 [0, 1]，值越小滤波越强
-
     gyroscope_result.gyro_z = ICM42688.gyro_z - gyro_z_offset; // 陀螺仪数据
-    // // 一阶低通滤波公式
-    // filtered_gyro_z = alpha * gyroscope_result.gyro_z + (1 - alpha) * filtered_gyro_z;
-
-    // // 更新滤波后的结果
-    // gyroscope_result.gyro_z = filtered_gyro_z;
 
     gyroscope_result.angle_z += (gyroscope_result.gyro_z) * GYROSCOPE_PIT_TIME / 1000.0f;
 }
