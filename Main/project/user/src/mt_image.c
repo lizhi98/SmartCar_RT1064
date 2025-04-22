@@ -121,7 +121,7 @@ void search(Image image) {
     double ml, mr;
     bool ml_set = false, mr_set = false;
 
-    uint8 dy0l = 0, dy0r = 0;
+    uint8 dy0l, dy0r;
     bool l_unset = true, r_unset = true;
 
     uint8 l_ng_count = 0, r_ng_count = 0;
@@ -134,6 +134,8 @@ void search(Image image) {
 
     // Find the bottom
     bottom:
+    dy0l = dy0r = 0;
+    ml_set = mr_set = false;
     if (el == LoopLeft || el == LoopLeftAfter || el == RampLeft) l_lost = true;
     else {
         for (y = Y_MAX; image[y][X_MIN] == ROAD && y > Y_BOTTOM_MIN; y --);
@@ -160,9 +162,7 @@ void search(Image image) {
     }
 
     // Find the bounds
-    if (el == LoopLeftAfter || el == RampLeft) y_bd_min = Y_BD_EARLY_MIN;
-    else y_bd_min = Y_BD_MIN;
-    for (y = Y_MAX - 1, dx = 0, dy = 1; y >= y_bd_min; y --, dy ++) {
+    for (y = Y_MAX - 1, dx = 0, dy = 1; y >= Y_BD_MIN; y --, dy ++) {
         if (y == Y_NORMAL_MIN && el_normal && ! l_ng_count && ! r_ng_count && l_segs == 1 && r_segs == 1) {
             break;
         }
@@ -225,7 +225,10 @@ void search(Image image) {
             if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; break; }
         if (! dx && xr != X_MAX) {
             if (image[y][xr + 1] == ROAD) {
-                if (el == RampLeft) break;
+                if (el == LoopLeftAfter) {
+                    el = image_result.element_type = RampLeft;
+                    break;
+                }
                 while (true) {
                     dx ++, xr ++;
                     if (image[y][xr + 1] != ROAD) break;
@@ -253,7 +256,7 @@ void search(Image image) {
             }
         }
         else if (xr != X_MAX) {
-            if (! r_unset && dy - dy0r && dx < 0 && dx >= - DX_M_MAX && xr - xrs[dy0r]) {
+            if (! r_unset && dy - dy0r && dx < 0 && dx >= - DX_M_MAX && xr != xrs[dy0r]) {
                 mr = (double) (xr - xrs[dy0r]) / (dy - dy0r);
                 mr_set = true;
             }
@@ -319,7 +322,7 @@ void search(Image image) {
         y ++;
         for (xl = xr ? xr : X_MAX; image[y][xl] != ROAD && xl >= X_MIN; xl --);
         for (; image[y][xl - 1] == ROAD && xl >= X_MIN; xl --);
-        SET_IMG(xl, y, MID_LINE);
+        SET_IMG(xl, y, SPECIAL);
         for (dx = 0; y <= Y_MAX; y ++) {
             for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++);
             if (! dx) for (; image[y][xl - 1] != EMPTY; dx --, xl --)
@@ -355,12 +358,8 @@ void search(Image image) {
         }
     }
 
-    if (image_result.element_type == LoopLeftAfter && y >= Y_BD_EARLY_MIN) {
-        image_result.element_type = RampLeft;
-    }
-
-    if (image_result.element_type == RampLeft) {
-        if (! r_lost && y < Y_BD_EARLY_MIN) {
+    if (el == RampLeft) {
+        if (! r_ng && y < Y_BD_MIN) {
             image_result.element_type = Normal;
             goto mid;
         }
