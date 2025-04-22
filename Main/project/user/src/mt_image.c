@@ -133,6 +133,7 @@ void search(Image image) {
     double so = 0;
 
     // Find the bottom
+    bottom:
     if (el == LoopLeft || el == LoopLeftAfter || el == RampLeft) l_lost = true;
     else {
         for (y = Y_MAX; image[y][X_MIN] == ROAD && y > Y_BOTTOM_MIN; y --);
@@ -149,7 +150,7 @@ void search(Image image) {
         for (y = Y_MAX; image[y][X_MAX] == ROAD && y > Y_BOTTOM_MIN; y --);
         if (y == Y_BOTTOM_MIN) r_lost = r_ng = true;
         else {
-            if (el == LoopLeft || el == LoopLeftAfter || el == RampLeft)
+            if (el == LoopLeftAfter || el == RampLeft)
                 for (xr = X_MID; image[y][xr + 1] != EMPTY; xr ++);
             else
                 for (xr = X_MAX; xr > X_MID && image[Y_MAX][xr] != ROAD; xr --);
@@ -329,14 +330,16 @@ void search(Image image) {
                 }
         }
         loop_left_corner$:
-        ;
+
         if (y > Y_MAX) {
-            image_result.element_type = LoopLeftAfter;
-            goto ramp_left;
+            el = image_result.element_type = LoopLeftAfter;
+            goto bottom;
         }
         else {
             uint8 yc = y;
             double m = (double) ((xrs[0] ? xrs[0] : X_MAX) - xl) / (Y_MAX - yc);
+            so = 0;
+            sw = 0;
             for (dy = 1, y = yc + 1; y <= Y_MAX; y ++, dy ++) {
                 if (y <= Y_MID_LINE_MIN) continue;
                 xr = xl + m * dy;
@@ -356,7 +359,6 @@ void search(Image image) {
         image_result.element_type = RampLeft;
     }
 
-    ramp_left:
     if (image_result.element_type == RampLeft) {
         if (! r_lost && y < Y_BD_EARLY_MIN) {
             image_result.element_type = Normal;
@@ -380,6 +382,8 @@ void search(Image image) {
     // Calculate midline
     mid:
     uint8 dy_max = Y_MAX - max(y_bd_min, Y_MID_LINE_MIN);
+    so = 0;
+    sw = 0;
     for (uint8 dy = 0; dy <= dy_max; dy ++) {
         xl = xls[dy];
         xr = xrs[dy];
