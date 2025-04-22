@@ -9,10 +9,16 @@
 #else
 	#define uint8 unsigned char
     #define int8 char
+    #define uint16 unsigned short
+    #define int16 short
 #endif
 
 #ifndef PI
 #define PI 3.14159265
+#endif
+
+#ifndef max
+#define max(a, b) ((a) > (b) ? (a) : (b)) 
 #endif
 
 #define HEIGHT 120
@@ -20,23 +26,31 @@
 #define WIDTH 187
 #define PIXEL 22560 // REAL_WIDTH * HEIGHT
 #define X_MID 93
+#define X_MIN 1
 #define X_MAX 186
 #define Y_MAX 119
 
 typedef uint8 (*Image)[REAL_WIDTH];
 
 typedef enum ElementType_t {
-    Normal,
+    Zebra,
     CurveLeft,
     CurveRight,
-    Zebra,
+    Normal,
+    CrossBefore,
+    Cross,
+    LoopLeftBefore,
+    LoopRightBefore,
     LoopLeft,
     LoopRight,
-    Cross,
+    LoopLeftAfter,
+    LoopRightAfter,
+    RampLeft,
+    RampRight,
 } ElementType;
 
 typedef struct {
-    float offset;
+    double offset;
     ElementType element_type;
 } ImageResult;
 
@@ -59,14 +73,28 @@ extern uint8 otsu_threshold;
 #define EMPTY 0
 #define ROAD 1
 #define BOUND 2
-#define BOUND_APP 4
 #define MID_LINE 3
+#define BOUND_APP 4
+#define SPECIAL 5
 
-#define Y_BD_MIN 35
-#define Y_BD_NORMAL_MIN 80
+#define Y_SEARCH_MIN 35
+#define Y_NORMAL_MIN 75
+#define Y_BD_MIN 40
+#define Y_BD_EARLY_MIN 80
+#define Y_BOTTOM_MIN 105
+#define Y_LOOP_END_MIN 35
+#define Y_CROSS_TOP_MIN 50
+#define Y_RAMP_TOP_MIN 50
+#define Y_STRICT_G_MAX 45
+#define Y_MID_LINE_MIN 95
+#define Y_LOOP_END_MAX 75
+#define X_LOOP_END_LEFT 50
+#define X_LOOP_END_RIGHT 135
+#define X_CURVE_OFFSET 25
 #define DX_BD_MAX 5
 #define DX_M_MAX 2
 #define BD_LENGTH 85
-#define LOST_COUNT_MAX 5
+#define BD_NG_COUNT_MAX 5
+#define BD_G_COUNT_MAX 3
 
 #endif 

@@ -249,7 +249,7 @@ void target_motion_calc(void){
     motor_right_speed   +=  rotation_pid.wl_out;
     motor_rear_speed    +=  rotation_pid.wl_out;
     // 分情况计算速度
-    // switch(search_result.element_type){
+    // switch(image_result.element_type){
     //     case Normal:
     //         // 往前跑+自转
     //         double speed_front  =   (double)target_speed_magnitude;
@@ -257,9 +257,9 @@ void target_motion_calc(void){
     //         motor_left_speed    =   (int32) (-speed_front * COS_PI_D_6);
     //         motor_right_speed   =   (int32) (speed_front * COS_PI_D_6);
 
-    //         motor_left_speed    +=  (int32) (w_kp * search_result.offset);
-    //         motor_right_speed   +=  (int32) (w_kp * search_result.offset);
-    //         motor_rear_speed    +=  (int32) (w_kp * search_result.offset);
+    //         motor_left_speed    +=  (int32) (w_kp * image_result.offset);
+    //         motor_right_speed   +=  (int32) (w_kp * image_result.offset);
+    //         motor_rear_speed    +=  (int32) (w_kp * image_result.offset);
     //     break;
 
     //     case CurveLeft:
