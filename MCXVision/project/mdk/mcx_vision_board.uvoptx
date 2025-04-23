@@ -264,8 +264,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\user\RT1064.c</PathWithFileName>
-      <FilenameWithoutPath>RT1064.c</FilenameWithoutPath>
+      <PathWithFileName>..\user\cube_detection.c</PathWithFileName>
+      <FilenameWithoutPath>cube_detection.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -276,8 +276,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\user\RT1064.h</PathWithFileName>
-      <FilenameWithoutPath>RT1064.h</FilenameWithoutPath>
+      <PathWithFileName>..\user\cube_detection.h</PathWithFileName>
+      <FilenameWithoutPath>cube_detection.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -288,8 +288,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\user\cube_detection.c</PathWithFileName>
-      <FilenameWithoutPath>cube_detection.c</FilenameWithoutPath>
+      <PathWithFileName>..\user\rt1064_uart.c</PathWithFileName>
+      <FilenameWithoutPath>rt1064_uart.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -300,8 +300,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\user\cube_detection.h</PathWithFileName>
-      <FilenameWithoutPath>cube_detection.h</FilenameWithoutPath>
+      <PathWithFileName>..\user\rt1064_uart.h</PathWithFileName>
+      <FilenameWithoutPath>rt1064_uart.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -433,7 +433,7 @@
 
   <Group>
     <GroupName>zf_drivers</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

@@ -32,7 +32,7 @@
 * 2024-04-21        ZSY            first version
 ********************************************************************************************************************/
 #include "zf_driver_uart.h"
-#include "RT1064.h"
+#include "rt1064_uart.h"
 
 // 用户串口回调函数
 void LP_FLEXCOMM5_IRQHandler(void)

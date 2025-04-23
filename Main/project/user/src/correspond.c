@@ -142,7 +142,7 @@ uint8 correspond_image_send_init(void){
     {
 
         seekfree_assistant_interface_init(SEEKFREE_ASSISTANT_WIFI_SPI);
-        seekfree_assistant_camera_information_config(SEEKFREE_ASSISTANT_SCC8660, scc8660_image_buffer, MT9V03X_W, MT9V03X_H);
+        seekfree_assistant_camera_information_config(SEEKFREE_ASSISTANT_MT9V03X, mt9v03x_image[0], MT9V03X_W, MT9V03X_H);
         return 0;
     }
     return 1;

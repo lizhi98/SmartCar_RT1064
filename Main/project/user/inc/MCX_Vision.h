@@ -35,13 +35,6 @@ typedef struct _CubeInfo{
 
 extern CubeInfo cube_info;
 
-typedef struct {
-    bool is_receiving;
-    bool is_done;
-    bool is_error;
-    uint32 offset;
-} McxUartState;
-extern McxUartState mcx_uart_state; // MCX_Vision 数据接收完成标志位
 
 uint8 mcx_init_wait(void);
 void  mcx_receive_data_callback(void);
@@ -49,5 +42,6 @@ void  mcx_receive_data_callback(void);
 void mcx_receive_data_interrupt_enable();
 void mcx_receive_data_interrupt_disable();
 void mcx_cube_data_handle_pit_call();
+void mcx_uart_data_handle_pit_init();
 
 #endif

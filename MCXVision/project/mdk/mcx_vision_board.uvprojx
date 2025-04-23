@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>mcx_vision_board</OutputName>
+          <OutputName>koishi_MCX_Vision</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
@@ -410,16 +410,6 @@
               <FilePath>..\user\smartcar_used19.tflite</FilePath>
             </File>
             <File>
-              <FileName>RT1064.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\user\RT1064.c</FilePath>
-            </File>
-            <File>
-              <FileName>RT1064.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\RT1064.h</FilePath>
-            </File>
-            <File>
               <FileName>cube_detection.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\user\cube_detection.c</FilePath>
@@ -428,6 +418,16 @@
               <FileName>cube_detection.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\cube_detection.h</FilePath>
+            </File>
+            <File>
+              <FileName>rt1064_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\rt1064_uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>rt1064_uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\rt1064_uart.h</FilePath>
             </File>
           </Files>
         </Group>

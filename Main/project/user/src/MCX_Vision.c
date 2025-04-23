@@ -5,17 +5,19 @@
 uint32 mcx_data_length = MCX_DATA_LENGTH - 1;
 
 vuint8 mcx_init_flag = 0; // MCX模块初始化标志位
+vuint8 mcx_data_recv_finish_flag = 0; // MCX模块数据接收完成标志位
 
-vuint8 * scc8660_recv_p;
-
-CubeInfo cube_info = {.state = CUBE_OUTSIDE_VIEW, .x_offset = 0, .y_offset = 0}; // 立方体信息
+CubeInfo cube_info ={
+    .state = CUBE_OUTSIDE_VIEW,
+    .x_offset = 0,
+    .y_offset = 0,
+};
 
 // MCX_Vision 数据缓冲和标志位
 fifo_struct mcx_uart_fifo;
 uint8 mcx_uart_fifo_buffer[MCX_READ_BUFFER_LEN];
 uint8 mcx_data_buffer[MCX_DATA_LENGTH];
-
-McxUartState mcx_uart_state = { .is_receiving = false, .is_done = false, .offset = 0 };
+vuint8 mcx_uart_interrupt_data_temp = 0; // 中断接收数据缓存
 
 /*
 * 函数简介     MCX模块UART通信初始化函数
@@ -61,23 +63,23 @@ uint8 mcx_init_wait(void) {
 }
 
 void mcx_receive_data_callback(void) {
-    if (! mcx_init_flag || mcx_uart_state.is_done) return;
+    if (! mcx_init_flag || mcx_data_recv_finish_flag) return;
+    // 现在可以接收数据了
+    uart_query_byte(MCX_UART_N, (uint8 *)&mcx_uart_interrupt_data_temp);                    // 读取串口数据
 
-    uint8 b;
-    uart_query_byte(MCX_UART_N, &b); // 从串口读一字节
-
-    if (mcx_uart_state.is_receiving) {
-        if (mcx_uart_state.offset == SCC8660_IMAGE_SIZE) {
-            mcx_uart_state.is_receiving = false;
-            mcx_uart_state.offset = 0;
-            mcx_uart_state.is_error = b != MCX_BUFFER_TAIL;
+    if(mcx_uart_interrupt_data_temp == MCX_BUFFER_HEAD){ // 判断数据头
+        fifo_clear(&mcx_uart_fifo); // 清空FIFO
+        // mcx_data_recv_finish_flag = 0; // 数据接收开始
+    }else if(mcx_uart_interrupt_data_temp == MCX_BUFFER_TAIL){ // 判断数据尾
+        if(fifo_used(&mcx_uart_fifo) != MCX_DATA_LENGTH - 1){ // 数据长度异常
+            mcx_data_recv_finish_flag = 0; // 打回，重新接收
+            return;
+        }else{
+            mcx_data_recv_finish_flag = 1; // 数据接收完成
         }
+    }else{
+        fifo_write_buffer(&mcx_uart_fifo, (uint8*)&mcx_uart_interrupt_data_temp, 1);           // 存入 FIFO
     }
-    else {
-        vuint8* p = (vuint8*) &scc8660_image_buffer[0];
-        p[mcx_uart_state.offset ++] = b;
-    }
-    mcx_uart_state.is_done = true;
 }
 
 void mcx_receive_data_interrupt_enable(){
@@ -85,29 +87,33 @@ void mcx_receive_data_interrupt_enable(){
 }
 
 void mcx_receive_data_interrupt_disable(){
-    uart_rx_interrupt(MCX_UART_N, 0); // 打开接收中断
+    uart_rx_interrupt(MCX_UART_N, 0); // 关闭接收中断
 }
 
 void mcx_cube_data_handle_pit_call(){
-    // // 未初始化或数据接收未完成则return
-    // if(!mcx_init_flag || !mcx_uart_state){
-    //     return;
-    // }
-    // // 先查询现在有多少数据
-    // if(fifo_used(&mcx_uart_fifo) != MCX_DATA_LENGTH - 1){ // 数据长度异常
-    //     mcx_uart_state = 0; // 打回，重新接收
-    //     return;
-    // }else{
-    //     // 程序执行到这应该是正常数据了
-    //     fifo_read_buffer(&mcx_uart_fifo, mcx_data_buffer, &mcx_data_length, FIFO_READ_AND_CLEAN); // 读取数据
-    //     if(mcx_data_length == MCX_DATA_LENGTH - 1){ // 数据长度正常
-    //         // 加上\0
-    //         mcx_data_buffer[MCX_DATA_LENGTH - 1] = '\0'; // 添加结束符
-    //         // 解析数据
-    //         sscanf((char *)&mcx_data_buffer[0],"s:%d,xf:%d,yf:%d\n",&cube_info.state,&cube_info.x_offset,&cube_info.y_offset); // 解析数据
-    //     }else{
-    //         mcx_data_length = MCX_DATA_LENGTH - 1; // 重置数据长度,防止fifo_read_buffer修改length
-    //     }
-    //     mcx_uart_state = 0;
-    // }
+    // 未初始化或数据接收未完成则return
+    if(!mcx_init_flag || !(mcx_data_recv_finish_flag)){
+        return;
+    }
+    // 先查询现在有多少数据
+    if(fifo_used(&mcx_uart_fifo) != MCX_DATA_LENGTH - 1){ // 数据长度异常
+        mcx_data_recv_finish_flag = 0; // 打回，重新接收
+        return;
+    }else{
+        // 程序执行到这应该是正常数据了
+        fifo_read_buffer(&mcx_uart_fifo, mcx_data_buffer, &mcx_data_length, FIFO_READ_AND_CLEAN); // 读取数据
+        if(mcx_data_length == MCX_DATA_LENGTH - 1){ // 数据长度正常
+            // 加上\0
+            mcx_data_buffer[MCX_DATA_LENGTH - 1] = '\0'; // 添加结束符
+            // 解析数据
+            sscanf((char *)&mcx_data_buffer[0],"s:%d,xf:%d,yf:%d\n",&cube_info.state,&cube_info.x_offset,&cube_info.y_offset); // 解析数据
+        }else{
+            mcx_data_length = MCX_DATA_LENGTH - 1; // 重置数据长度,防止fifo_read_buffer修改length
+        }
+        mcx_data_recv_finish_flag = 0;
+    }
+}
+
+void mcx_uart_data_handle_pit_init(){
+    pit_ms_init(PIT_CH3, 20); // MCX_Vision 定时器初始化
 }
