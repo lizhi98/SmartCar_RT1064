@@ -49,8 +49,11 @@ void find_red_cube_center(uint16 *scc8660_image) {
                 pixel_count ++;
                 pixel_x_count[cx] ++;
                 pixel_y_count[cy] ++;
+
+#ifdef CUBE_DEBUG
                 // 将像素设置为黑色
                 *p_pixel = RGB565_BLACK;
+#endif
             }
             // 移动到下一个像素
             p_pixel ++;

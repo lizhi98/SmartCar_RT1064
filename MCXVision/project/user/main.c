@@ -30,7 +30,9 @@ int main(void)
     while (1) {
         if (! scc8660_finish) continue;
 
+#ifdef CUBE_DEBUG
         memcpy(scc8660_image_buff, scc8660_image, SCC8660_IMAGE_SIZE);
+#endif
 
         find_red_cube_center(scc8660_image_buff);
         
