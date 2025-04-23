@@ -27,7 +27,7 @@ int main(void)
     char ips_buff[32];
 
     while (1) {
-        if (! scc8660_finish) continue;
+        if (scc8660_finish) continue;
 
         find_red_cube_center(scc8660_image);
         
