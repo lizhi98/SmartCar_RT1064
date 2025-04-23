@@ -1,8 +1,3 @@
-#if defined(__cplusplus) && ! defined(_VSCODE)
-extern "C"
-{
-#endif
-
 #include "zf_device_ips200.h"
 #include "zf_device_scc8660.h"
 #include "zf_driver_uart.h"
@@ -13,7 +8,12 @@ extern "C"
 #include <stdbool.h>
 
 char ips_buff[32];
+
+#ifdef CUBE_DEBUG
 uint16 scc8660_image_buff[SCC8660_W * SCC8660_H];
+#else
+#define scc8660_image_buff scc8660_image
+#endif
 
 int main(void)
 {
@@ -36,6 +36,7 @@ int main(void)
         
         rt1064_uart_send_cube_info();
 
+#ifdef CUBE_DEBUG
         ips200_show_scc8660(scc8660_image_buff);
         if (cube_info.exist) {
             int xc = cube_info.x_center;
@@ -56,11 +57,8 @@ int main(void)
             sprintf(ips_buff, "pc: %5d xc: %3d yc: %3d", cube_info.pixel_count, cube_info.x_center, cube_info.y_center);
             ips200_show_string(0, 0, ips_buff);
         }
+#endif
 
         scc8660_finish = 0;
     }
 }
-
-#if defined(__cplusplus) && ! defined(_VSCODE)
-}
-#endif
