@@ -24,8 +24,8 @@ uint8 pixel_x_count[SCC8660_W];
 uint8 pixel_y_count[SCC8660_H];
 
 void find_red_cube_center(uint16 *scc8660_image) {
-    int x_min = 0, x_max = SCC8660_W - 1;
-    int y_min = 0, y_max = SCC8660_H - 1;
+    int16 x_min = 0, x_max = SCC8660_W - 1;
+    int16 y_min = 0, y_max = SCC8660_H - 1;
 
     memset(pixel_x_count, 0, sizeof(pixel_x_count));
     memset(pixel_y_count, 0, sizeof(pixel_y_count));
@@ -58,7 +58,10 @@ void find_red_cube_center(uint16 *scc8660_image) {
     }
 
     // 有效性检查
-    if (! (cube_info.exist = pixel_count < MIN_PIXEL_COUNT)) return;
+    if (! pixel_count < MIN_PIXEL_COUNT) {
+        cube_info.exist = false;
+        return;
+    }
 
     // 计算边界
     while (pixel_x_count[x_min] < MIN_X_PIXEL_COUNT && x_min < SCC8660_W) x_min ++;
@@ -71,6 +74,7 @@ void find_red_cube_center(uint16 *scc8660_image) {
     }
 
     // 写入立方体信息
+    cube_info.exist = true;
     cube_info.x_center = (x_min + x_max) >> 1;
     cube_info.y_center = (y_min + y_max) >> 1;
     cube_info.x_min = x_min;
