@@ -20,8 +20,19 @@ typedef struct _CubeInfo {
     int32 y_offset;
 } CubeInfo;
 
-extern CubeInfo cube_info;
+typedef struct _CubeDebugInfo {
+    bool  exist;
+    int32 x_center;
+    int32 y_center;
+    int32 x_min;
+    int32 x_max;
+    int32 y_min;
+    int32 y_max;
+} CubeDebugInfo;
 
-void find_red_cube_center(uint16 *scc8660_image, int *x, int *y);
+extern CubeInfo cube_info;
+extern CubeDebugInfo cube_debug_info;
+
+void find_red_cube_center(uint16 *scc8660_image);
 
 #endif

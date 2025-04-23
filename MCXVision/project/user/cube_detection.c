@@ -7,13 +7,13 @@ CubeInfo cube_info = {
     .y_offset = 0
 };
 
-void find_red_cube_center(uint16 *scc8660_image, int *x, int *y) {
+void find_red_cube_center(uint16 *scc8660_image) {
     int x_min = SCC8660_W, x_max = 0;
     int y_min = SCC8660_H, y_max = 0;
 
     uint32 pixel_count = 0;
     uint16 *p_pixel = scc8660_image;
-    
+
     for (int cy = 0; cy < SCC8660_H; cy ++) {
         for (int cx = 0; cx < SCC8660_W; cx ++) {
             uint16 pixel = *p_pixel ++;
@@ -43,11 +43,11 @@ void find_red_cube_center(uint16 *scc8660_image, int *x, int *y) {
         x_max > x_min && 
         y_max > y_min
     ) {
-        *x = (x_min + x_max) >> 1;
-        *y = (y_min + y_max) >> 1;
+        cube_debug_info.exist = true;
+        cube_debug_info.x_center = (x_min + x_max) >> 1;
+        cube_debug_info.y_center = (y_min + y_max) >> 1;
     }
     else {
-        *x = -1;
-        *y = -1;
+        cube_debug_info.exist = false;
     }
 }

@@ -7,7 +7,7 @@ extern "C"
 #include "zf_device_scc8660.h"
 #include "zf_driver_uart.h"
 
-#include "RT1064.h"
+#include "rt1064_uart.h"
 #include "cube_detection.h"
 
 #include <stdbool.h>
@@ -25,23 +25,31 @@ int main(void)
     scc8660_init();
 
     while (1) {
-        // 立方体状态为不在视野内
-        cube_info.state = CUBE_OUTSIDE_VIEW;
-        if (scc8660_finish) {
-            int center_x, center_y;
-            find_red_cube_center(scc8660_image, &center_x, &center_y);
-            
-            if (center_x != -1) {
-                cube_info.x_offset = center_x;
-                cube_info.y_offset = center_y;
-                ips200_draw_line(center_x - 5, center_y, center_x + 5, center_y, RGB565_RED);
-                ips200_draw_line(center_x, center_y - 5, center_x, center_y + 5, RGB565_RED);
-            }
-            
-            rt1064_uart_send_cube_info();
-            ips200_show_scc8660(scc8660_image);
-            scc8660_finish = 0;
+        if (! scc8660_finish) continue;
+
+        find_red_cube_center(scc8660_image);
+        
+        // rt1064_uart_send_cube_info();
+
+        ips200_show_scc8660(scc8660_image);
+        if (cube_debug_info.exist) {
+            int xc = cube_debug_info.x_center;
+            int yc = cube_debug_info.y_center;
+            int x1 = cube_debug_info.x_min;
+            int x2 = cube_debug_info.x_max;
+            int y1 = cube_debug_info.y_min;
+            int y2 = cube_debug_info.y_max;
+            // 绘制中心十字
+            ips200_draw_line(xc - 5, yc, xc + 5, yc, RGB565_RED);
+            ips200_draw_line(xc, yc - 5, xc, yc + 5, RGB565_RED);
+            // 绘制边框
+            ips200_draw_line(x1, y1, x2, y1, RGB565_RED);
+            ips200_draw_line(x1, y1, x1, y2, RGB565_RED);
+            ips200_draw_line(x2, y1, x2, y2, RGB565_RED);
+            ips200_draw_line(x1, y2, x2, y2, RGB565_RED);
         }
+
+        scc8660_finish = 0;
     }
 }
 
