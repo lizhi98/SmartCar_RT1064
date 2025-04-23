@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "Main",
+      "includePath": [
+        "${workspaceFolder}/libraries/**",
+        "${workspaceFolder}/project/user/**"
+      ]
+    }
+  ],
+  "version": 4
+}

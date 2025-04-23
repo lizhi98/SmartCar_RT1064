@@ -3,6 +3,7 @@
 *.uvmpw.*
 *.uvguix.*
 uv4.log.lock
+mdk/.vscode
 
 # Node.js
 node_modules
@@ -41,8 +42,9 @@ System\ Volume\ Information
 *.log
 *.xml
 *.iml
-Object_detection_training.7z
+*.7z
+*.sfd
+*.SFR
+
 # VS Code
-.vscode/c_cpp_properties.json
-Main/project/RT1064智能车推荐引脚分配.txt
-Main/project/RT1064核心板丝印与芯片引脚对应表格.xlsx
+

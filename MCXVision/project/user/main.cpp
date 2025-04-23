@@ -1,9 +1,7 @@
-#if defined(__cplusplus) && !defined(_VSCODE)
-extern "C" // mian文件是C++文件，如果需要包含C语言的头文件，就需要使用extern "C"
+#if defined(__cplusplus) && ! defined(_VSCODE)
+extern "C"
 {
 #endif /* __cplusplus */ 
-
-// #define LED_ON
 
 #include "zf_device_ips200.h"
 #include "zf_device_scc8660.h"
@@ -12,58 +10,41 @@ extern "C" // mian文件是C++文件，如果需要包含C语言的头文件，�
 #include "RT1064.h"
 #include "cube_detection.h"
 
-// 核心板下载完代码需要手动复位！！！
-// 如果程序运行后，模块上的Core灯闪烁，说明程序进入了HardFault，就需要检测是否有数组越界，外设没有初始化，外设时钟没有设置等情况
+#include <stdbool.h>
 
 int main(void)
 {
-    
     // 时钟和调试串口-串口4初始化
     zf_board_init();
-    // 延时300ms
     system_delay_ms(300);
-    // 使用C++编译无法使用printf，可以使用zf_debug_printf和zf_user_printf替代
-    // zf_debug_printf("debug_uart_init_finish\r\n");  // 使用调试串口-串口4发送数据
-    // zf_user_printf("user_uart_init_finish\r\n");    // 使用用户串口-串口5发送数据
-    // gpio_struct gpio_led_red =      {GPIO2, 8u};
-    // gpio_struct gpio_led_green =    {GPIO2, 9u};
-    // gpio_struct gpio_led_blue =     {GPIO2, 10u};
-    // ================外设初始化================
-#if defined(LED_ON)
-    // 打开照明LED
-    gpio_struct gpio_led_white =    {GPIO2, 11u};   
-    // gpio_init(gpio_led_white, GPO, 0, PULL_UP);
-#endif
-    ips200_init(); // 初始化IPS200模块
-    rt1064_uart_init_wait(); // 等待RT1064模块唤醒
+    // 初始化 IPS200 模块
+    ips200_init(); 
+    // 等待 RT1064 模块唤醒
+    rt1064_uart_init_wait();
+    // 初始化 SCC8660 摄像头
     scc8660_init();
-    // ================外设初始化================
-    while (1)
-    {   
-        cube_info.state = CUBE_OUTSIDE_VIEW; // 立方体状态为不在视野内
-        if(scc8660_finish){
+
+    while (1) {
+        // 立方体状态为不在视野内
+        cube_info.state = CUBE_OUTSIDE_VIEW;
+        if (scc8660_finish) {
             int center_x, center_y;
             find_red_cube_center(scc8660_image, &center_x, &center_y);
             
             if (center_x != -1) {
-                // 使用检测到的坐标
-                // cube_info.x_offset = center_x - (SCC8660_W / 2); // 计算偏移量
-                // cube_info.y_offset = center_y - (SCC8660_H / 2); // 计算偏移量
-                cube_info.x_offset = center_x; // 计算偏移量
-                cube_info.y_offset = center_y; // 计算偏移量
-                ips200_draw_line(center_x - 5, center_y, center_x + 5, center_y, RGB565_YELLOW); // 绘制红色横线
-                ips200_draw_line(center_x, center_y - 5, center_x, center_y + 5, RGB565_YELLOW); // 绘制红色竖线
+                cube_info.x_offset = center_x;
+                cube_info.y_offset = center_y;
+                ips200_draw_line(center_x - 5, center_y, center_x + 5, center_y, RGB565_RED);
+                ips200_draw_line(center_x, center_y - 5, center_x, center_y + 5, RGB565_RED);
             }
             
-            rt1064_uart_send_cube_info(); // 发送数据
+            rt1064_uart_send_cube_info();
             ips200_show_scc8660(scc8660_image);
-            // ips200_show_string(0,0,(char *)&rt1064_uart_write_buffer[0]);
             scc8660_finish = 0;
         }
-
     }
 }
 
-#if defined(__cplusplus)&&!defined(_VSCODE)
+#if defined(__cplusplus) && ! defined(_VSCODE)
 }
 #endif

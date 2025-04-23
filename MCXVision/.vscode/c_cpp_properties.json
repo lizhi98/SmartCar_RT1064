@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "MCXVision",
+            "includePath": [
+                "${workspaceFolder}/libraries/**",
+                "${workspaceFolder}/project/user/**"
+            ]
+        }
+    ],
+    "version": 4
+}
