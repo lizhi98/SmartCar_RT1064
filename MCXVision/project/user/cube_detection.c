@@ -8,6 +8,7 @@ CubeInfo cube_info = {
 };
 CubeDebugInfo cube_debug_info = {
     .exist = false,
+    .pixel_count = 0,
     .x_center = 0,
     .y_center = 0,
     .x_min = 0,
@@ -28,12 +29,12 @@ void find_red_cube_center(uint16 *scc8660_image) {
             uint16 pixel = *p_pixel ++;
             
             // 提取 RGB 565 分量
-            uint8 r = pixel >> 11;
-            uint8 g = (pixel >> 5) & 0b111111;
-            uint8 b = pixel & 0b11111;
+            uint8 r = (uint8) ((pixel & 0xf800) >> 8);
+            uint8 g = (uint8) ((pixel & 0x07e0) >> 3);
+            uint8 b = (uint8) ((pixel & 0x001f) << 3);
 
             if (r > R_BASE_THRESHOLD && // R 分量大于阈值
-                r > g &&                // R 分量显著大于 G（考虑位宽差异）
+                r > (g << 1) &&         // R 分量显著大于 G
                 r > (b << 1)            // R 分量显著大于 B
             ) {
                 // 更新边界
@@ -55,6 +56,11 @@ void find_red_cube_center(uint16 *scc8660_image) {
         cube_debug_info.exist = true;
         cube_debug_info.x_center = (x_min + x_max) >> 1;
         cube_debug_info.y_center = (y_min + y_max) >> 1;
+        cube_debug_info.x_min = x_min;
+        cube_debug_info.x_max = x_max;
+        cube_debug_info.y_min = y_min;
+        cube_debug_info.y_max = y_max;
+        cube_debug_info.pixel_count = pixel_count;
     }
     else {
         cube_debug_info.exist = false;

@@ -24,6 +24,8 @@ int main(void)
     // 初始化 SCC8660 摄像头
     scc8660_init();
 
+    char ips_buff[32];
+
     while (1) {
         if (! scc8660_finish) continue;
 
@@ -40,13 +42,16 @@ int main(void)
             int y1 = cube_debug_info.y_min;
             int y2 = cube_debug_info.y_max;
             // 绘制中心十字
-            ips200_draw_line(xc - 5, yc, xc + 5, yc, RGB565_RED);
-            ips200_draw_line(xc, yc - 5, xc, yc + 5, RGB565_RED);
+            ips200_draw_line(xc - 5, yc, xc + 5, yc, RGB565_YELLOW);
+            ips200_draw_line(xc, yc - 5, xc, yc + 5, RGB565_YELLOW);
             // 绘制边框
-            ips200_draw_line(x1, y1, x2, y1, RGB565_RED);
-            ips200_draw_line(x1, y1, x1, y2, RGB565_RED);
-            ips200_draw_line(x2, y1, x2, y2, RGB565_RED);
-            ips200_draw_line(x1, y2, x2, y2, RGB565_RED);
+            ips200_draw_line(x1, y1, x2, y1, RGB565_GREEN);
+            ips200_draw_line(x1, y1, x1, y2, RGB565_GREEN);
+            ips200_draw_line(x2, y1, x2, y2, RGB565_GREEN);
+            ips200_draw_line(x1, y2, x2, y2, RGB565_GREEN);
+            // 显示数据
+            sprintf(ips_buff, "pc: %5d", cube_debug_info.pixel_count);
+            ips200_show_string(0, 0, ips_buff);
         }
 
         scc8660_finish = 0;

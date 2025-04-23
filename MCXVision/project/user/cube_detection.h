@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 
-#define R_BASE_THRESHOLD        (15)
+#define R_BASE_THRESHOLD        (150)
 #define MIN_RED_PIXELS          (80)
 
 typedef enum _CubeDetectionState {
@@ -21,13 +21,14 @@ typedef struct _CubeInfo {
 } CubeInfo;
 
 typedef struct _CubeDebugInfo {
-    bool  exist;
-    int32 x_center;
-    int32 y_center;
-    int32 x_min;
-    int32 x_max;
-    int32 y_min;
-    int32 y_max;
+    bool    exist;
+    uint32  pixel_count;
+    int32   x_center;
+    int32   y_center;
+    int32   x_min;
+    int32   x_max;
+    int32   y_min;
+    int32   y_max;
 } CubeDebugInfo;
 
 extern CubeInfo cube_info;
