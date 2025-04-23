@@ -6,6 +6,15 @@ CubeInfo cube_info = {
     .x_offset = 0,
     .y_offset = 0
 };
+CubeDebugInfo cube_debug_info = {
+    .exist = false,
+    .x_center = 0,
+    .y_center = 0,
+    .x_min = 0,
+    .x_max = 0,
+    .y_min = 0,
+    .y_max = 0
+};
 
 void find_red_cube_center(uint16 *scc8660_image) {
     int x_min = SCC8660_W, x_max = 0;
