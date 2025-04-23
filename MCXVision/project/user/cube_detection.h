@@ -31,6 +31,12 @@ typedef struct _CubeDebugInfo {
     int32   y_max;
 } CubeDebugInfo;
 
+typedef struct _RGB {
+    uint8 r;
+    uint8 g;
+    uint8 b;
+} RGB;
+
 extern CubeInfo cube_info;
 extern CubeDebugInfo cube_debug_info;
 

@@ -12,6 +12,9 @@ extern "C"
 
 #include <stdbool.h>
 
+char ips_buff[32];
+uint16 scc8660_image_buff[SCC8660_W * SCC8660_H];
+
 int main(void)
 {
     // 时钟和调试串口-串口4初始化
@@ -24,16 +27,17 @@ int main(void)
     // 初始化 SCC8660 摄像头
     scc8660_init();
 
-    char ips_buff[32];
 
     while (1) {
-        if (scc8660_finish) continue;
+        if (! scc8660_finish) continue;
 
-        find_red_cube_center(scc8660_image);
+        memcpy(scc8660_image_buff, scc8660_image, SCC8660_IMAGE_SIZE);
+
+        find_red_cube_center(scc8660_image_buff);
         
         // rt1064_uart_send_cube_info();
 
-        ips200_show_scc8660(scc8660_image);
+        ips200_show_scc8660(scc8660_image_buff);
         if (cube_debug_info.exist) {
             int xc = cube_debug_info.x_center;
             int yc = cube_debug_info.y_center;

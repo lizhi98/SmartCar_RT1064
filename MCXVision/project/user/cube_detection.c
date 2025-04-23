@@ -17,25 +17,31 @@ CubeDebugInfo cube_debug_info = {
     .y_max = 0
 };
 
+void parse_rgb(uint16 pixel, RGB *rgb) {
+    pixel =  ((((uint16_t) pixel << 8) & 0xFF00) | ((uint16_t) pixel >> 8));
+    rgb->r = (uint8) ((pixel & 0xf800) >> 8);
+    rgb->g = (uint8) ((pixel & 0x07e0) >> 3);
+    rgb->b = (uint8) ((pixel & 0x001f) << 3);
+}
+
 void find_red_cube_center(uint16 *scc8660_image) {
     int x_min = SCC8660_W, x_max = 0;
     int y_min = SCC8660_H, y_max = 0;
 
     uint32 pixel_count = 0;
     uint16 *p_pixel = scc8660_image;
+    RGB rgb;
 
     for (int cy = 0; cy < SCC8660_H; cy ++) {
         for (int cx = 0; cx < SCC8660_W; cx ++) {
-            uint16 pixel = *p_pixel ++;
+            uint16 pixel = *p_pixel;
             
             // 提取 RGB 565 分量
-            uint8 r = (uint8) ((pixel & 0xf800) >> 8);
-            uint8 g = (uint8) ((pixel & 0x07e0) >> 3);
-            uint8 b = (uint8) ((pixel & 0x001f) << 3);
+            parse_rgb(pixel, &rgb);
 
-            if (r > R_BASE_THRESHOLD && // R 分量大于阈值
-                r > (g << 1) &&         // R 分量显著大于 G
-                r > (b << 1)            // R 分量显著大于 B
+            if (rgb.r > R_BASE_THRESHOLD && // R 分量大于阈值
+                (rgb.r >> 1) > rgb.g &&     // R 分量显著大于 G
+                (rgb.r >> 1) > rgb.b        // R 分量显著大于 B
             ) {
                 // 更新边界
                 if (cx < x_min) x_min = cx;
@@ -44,7 +50,11 @@ void find_red_cube_center(uint16 *scc8660_image) {
                 if (cy > y_max) y_max = cy;
                 // 更新有效像素数RRR
                 pixel_count ++;
+                // 将像素设置为红色
+                *p_pixel = RGB565_RED;
             }
+            // 移动到下一个像素
+            p_pixel ++;
         }
     }
 
