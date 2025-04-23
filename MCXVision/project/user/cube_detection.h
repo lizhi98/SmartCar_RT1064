@@ -6,8 +6,10 @@
 
 #include <stdint.h>
 
-#define R_BASE_THRESHOLD        (150)
-#define MIN_RED_PIXELS          (4200)
+#define R_BASE_THRESHOLD        150
+#define MIN_PIXEL_COUNT         4200
+#define MIN_X_PIXEL_COUNT       30
+#define MIN_Y_PIXEL_COUNT       30
 
 typedef struct _CubeInfo {
     bool    exist;

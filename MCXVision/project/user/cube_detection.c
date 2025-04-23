@@ -20,14 +20,20 @@ void parse_rgb(uint16 pixel, RGB *rgb) {
     rgb->b = (uint8) ((pixel & 0x001f) << 3);
 }
 
+uint8 pixel_x_count[SCC8660_W];
+uint8 pixel_y_count[SCC8660_H];
+
 void find_red_cube_center(uint16 *scc8660_image) {
-    int x_min = SCC8660_W, x_max = 0;
-    int y_min = SCC8660_H, y_max = 0;
+    int x_min = 0, x_max = SCC8660_W - 1;
+    int y_min = 0, y_max = SCC8660_H - 1;
+
+    memset(pixel_x_count, 0, sizeof(pixel_x_count));
+    memset(pixel_y_count, 0, sizeof(pixel_y_count));
 
     uint32 pixel_count = 0;
     uint16 *p_pixel = scc8660_image;
     RGB rgb;
-
+    
     for (int cy = 0; cy < SCC8660_H; cy ++) {
         for (int cx = 0; cx < SCC8660_W; cx ++) {
             uint16 pixel = *p_pixel;
@@ -39,13 +45,10 @@ void find_red_cube_center(uint16 *scc8660_image) {
                 (rgb.r >> 1) > rgb.g &&     // R 分量显著大于 G
                 (rgb.r >> 1) > rgb.b        // R 分量显著大于 B
             ) {
-                // 更新边界
-                if (cx < x_min) x_min = cx;
-                if (cx > x_max) x_max = cx;
-                if (cy < y_min) y_min = cy;
-                if (cy > y_max) y_max = cy;
                 // 更新有效像素数
                 pixel_count ++;
+                pixel_x_count[cx] ++;
+                pixel_y_count[cy] ++;
                 // 将像素设置为黑色
                 *p_pixel = RGB565_BLACK;
             }
@@ -55,20 +58,24 @@ void find_red_cube_center(uint16 *scc8660_image) {
     }
 
     // 有效性检查
-    if (pixel_count > MIN_RED_PIXELS && 
-        x_max > x_min && 
-        y_max > y_min
-    ) {
-        cube_info.exist = true;
-        cube_info.x_center = (x_min + x_max) >> 1;
-        cube_info.y_center = (y_min + y_max) >> 1;
-        cube_info.x_min = x_min;
-        cube_info.x_max = x_max;
-        cube_info.y_min = y_min;
-        cube_info.y_max = y_max;
-        cube_info.pixel_count = pixel_count;
-    }
-    else {
+    if (! (cube_info.exist = pixel_count < MIN_PIXEL_COUNT)) return;
+
+    // 计算边界
+    while (pixel_x_count[x_min] < MIN_X_PIXEL_COUNT && x_min < SCC8660_W) x_min ++;
+    while (pixel_x_count[x_max] < MIN_X_PIXEL_COUNT && x_max >= 0) x_max --;
+    while (pixel_y_count[y_min] < MIN_Y_PIXEL_COUNT && y_min < SCC8660_H) y_min ++;
+    while (pixel_y_count[y_max] < MIN_Y_PIXEL_COUNT && y_max >= 0) y_max --;
+    if (x_min == SCC8660_W || y_min == SCC8660_H || x_max == - 1 || y_max == - 1) {
         cube_info.exist = false;
+        return;
     }
+
+    // 写入立方体信息
+    cube_info.x_center = (x_min + x_max) >> 1;
+    cube_info.y_center = (y_min + y_max) >> 1;
+    cube_info.x_min = x_min;
+    cube_info.x_max = x_max;
+    cube_info.y_min = y_min;
+    cube_info.y_max = y_max;
+    cube_info.pixel_count = pixel_count;
 }

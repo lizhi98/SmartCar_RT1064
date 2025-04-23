@@ -1,7 +1,7 @@
 #if defined(__cplusplus) && ! defined(_VSCODE)
 extern "C"
 {
-#endif /* __cplusplus */ 
+#endif
 
 #include "zf_device_ips200.h"
 #include "zf_device_scc8660.h"
