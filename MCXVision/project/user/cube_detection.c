@@ -58,7 +58,7 @@ void find_red_cube_center(uint16 *scc8660_image) {
     }
 
     // 有效性检查
-    if (! pixel_count < MIN_PIXEL_COUNT) {
+    if (pixel_count < MIN_PIXEL_COUNT) {
         cube_info.exist = false;
         return;
     }
