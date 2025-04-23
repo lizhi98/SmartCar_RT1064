@@ -7,29 +7,18 @@
 #include <stdint.h>
 
 #define R_BASE_THRESHOLD        (150)
-#define MIN_RED_PIXELS          (80)
-
-typedef enum _CubeDetectionState {
-    CUBE_INSIDE_VIEW,
-    CUBE_OUTSIDE_VIEW,
-} CubeDetectionState;
+#define MIN_RED_PIXELS          (4200)
 
 typedef struct _CubeInfo {
-    CubeDetectionState state;
-    int32 x_offset;
-    int32 y_offset;
-} CubeInfo;
-
-typedef struct _CubeDebugInfo {
     bool    exist;
     uint32  pixel_count;
-    int32   x_center;
-    int32   y_center;
+    uint16  x_center;
+    uint16  y_center;
     int32   x_min;
     int32   x_max;
     int32   y_min;
     int32   y_max;
-} CubeDebugInfo;
+} CubeInfo;
 
 typedef struct _RGB {
     uint8 r;
@@ -38,7 +27,6 @@ typedef struct _RGB {
 } RGB;
 
 extern CubeInfo cube_info;
-extern CubeDebugInfo cube_debug_info;
 
 void find_red_cube_center(uint16 *scc8660_image);
 

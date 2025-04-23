@@ -1,12 +1,8 @@
 #include "cube_detection.h"
 
 // 立方体信息初始化
+
 CubeInfo cube_info = {
-    .state = CUBE_OUTSIDE_VIEW,
-    .x_offset = 0,
-    .y_offset = 0
-};
-CubeDebugInfo cube_debug_info = {
     .exist = false,
     .pixel_count = 0,
     .x_center = 0,
@@ -48,10 +44,10 @@ void find_red_cube_center(uint16 *scc8660_image) {
                 if (cx > x_max) x_max = cx;
                 if (cy < y_min) y_min = cy;
                 if (cy > y_max) y_max = cy;
-                // 更新有效像素数RRR
+                // 更新有效像素数
                 pixel_count ++;
-                // 将像素设置为红色
-                *p_pixel = RGB565_RED;
+                // 将像素设置为黑色
+                *p_pixel = RGB565_BLACK;
             }
             // 移动到下一个像素
             p_pixel ++;
@@ -63,16 +59,16 @@ void find_red_cube_center(uint16 *scc8660_image) {
         x_max > x_min && 
         y_max > y_min
     ) {
-        cube_debug_info.exist = true;
-        cube_debug_info.x_center = (x_min + x_max) >> 1;
-        cube_debug_info.y_center = (y_min + y_max) >> 1;
-        cube_debug_info.x_min = x_min;
-        cube_debug_info.x_max = x_max;
-        cube_debug_info.y_min = y_min;
-        cube_debug_info.y_max = y_max;
-        cube_debug_info.pixel_count = pixel_count;
+        cube_info.exist = true;
+        cube_info.x_center = (x_min + x_max) >> 1;
+        cube_info.y_center = (y_min + y_max) >> 1;
+        cube_info.x_min = x_min;
+        cube_info.x_max = x_max;
+        cube_info.y_min = y_min;
+        cube_info.y_max = y_max;
+        cube_info.pixel_count = pixel_count;
     }
     else {
-        cube_debug_info.exist = false;
+        cube_info.exist = false;
     }
 }
