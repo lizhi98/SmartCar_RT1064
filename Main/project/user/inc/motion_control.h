@@ -19,7 +19,7 @@
 
 // MOTOR PWM
 #define MOTOR_PWM_FREQUENCY         17000
-#define MOTOR_PWM_DUTY_MAX          5000
+#define MOTOR_PWM_DUTY_MAX          6000
 
 // SPEED PID
 #define SUM_WRONG_MAX               5000

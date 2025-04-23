@@ -50,3 +50,7 @@ void rt1064_uart_send_cube_info(void){
     user_uart_write_string((char *)&rt1064_uart_write_buffer[0]); // 发送数据
     user_uart_putchar(RT1064_BUFFER_TAIL); // 发送帧尾
 }
+
+void rt1064_uart_scc8660_send(void){
+    
+}

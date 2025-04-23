@@ -38,32 +38,51 @@ int main(void)
     rt1064_uart_init_wait(); // 等待RT1064模块唤醒
     scc8660_init();
     // ================外设初始化================
-    while (1)
-    {   
-        cube_info.state = CUBE_OUTSIDE_VIEW; // 立方体状态为不在视野内
-        if(scc8660_finish){
-            int center_x, center_y;
-            find_red_cube_center(scc8660_image, &center_x, &center_y);
+    // while (1)
+    // {   
+    //     cube_info.state = CUBE_OUTSIDE_VIEW; // 立方体状态为不在视野内
+    //     if(scc8660_finish){
+    //         int center_x, center_y;
+    //         find_red_cube_center(scc8660_image, &center_x, &center_y);
             
-            if (center_x != -1) {
-                // 使用检测到的坐标
-                // cube_info.x_offset = center_x - (SCC8660_W / 2); // 计算偏移量
-                // cube_info.y_offset = center_y - (SCC8660_H / 2); // 计算偏移量
-                cube_info.x_offset = center_x; // 计算偏移量
-                cube_info.y_offset = center_y; // 计算偏移量
-                ips200_draw_line(center_x - 5, center_y, center_x + 5, center_y, RGB565_YELLOW); // 绘制红色横线
-                ips200_draw_line(center_x, center_y - 5, center_x, center_y + 5, RGB565_YELLOW); // 绘制红色竖线
-            }
+    //         if (center_x != -1) {
+    //             // 使用检测到的坐标
+    //             // cube_info.x_offset = center_x - (SCC8660_W / 2); // 计算偏移量
+    //             // cube_info.y_offset = center_y - (SCC8660_H / 2); // 计算偏移量
+    //             cube_info.x_offset = center_x; // 计算偏移量
+    //             cube_info.y_offset = center_y; // 计算偏移量
+    //             ips200_draw_line(center_x - 5, center_y, center_x + 5, center_y, RGB565_YELLOW); // 绘制红色横线
+    //             ips200_draw_line(center_x, center_y - 5, center_x, center_y + 5, RGB565_YELLOW); // 绘制红色竖线
+    //         }
             
-            rt1064_uart_send_cube_info(); // 发送数据
-            ips200_show_scc8660(scc8660_image);
-            // ips200_show_string(0,0,(char *)&rt1064_uart_write_buffer[0]);
+    //         // rt1064_uart_send_cube_info(); // 发送数据
+    //         ips200_show_scc8660(scc8660_image);
+    //         // ips200_show_string(0,0,(char *)&rt1064_uart_write_buffer[0]);
+    //         scc8660_finish = 0;
+    //     }
+
+    // }
+    system_delay_ms(10 * 1000);
+    char buf[32];
+    while (1) {   
+        uint8 *scc_p = (uint8 *) scc8660_image;
+        if (scc8660_finish) {
+            ips200_show_scc8660(scc8660_image); 
+            // user_uart_putchar(0xFE); // 发送帧头
+            // for(int i = 0; i < SCC8660_H; i++){
+            //     for(int j = 0; j < SCC8660_W; j++){
+            //         // sprintf(buf, "%6d,%6d", i,j); // 将数据转换为16进制字符串
+            //         // ips200_show_string(0, 0, buf); // 显示数据
+            //         user_uart_putchar((char) *scc_p++);
+            //         user_uart_putchar((char) *scc_p++);
+            //     }
+            // }
+            // user_uart_putchar(0xEF); // 发送帧尾
             scc8660_finish = 0;
         }
-
     }
 }
 
-#if defined(__cplusplus)&&!defined(_VSCODE)
+#if defined(__cplusplus) && ! defined(_VSCODE)
 }
 #endif

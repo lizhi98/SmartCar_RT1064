@@ -102,11 +102,16 @@ void correspond_host_cmd_pit_call(void){
 // 函数简介     将信息发送到上位机
 void correspond_send_info_to_host(){
 #if CORRESPOND_SEND_INFO_MODE == 1
+    // sprintf(wifi_uart_send_buffer_temp, 
+    //     "%d.0,%d.0,%d.0,%f,%d,%d,%d,%d,%d\n",
+    //     motors[LEFT].current_speed, motors[RIGHT].current_speed, motors[REAR].current_speed,  // 左右后电机速度
+    //     image_result.offset,  image_process_time,// 图像
+    //     motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty,  // 电机实时PWM
+    //     rotation_pid.wl_out  // 角速度PID输出
+    // );
     sprintf(wifi_uart_send_buffer_temp, 
-        "%d.0,%d.0,%d.0,%f,%d,%d,%d,%d,%d\n",
-        motors[LEFT].current_speed, motors[RIGHT].current_speed, motors[REAR].current_speed,  // 左右后电机速度
-        image_result.offset,  image_process_time,// 图像
-        motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty,  // 电机实时PWM
+        "%lf,%d,%d,%d\n",
+        image_result.offset,  image_process_time,image_result.element_type,
         rotation_pid.wl_out  // 角速度PID输出
     );
 #elif CORRESPOND_SEND_INFO_MODE == 2
@@ -137,7 +142,7 @@ uint8 correspond_image_send_init(void){
     {
 
         seekfree_assistant_interface_init(SEEKFREE_ASSISTANT_WIFI_SPI);
-        seekfree_assistant_camera_information_config(SEEKFREE_ASSISTANT_MT9V03X,mt9v03x_image[0],MT9V03X_W,MT9V03X_H);
+        seekfree_assistant_camera_information_config(SEEKFREE_ASSISTANT_SCC8660, scc8660_image_buffer, MT9V03X_W, MT9V03X_H);
         return 0;
     }
     return 1;

@@ -13,7 +13,7 @@
     #define int16 short
 #endif
 
-#ifndef PI
+#ifdef _VSCODE
 #define PI 3.14159265
 #endif
 

@@ -25,15 +25,23 @@
 typedef enum _CubeDetectionState{
     CUBE_INSIDE_VIEW,
     CUBE_OUTSIDE_VIEW,
-}CubeDetectionState;
+} CubeDetectionState;
 
 typedef struct _CubeInfo{
     CubeDetectionState state;
     int32 x_offset;
     int32 y_offset;
-}CubeInfo;
+} CubeInfo;
 
 extern CubeInfo cube_info;
+
+typedef struct {
+    bool is_receiving;
+    bool is_done;
+    bool is_error;
+    uint32 offset;
+} McxUartState;
+extern McxUartState mcx_uart_state; // MCX_Vision 数据接收完成标志位
 
 uint8 mcx_init_wait(void);
 void  mcx_receive_data_callback(void);

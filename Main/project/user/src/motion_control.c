@@ -1,6 +1,6 @@
 #include "motion_control.h"
 
-uint8 KI_clear_flag[5] = {0,0,0};
+uint8 KI_clear_flag[5] = {0,0,0,0,0};
 
 Encoder encoder_left = {
     .encoder_index      = QTIMER1_ENCODER1,
@@ -32,7 +32,7 @@ MotorPID motor_rear_pid = {
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 
-// 角速度PID
+// 自转PID
 RotationPID rotation_pid = {
     .KP = -3.0,          .KI = -0.01,        .KD = -0.8,
     .last_offset = 0,    .sum_offset = 0,    .offset = 0,
@@ -229,8 +229,8 @@ void rotation_pid_calc(){
 
     // 输出
     if(motion_control.motion_mode == CUBE_ANGLE_POSITION_LEFT || motion_control.motion_mode == CUBE_ANGLE_POSITION_RIGHT){
-        if(abs(out) > 150.0){
-            (out > 0) ? (out = 150.0) : (out = -150.0);
+        if(abs(out) > 200.0){
+            (out > 0) ? (out = 200.0) : (out = -200.0);
         }
     }
     rotation_pid.wl_out = (int32)out;
@@ -247,13 +247,13 @@ void translation_pid_calc(void){
         {
         case Normal:
         case Cross:
-            translation_pid.front_speed_out = 600;
+            translation_pid.front_speed_out = 800;
             break;
         case Zebra:
-            translation_pid.front_speed_out = 0;
+            // translation_pid.front_speed_out = 0;
             break;
         default:
-            translation_pid.front_speed_out = 500;
+            translation_pid.front_speed_out = 600;
             break;
         }
         // translation_pid.front_speed_out = 200;

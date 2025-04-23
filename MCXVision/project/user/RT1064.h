@@ -24,6 +24,8 @@ extern uint8  rt1064_uart_write_buffer[RT1064_UART_READ_BUFFER_SIZE]; // 发送�
 void rt1064_uart_receive_callback(uint8 data);
 void rt1064_uart_init_wait(void);
 
+void rt1064_uart_scc8660_send(void);
+
 void rt1064_uart_send_cube_info(void);
 
 #endif

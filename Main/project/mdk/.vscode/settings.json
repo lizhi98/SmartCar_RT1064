@@ -51,6 +51,8 @@
         "mcx_vision.h": "c",
         "zf_common_fifo.h": "c",
         "seekfree_assistant_interface.h": "c",
-        "motion_control.h": "c"
+        "motion_control.h": "c",
+        "openmv.h": "c",
+        "zf_device_scc8660.h": "c"
     }
 }
