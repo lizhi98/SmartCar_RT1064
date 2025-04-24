@@ -23,14 +23,14 @@
 #define MCX_DATA_LENGTH                 21
 
 typedef enum _CubeDetectionState{
-    CUBE_INSIDE_VIEW,
     CUBE_OUTSIDE_VIEW,
+    CUBE_INSIDE_VIEW,
 } CubeDetectionState;
 
 typedef struct _CubeInfo{
     CubeDetectionState state;
-    int32 x_offset;
-    int32 y_offset;
+    uint16 x_center;
+    uint16 y_center;
 } CubeInfo;
 
 extern CubeInfo cube_info;

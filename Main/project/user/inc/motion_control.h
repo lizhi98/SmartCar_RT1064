@@ -57,6 +57,7 @@ typedef struct _RotationPID{
     volatile float KI;
     volatile float KD;
     volatile int32 offset;
+    volatile int32 rotation_angle;
     volatile int32 last_offset;
     volatile int32 sum_offset;
     volatile int32 wl_out;
@@ -129,6 +130,8 @@ extern TranslationPID   translation_pid;
 
 // TARGET MOTION
 extern MotionControl motion_control;
+
+extern uint8 run_flag;
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);

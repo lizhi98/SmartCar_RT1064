@@ -20,10 +20,11 @@ int main(void)
     // 时钟和调试串口-串口4初始化
     zf_board_init();
     system_delay_ms(300);
-    // 初始化 IPS200 模块
-    ips200_init(); 
     // 等待 RT1064 模块唤醒
     rt1064_uart_init_wait();
+    // 初始化 IPS200 模块
+    ips200_init(); 
+
     // 初始化 SCC8660 摄像头
     scc8660_init();
 

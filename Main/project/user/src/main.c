@@ -64,7 +64,11 @@ int main(void)
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
 
-    char    ips200_str_buffer[64];
+    run_flag = 1;
+
+    char    ips200_str_buffer_1[64];
+    char    ips200_str_buffer_2[64];
+    char    ips200_str_buffer_3[64];
     char *  image_ele_buffer;
     // target_speed_magnitude = 700;
     motion_control.motion_mode = LINE_FOLLOW; // 运动模式初始化
@@ -87,26 +91,35 @@ int main(void)
 #if defined(IPS_IMAGE)
             ips200_displayimage03x((uint8 *)&mt9v03x_image[0], MT9V03X_W, MT9V03X_H); // 显示图像
 
-            switch(image_result.element_type){
-                case Zebra: image_ele_buffer = "Zebra"; break;
-                case CurveLeft: image_ele_buffer = "CurveL"; break;
-                case CurveRight: image_ele_buffer = "CurveR"; break;
-                case Normal: image_ele_buffer = "Normal"; break;
-                case CrossBefore: image_ele_buffer = "CrossB"; break;
-                case Cross: image_ele_buffer = "Cross"; break;
-                case LoopLeftBefore: image_ele_buffer = "LoopLB"; break;
-                case LoopRightBefore: image_ele_buffer = "LoopRB"; break;
-                case LoopLeft: image_ele_buffer = "LoopL"; break;
-                case LoopRight: image_ele_buffer = "LoopR"; break;
-                case LoopLeftAfter: image_ele_buffer = "LoopLA"; break;
-                case LoopRightAfter: image_ele_buffer = "LoopRA"; break;
-                case RampLeft: image_ele_buffer = "RampL"; break;
-                case RampRight: image_ele_buffer = "RampR"; break;
-                default: image_ele_buffer = "Unknown"; break;
-            }
+            // switch(image_result.element_type){
+            //     case Zebra: image_ele_buffer = "Zebra"; break;
+            //     case CurveLeft: image_ele_buffer = "CurveL"; break;
+            //     case CurveRight: image_ele_buffer = "CurveR"; break;
+            //     case Normal: image_ele_buffer = "Normal"; break;
+            //     case CrossBefore: image_ele_buffer = "CrossB"; break;
+            //     case Cross: image_ele_buffer = "Cross"; break;
+            //     case LoopLeftBefore: image_ele_buffer = "LoopLB"; break;
+            //     case LoopRightBefore: image_ele_buffer = "LoopRB"; break;
+            //     case LoopLeft: image_ele_buffer = "LoopL"; break;
+            //     case LoopRight: image_ele_buffer = "LoopR"; break;
+            //     case LoopLeftAfter: image_ele_buffer = "LoopLA"; break;
+            //     case LoopRightAfter: image_ele_buffer = "LoopRA"; break;
+            //     case RampLeft: image_ele_buffer = "RampL"; break;
+            //     case RampRight: image_ele_buffer = "RampR"; break;
+            //     default: image_ele_buffer = "Unknown"; break;
+            // }
 
-            sprintf(ips200_str_buffer,"offset:%8.3lf,ele:%s",image_result.offset,image_ele_buffer);
-            ips200_show_string(0, MT9V03X_H, ips200_str_buffer); // 显示图像名称
+            // sprintf(ips200_str_buffer,"offset:%8.3lf,ele:%s",image_result.offset,image_ele_buffer);
+            sprintf(ips200_str_buffer_1,"state:%1d,x:%4d,y:%4d,mode:%1d",
+                cube_info.state,cube_info.x_center,cube_info.y_center,motion_control.motion_mode);
+            sprintf(ips200_str_buffer_2,"yf:%5d,xf:%5d",
+                translation_pid.front_offset,translation_pid.left_offset);
+            sprintf(ips200_str_buffer_3,"fs:%5d,ls:%5d,ro:%5d",
+                translation_pid.front_speed_out,translation_pid.left_speed_out,
+                rotation_pid.wl_out);
+            ips200_show_string(0, MT9V03X_H, ips200_str_buffer_1);
+            ips200_show_string(0, MT9V03X_H+30, ips200_str_buffer_2);
+            ips200_show_string(0, MT9V03X_H+60, ips200_str_buffer_3);
 #endif
 #if defined(SEND_IMAGE)
             // 发送图像到上位机

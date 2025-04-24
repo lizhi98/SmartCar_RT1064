@@ -385,29 +385,9 @@
           <GroupName>user</GroupName>
           <Files>
             <File>
-              <FileName>main.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\user\main.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>zf_model_process.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\user\zf_model_process.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>zf_model_process.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\zf_model_process.h</FilePath>
-            </File>
-            <File>
               <FileName>anchors.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\components\eiq\tensorflow-lite\model\anchors.txt</FilePath>
-            </File>
-            <File>
-              <FileName>smartcar_used19.tflite</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\smartcar_used19.tflite</FilePath>
             </File>
             <File>
               <FileName>cube_detection.c</FileName>
@@ -428,6 +408,21 @@
               <FileName>rt1064_uart.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\rt1064_uart.h</FilePath>
+            </File>
+            <File>
+              <FileName>zf_model_process.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\user\zf_model_process.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>zf_model_process.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\zf_model_process.h</FilePath>
+            </File>
+            <File>
+              <FileName>main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -550,16 +545,6 @@
               <FilePath>..\..\libraries\zf_drivers\zf_driver_soft_iic.h</FilePath>
             </File>
             <File>
-              <FileName>zf_driver_ezh.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\..\libraries\zf_drivers\zf_driver_ezh.lib</FilePath>
-            </File>
-            <File>
-              <FileName>zf_driver_ezh.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\libraries\zf_drivers\zf_driver_ezh.h</FilePath>
-            </File>
-            <File>
               <FileName>zf_driver_sd.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\libraries\zf_drivers\zf_driver_sd.c</FilePath>
@@ -568,6 +553,16 @@
               <FileName>zf_driver_sd.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\zf_drivers\zf_driver_sd.h</FilePath>
+            </File>
+            <File>
+              <FileName>zf_driver_ezh.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\libraries\zf_drivers\zf_driver_ezh.h</FilePath>
+            </File>
+            <File>
+              <FileName>zf_driver_ezh.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\libraries\zf_drivers\zf_driver_ezh.lib</FilePath>
             </File>
           </Files>
         </Group>
