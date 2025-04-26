@@ -3,7 +3,7 @@
 #define CUBE_RIGHT_CENTER_X  160
 #define CUBE_RIGHT_CENTER_Y  180
 
-uint8 run_flag = 0;
+vuint8 run_flag = 0;
 
 uint8 KI_clear_flag[5] = {0,0,0,0,0};
 
@@ -39,7 +39,7 @@ MotorPID motor_rear_pid = {
 
 // 自转PID
 RotationPID rotation_pid = {
-    .KP = -3.1,          .KI = -0.00,        .KD = -0.8,
+    .KP = -3.1,          .KI = -0.00,        .KD = - 0.8,
     .last_offset = 0,    .sum_offset = 0,    .offset = 0,
     .rotation_angle = 0
 };
@@ -129,14 +129,15 @@ void motor_pid_calc_apply(MotorIndex index){
     // 比例
     out += (double) (motor->PID->KP * motor->PID->wrong);
 
-    if(motor->PID->wrong == 0 && KI_clear_flag[index] < 10){
-        KI_clear_flag[index]++;
-    }else{
-        KI_clear_flag[index] = 0;
-    }
     if(KI_clear_flag[index] >= 10){
         motors[index].PID->sum_wrong = 0;
         motor_set_duty(index,0);
+        KI_clear_flag[index] = 0;
+    }
+    
+    if(motor->PID->wrong == 0 && KI_clear_flag[index] < 10){
+        KI_clear_flag[index]++;
+    }else{
         KI_clear_flag[index] = 0;
     }
     // 积分
@@ -211,11 +212,11 @@ void rotation_pid_calc(){
         break;
     case CUBE_ANGLE_POSITION_LEFT:
         rotation_pid.rotation_angle = 90;
-        rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 1.0 * rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
+        rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 0.8 * rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
         break;
     case CUBE_ANGLE_POSITION_RIGHT:
         rotation_pid.rotation_angle = -90;
-        rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 1.0*rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
+        rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 0.8*rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
         break;
     case LINE_BACK:
         rotation_pid.offset = -1 * (int32)(motion_control.line_gyro_angle_z - gyroscope_result.angle_z) / 3; // 需要测试决定
@@ -264,13 +265,14 @@ void translation_pid_calc(void){
         {
         case Normal:
         case Cross:
-            translation_pid.front_speed_out = 700;
+            translation_pid.front_speed_out = 800;
             break;
         case Zebra:
+        
             // translation_pid.front_speed_out = 0;
             break;
         default:
-            translation_pid.front_speed_out = 500;
+            translation_pid.front_speed_out = 600;
             break;
         }
         // translation_pid.front_speed_out = 200;
@@ -356,7 +358,7 @@ void motion_pid_callback(void){
 
 uint8 cube_distance_position_ok(){
     // 立方体坐标定位是否正确
-    if( (abs(cube_info.x_center - CUBE_RIGHT_CENTER_X) <= 20) && ( abs(cube_info.y_center - CUBE_RIGHT_CENTER_Y) <= 15 )){
+    if( (abs(cube_info.x_center - CUBE_RIGHT_CENTER_X) <= 40) && ( abs(cube_info.y_center - CUBE_RIGHT_CENTER_Y) <= 30 )){
         return 1u;
     }else{
         return 0u;
@@ -410,12 +412,15 @@ uint8 line_back_ok(){
 
 // 车运动解算函数
 void target_motion_calc(void){
-    if(run_flag == 0){
-        motor_run_with_speed(LEFT,0);
-        motor_run_with_speed(RIGHT,0);
-        motor_run_with_speed(REAR,0);
-        return;
-    }
+    // if(zebra_valid_flag && (run_flag == 0)){
+    //     // system_delay_ms(800);
+    //     // while(1){
+    //     //     motor_run_with_speed(LEFT,0);
+    //     //     motor_run_with_speed(RIGHT,0);
+    //     //     motor_run_with_speed(REAR,0);
+    //     // }
+    //     // return;
+    // }
     // ====================运动模式与相关参量计算====================
 // 巡线 转 立方体坐标定位
     if(motion_control.motion_mode == LINE_FOLLOW && cube_info.state == CUBE_INSIDE_VIEW)
@@ -426,23 +431,27 @@ void target_motion_calc(void){
     }
     else if(motion_control.motion_mode == CUBE_DISTANCE_POSITION && cube_distance_position_ok())
     {
-        motion_control.motion_mode = CUBE_ANGLE_POSITION_RIGHT; // 需要OpenMV数据
-        motion_control.line_gyro_angle_z = gyroscope_result.angle_z; // 记录当前角度
-// 立方体角度定位 转 推立方体
-    }
-    else if( (motion_control.motion_mode == CUBE_ANGLE_POSITION_RIGHT || motion_control.motion_mode == CUBE_ANGLE_POSITION_LEFT )
-        && cube_angle_position_ok())
-    {
-        motion_control.motion_mode = CUBE_PUSH;
-        motion_control.line_distance = 0; // 清除距离
-// 推立方体 转 回到赛道
-    }else if(motion_control.motion_mode == CUBE_PUSH && cube_push_ok())
-    {
-        motion_control.motion_mode = LINE_BACK;
-    }else if(motion_control.motion_mode == LINE_BACK && line_back_ok()){
+        // motion_control.motion_mode = CUBE_ANGLE_POSITION_RIGHT; // 需要OpenMV数据
+        // motion_control.line_gyro_angle_z = gyroscope_result.angle_z; // 记录当前角度
+        push_box();
+        run_flag = 1;
         motion_control.motion_mode = LINE_FOLLOW;
     }
-    // ====================电机速度解算====================
+// 立方体角度定位 转 推立方体
+//     }
+//     else if( (motion_control.motion_mode == CUBE_ANGLE_POSITION_RIGHT || motion_control.motion_mode == CUBE_ANGLE_POSITION_LEFT )
+//         && cube_angle_position_ok())
+//     {
+//         motion_control.motion_mode = CUBE_PUSH;
+//         motion_control.line_distance = 0; // 清除距离
+// // 推立方体 转 回到赛道
+//     }else if(motion_control.motion_mode == CUBE_PUSH && cube_push_ok())
+//     {
+//         motion_control.motion_mode = LINE_BACK;
+//     }else if(motion_control.motion_mode == LINE_BACK && line_back_ok()){
+//         motion_control.motion_mode = LINE_FOLLOW;
+//     }
+    // ===============  =====电机速度解算====================
     // 初始化三个电机速度缓存
     int32   motor_left_speed    = 0,
             motor_right_speed   = 0,

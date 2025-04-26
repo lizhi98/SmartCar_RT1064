@@ -19,7 +19,9 @@
 // 图像处理时间记录
 extern uint32 image_process_time_start;
 extern uint32 image_process_time;
+extern uint8 zebra_valid_flag;
 
 extern vuint16 scc8660_image_buffer[SCC8660_H * SCC8660_W];
+void push_box();
 
 #endif

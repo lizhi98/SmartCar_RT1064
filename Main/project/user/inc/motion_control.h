@@ -7,6 +7,7 @@
 #include "zf_driver_encoder.h"
 #include "zf_driver_pit.h"
 #include "math.h"
+#include "main.h"
 #include "mt_image.h"
 #include "MCX_Vision.h"
 #include "OpenMV.h"
@@ -19,10 +20,10 @@
 
 // MOTOR PWM
 #define MOTOR_PWM_FREQUENCY         17000
-#define MOTOR_PWM_DUTY_MAX          6000
+#define MOTOR_PWM_DUTY_MAX          6500
 
 // SPEED PID
-#define SUM_WRONG_MAX               5000
+#define SUM_WRONG_MAX               6500
 #define MOTOR_PID_PIT               PIT_CH2
 #define MOTOR_PID_PIT_TIME          20
 
@@ -131,7 +132,7 @@ extern TranslationPID   translation_pid;
 // TARGET MOTION
 extern MotionControl motion_control;
 
-extern uint8 run_flag;
+extern vuint8 run_flag;
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);
