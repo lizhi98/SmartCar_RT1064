@@ -83,6 +83,7 @@ extern uint8 otsu_threshold;
 #define Y_BOTTOM_MIN 105
 #define Y_LOOP_END_MIN 35
 #define Y_CROSS_TOP_MIN 50
+#define Y_RAMP_CHECKPOINT_MIN 80
 #define Y_RAMP_TOP_MIN 50
 #define Y_STRICT_G_MAX 45
 #define Y_MID_LINE_MIN 95

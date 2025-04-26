@@ -225,7 +225,7 @@ void search(Image image) {
             if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; break; }
         if (! dx && xr != X_MAX) {
             if (image[y][xr + 1] == ROAD) {
-                if (el == LoopLeftAfter) {
+                if (el == LoopLeftAfter && y >= Y_RAMP_CHECKPOINT_MIN) {
                     el = image_result.element_type = RampLeft;
                     break;
                 }
