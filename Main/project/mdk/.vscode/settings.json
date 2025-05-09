@@ -53,6 +53,7 @@
         "seekfree_assistant_interface.h": "c",
         "motion_control.h": "c",
         "openmv.h": "c",
-        "zf_device_scc8660.h": "c"
+        "zf_device_scc8660.h": "c",
+        "zf_common_function.h": "c"
     }
 }

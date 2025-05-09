@@ -25,21 +25,21 @@ Encoder encoder_rear = {
 
 // 电机速度PID
 MotorPID motor_left_pid = {
-    .KP = 2.0,          .KI = 0.05,        .KD = 0.9,
+    .KP = 2.1,          .KI = 0.05,        .KD = 0.8,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_right_pid = {
-    .KP = 2.0,          .KI = 0.05,        .KD = 0.9,
+    .KP = 2.1,          .KI = 0.05,        .KD = 0.8,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_rear_pid = {
-    .KP = 2.0,          .KI = 0.10,        .KD = 0.9,
+    .KP = 2.1,          .KI = 0.10,        .KD = 0.9,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 
 // 自转PID
 RotationPID rotation_pid = {
-    .KP = -3.1,          .KI = -0.00,        .KD = - 0.8,
+    .KP = -2.6,          .KI = -0.05,        .KD = -0.4,
     .last_offset = 0,    .sum_offset = 0,    .offset = 0,
     .rotation_angle = 0
 };
@@ -118,9 +118,6 @@ void motor_all_stop(void){
     }
 }
 
-void motor_pid_pit_init(void){
-    pit_ms_init(MOTOR_PID_PIT,MOTOR_PID_PIT_TIME);
-}
 void motor_pid_calc_apply(MotorIndex index){
     
     double out = 0.;
@@ -183,13 +180,10 @@ void motor_encoder_pit_call(void){
         encoder_clear_count(motors[index].encoder->encoder_index);
     }
     // 获取后面方向编码器速度
-    motors[REAR].current_speed = encoder_get_speed(motors[REAR].encoder->encoder_index) / -4;
+    motors[REAR].current_speed = -1 * encoder_get_speed(motors[REAR].encoder->encoder_index);
     // 清除计数
     encoder_clear_count(motors[REAR].encoder->encoder_index);
-    // 如果运动状态是推箱子或者回到赛道，需要记录走过距离
-    if(motion_control.motion_mode == CUBE_PUSH || motion_control.motion_mode == LINE_BACK){
-        motion_control.line_distance += (int32)(motors[LEFT].current_speed * COS_PI_D_6);
-    }
+
 }
 
 // ROTATION
@@ -265,14 +259,14 @@ void translation_pid_calc(void){
         {
         case Normal:
         case Cross:
-            translation_pid.front_speed_out = 800;
+            translation_pid.front_speed_out = MOTOR_NORMAL_SPEED;
             break;
         case Zebra:
         
             // translation_pid.front_speed_out = 0;
             break;
         default:
-            translation_pid.front_speed_out = 600;
+            translation_pid.front_speed_out = MOTOR_CURVE_SPEED;
             break;
         }
         // translation_pid.front_speed_out = 200;
@@ -410,8 +404,19 @@ uint8 line_back_ok(){
     return 0u;
 }
 
+uint32 push_box_valid_time = 0;
 // 车运动解算函数
 void target_motion_calc(void){
+    // if(image_result.element_type == Zebra){
+    //     motor_run_with_speed(LEFT,0);
+    //     motor_run_with_speed(RIGHT,0);
+    //     motor_run_with_speed(REAR,0);
+    //     system_delay_ms(1000);
+    //     while(1){
+
+    //     }
+    // }
+
     // if(zebra_valid_flag && (run_flag == 0)){
     //     // system_delay_ms(800);
     //     // while(1){
@@ -426,6 +431,9 @@ void target_motion_calc(void){
     if(motion_control.motion_mode == LINE_FOLLOW && cube_info.state == CUBE_INSIDE_VIEW)
     {
         // run_flag = 0;
+        if(! push_box_valid_time || timer_get(GPT_TIM_1) - push_box_valid_time >= 5000){
+            motion_control.motion_mode = CUBE_DISTANCE_POSITION;
+        }
         motion_control.motion_mode = CUBE_DISTANCE_POSITION;
 // 立方体坐标定位 转 立方体角度定位
     }
@@ -433,32 +441,18 @@ void target_motion_calc(void){
     {
         // motion_control.motion_mode = CUBE_ANGLE_POSITION_RIGHT; // 需要OpenMV数据
         // motion_control.line_gyro_angle_z = gyroscope_result.angle_z; // 记录当前角度
-        push_box();
+        // push_box();
         run_flag = 1;
         motion_control.motion_mode = LINE_FOLLOW;
+        push_box_valid_time = timer_get(GPT_TIM_1); // 记录推箱子时间
     }
-// 立方体角度定位 转 推立方体
-//     }
-//     else if( (motion_control.motion_mode == CUBE_ANGLE_POSITION_RIGHT || motion_control.motion_mode == CUBE_ANGLE_POSITION_LEFT )
-//         && cube_angle_position_ok())
-//     {
-//         motion_control.motion_mode = CUBE_PUSH;
-//         motion_control.line_distance = 0; // 清除距离
-// // 推立方体 转 回到赛道
-//     }else if(motion_control.motion_mode == CUBE_PUSH && cube_push_ok())
-//     {
-//         motion_control.motion_mode = LINE_BACK;
-//     }else if(motion_control.motion_mode == LINE_BACK && line_back_ok()){
-//         motion_control.motion_mode = LINE_FOLLOW;
-//     }
-    // ===============  =====电机速度解算====================
+
+    // ======================电机速度解算====================
     // 初始化三个电机速度缓存
     int32   motor_left_speed    = 0,
             motor_right_speed   = 0,
             motor_rear_speed    = 0;
-    // translation_pid.left_speed_out = 400;
-    // translation_pid.front_speed_out = 400;
-    // rotation_pid.wl_out = 0;
+    
     motor_left_speed    =   (int32) (-translation_pid.front_speed_out * COS_PI_D_6 + translation_pid.left_speed_out * SIN_PI_D_6);
     motor_right_speed   =   (int32) ( translation_pid.front_speed_out * COS_PI_D_6 + translation_pid.left_speed_out * SIN_PI_D_6);
     motor_rear_speed    =   (int32) (-translation_pid.left_speed_out);
@@ -474,4 +468,25 @@ void target_motion_calc(void){
 
     // 记录运动模式
     motion_control.last_motion_mode = motion_control.motion_mode;
+}
+
+void target_motion_calc_new(){
+    // ！！！顺时针为正方向，逆时针为负方向！！！
+
+    // 初始化三个电机速度缓存
+    int32   motor_left_speed    = 0,
+            motor_right_speed   = 0,
+            motor_rear_speed    = 0;
+    
+    // 后轮速度     =   wl + V左
+    motor_rear_speed    = (int32) (rotation_pid.wl_out + translation_pid.left_speed_out);
+    // 左轮这速度   =   wl + V前 * cos(30) + V左 * cos(60)
+    motor_left_speed    = (int32) (rotation_pid.wl_out - translation_pid.left_speed_out * COS_PI_D_3 + translation_pid.front_speed_out * COS_PI_D_6);
+    // 右轮速度     =   wl - V前 * cos(30) - V左 * cos(60)
+    motor_right_speed   = (int32) (rotation_pid.wl_out - translation_pid.left_speed_out * COS_PI_D_3 - translation_pid.front_speed_out * COS_PI_D_6);
+
+    // 应用速度
+    motor_run_with_speed(LEFT,motor_left_speed);
+    motor_run_with_speed(RIGHT,motor_right_speed);
+    motor_run_with_speed(REAR,motor_rear_speed);
 }

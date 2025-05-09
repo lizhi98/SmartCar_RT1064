@@ -1,6 +1,8 @@
 #ifndef _CODE_MENU_H_
 #define _CODE_MENU_H_
 
+#include "math.h"
+
 #include <zf_device_key.h>
 #include <screen.h>
 
@@ -94,6 +96,10 @@ void menu_sort(void);
 void menu_init(void);
 
 void menu_fresh(MenuFreshMode mode);
+
+void menu_animation_block_jump_item(MenuItemIndex item_from,MenuItemIndex item_to, uint16 item_from_length,uint16 item_to_length);
+
+void menu_animation_test(void);
 
 // void menu_key_pressed_event_handler(key_index_enum key);
 

@@ -23,20 +23,22 @@
 #define MOTOR_PWM_DUTY_MAX          6500
 
 // SPEED PID
-#define SUM_WRONG_MAX               6500
-#define MOTOR_PID_PIT               PIT_CH2
-#define MOTOR_PID_PIT_TIME          20
+#define SUM_WRONG_MAX               4000
 
 // ENCODER
 #define MOTOR_ENCODER_PIT           PIT_CH2
-#define MOTOR_ENCODER_PIT_TIME      20
+#define MOTOR_ENCODER_PIT_TIME      10
 
 // MOTION PID
 #define MOTION_PID_PIT              PIT_CH1
 #define MOTION_PID_PIT_TIME         10
 
-#define ROTATION_SUM_OFFSET_MAX     400
+#define ROTATION_SUM_OFFSET_MAX     200
 #define TRANSLATION_SUM_OFFSET_MAX  40
+
+// SPEED
+#define MOTOR_NORMAL_SPEED          400
+#define MOTOR_CURVE_SPEED           300
 
 typedef enum _MotorIndex
 {
@@ -144,7 +146,6 @@ void motor_all_stop(void);
 void motor_all_init(void);
 
 // Motor PID Control
-void motor_pid_pit_init(void);
 void motor_pid_calc_apply(MotorIndex index);
 void motor_pid_pit_call(void);
 

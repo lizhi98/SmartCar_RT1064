@@ -117,12 +117,24 @@ void menu_animation_block_jump_item(MenuItemIndex item_from,MenuItemIndex item_t
     // 首先计算item在屏幕的起始y坐标
     uint16 item_from_ys = (item_from - menu_pages[menu_items[item_from].current_page_index].start_index + 1u) * MENU_ITEM_WIDTH;
     uint16 item_to_ys   = (item_to -   menu_pages[menu_items[item_to]  .current_page_index].start_index + 1u) * MENU_ITEM_WIDTH;
-    // 计算y步长，保证动画时间相同
-    int8 y_step = (int8)((item_to_ys - item_from_ys) / MENU_ITEM_WIDTH);  // y步长
-    // 然后计算方块x长度变化量相对于方块y坐标的变化率，即x步长
-    int8 x_step = (int8)((item_to_length - item_from_length) / (item_to_ys - item_from_ys));  // x步长
+
+    int16  item_d_y = item_to_ys        - item_from_ys;  // y坐标差值
+    int16  item_d_x = item_to_length    - item_from_length;  // x坐标差值
+    // 定义循环次数，在该循环次数内完成补间动画
+    uint16 loop_times = 30;  // 循环次数
+        // while(1);
+    double k = 0.0;
+    for(uint16 time = 0; time <= loop_times; time++){
+        double k_next = 1.0 - pow(1 - (double) time / (loop_times * 1.0) , 3.0);
+        system_delay_ms(30);  // 延时
+        ips200_draw_region(0, item_from_ys + k * item_d_y,      item_from_length + k * item_d_x,        item_from_ys + k * item_d_y + MENU_ITEM_WIDTH,      RGB565_BLACK);
+        ips200_draw_region(0, item_from_ys + k_next * item_d_y, item_from_length + k_next * item_d_x,   item_from_ys + k_next * item_d_y + MENU_ITEM_WIDTH, RGB565_WHITE);
+        k = k_next;
+    }
+    
+        
     // 外层循环，循环方块的y起始位置：方块从开始运动到结束
-    while(0);
+    while(1);
 }
 
 void menu_fresh(MenuFreshMode mode){
@@ -143,3 +155,19 @@ void menu_fresh(MenuFreshMode mode){
 void menu_key_pressed_event_handler(key_index_enum key){
     
 }
+
+void menu_animation_test(){
+    screen_clear();  // 清屏
+    system_delay_ms(1000);  // 延时1s
+    ips200_draw_region(0, 0, 100, 30, RGB565_WHITE);  // 画区域测试
+    uint8 step = 30 / 30;
+    double t = 0.0;
+    for(uint8 time = 0; time <= 50; time++) {
+        double t_next = 1.0 - pow(1 - (float) time / 50.0 , 3.0);
+        system_delay_ms(20);  // 延时
+        ips200_draw_region(0, t * 200, 100, t_next * 200, RGB565_BLACK);  // 画区域测试
+        ips200_draw_region(0, t_next * 200, 100, t_next * 200 + 30, RGB565_WHITE);  // 画区域测试
+        t = t_next;
+    }
+}
+

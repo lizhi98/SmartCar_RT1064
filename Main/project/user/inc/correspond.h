@@ -18,7 +18,7 @@
 // WIRELESS CONFIG
 #define WIFI_SSID                               "AP-lizhi"
 #define WIFI_PASS                               "9894653xxk"
-#define HOST_IP                                 "192.168.201.252"
+#define HOST_IP                                 "192.168.43.252"
 
 // WIFI SPI CONFIG
 #define WIFI_SPI_CONNECT_MODE                   "UDP"
