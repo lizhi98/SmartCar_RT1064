@@ -328,10 +328,9 @@ void search(Image image) {
                 }
             }
         }
-        if (xr - xl <= STD_WIDTH[Y_MAX - y] * 3) break;
+        if (xr - xl <= STD_WIDTH[y] * 3) break;
         y += 3;
         if (y > Y_CROSS_TOP_MIN + 30) {
-            exit(1);
             goto cross_exit;
         }
     }
@@ -427,7 +426,7 @@ void search(Image image) {
                 if (y <= Y_MID_LINE_MIN) continue;
                 xr = xl + m * dy;
                 SET_IMG(xr, y, BOUND_APP);
-                w = STD_WIDTH[Y_MAX - y];
+                w = STD_WIDTH[y];
                 xm = xr - w;
                 so += (xm - X_MID) * w;
                 sw += w;
