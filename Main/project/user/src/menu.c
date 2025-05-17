@@ -1,4 +1,4 @@
-#include<stdlib.h>
+#include <stdlib.h>
 #include "zf_driver_delay.h"
 
 #include "menu.h"
@@ -113,28 +113,43 @@ void menu_init(void){
 }
 
 void menu_animation_block_jump_item(MenuItemIndex item_from,MenuItemIndex item_to, uint16 item_from_length,uint16 item_to_length){
-    if(item_from == item_to) return;  // 如果没有跳转，则不需要创建补间动画
     // 首先计算item在屏幕的起始y坐标
     uint16 item_from_ys = (item_from - menu_pages[menu_items[item_from].current_page_index].start_index + 1u) * MENU_ITEM_WIDTH;
     uint16 item_to_ys   = (item_to -   menu_pages[menu_items[item_to]  .current_page_index].start_index + 1u) * MENU_ITEM_WIDTH;
+    // 设置显示颜色
+    ips200_set_color(RGB565_WHITE, RGB565_BLACK);  // 这是正常显示的颜色
+    if(item_from == item_to){
+        // 画一个白色方块
+        ips200_draw_region(0,item_from_ys, item_from_length, item_from_ys + MENU_ITEM_WIDTH, RGB565_WHITE);
+        // 然后反转菜单文字颜色
+        ips200_set_color(RGB565_BLACK, RGB565_WHITE);  // 这是反转显示的颜色
+        ips200_show_string(0, item_from_ys, menu_items[item_from].name);
+        return;
+    }
 
     int16  item_d_y = item_to_ys        - item_from_ys;  // y坐标差值
     int16  item_d_x = item_to_length    - item_from_length;  // x坐标差值
     // 定义循环次数，在该循环次数内完成补间动画
     uint16 loop_times = 30;  // 循环次数
-        // while(1);
+
     double k = 0.0;
     for(uint16 time = 0; time <= loop_times; time++){
         double k_next = 1.0 - pow(1 - (double) time / (loop_times * 1.0) , 3.0);
         system_delay_ms(30);  // 延时
-        ips200_draw_region(0, item_from_ys + k * item_d_y,      item_from_length + k * item_d_x,        item_from_ys + k * item_d_y + MENU_ITEM_WIDTH,      RGB565_BLACK);
-        ips200_draw_region(0, item_from_ys + k_next * item_d_y, item_from_length + k_next * item_d_x,   item_from_ys + k_next * item_d_y + MENU_ITEM_WIDTH, RGB565_WHITE);
+        ips200_draw_region(0, item_from_ys + k * item_d_y,      item_from_length + k * item_d_x,        item_from_ys + k * item_d_y + MENU_ITEM_WIDTH,      RGB565_BLACK); // 擦除
+
+        ips200_set_color(RGB565_WHITE, RGB565_BLACK);  // 这是正常显示的颜色
+        ips200_show_string(0, item_from_ys, menu_items[item_from].name);
+        ips200_show_string(0, item_to_ys,   menu_items[item_to].name);
+
+        ips200_draw_region(0, item_from_ys + k_next * item_d_y, item_from_length + k_next * item_d_x,   item_from_ys + k_next * item_d_y + MENU_ITEM_WIDTH, RGB565_WHITE); // 画出新的区域
+
+        ips200_set_color(RGB565_BLACK, RGB565_BLACK);  // 这是反转显示的颜色
+        ips200_show_string(0, item_from_ys + k_next * item_d_y, menu_items[item_to].name);  // 显示新的菜单项
+
         k = k_next;
     }
-    
-        
-    // 外层循环，循环方块的y起始位置：方块从开始运动到结束
-    while(1);
+
 }
 
 void menu_fresh(MenuFreshMode mode){
@@ -170,4 +185,3 @@ void menu_animation_test(){
         t = t_next;
     }
 }
-

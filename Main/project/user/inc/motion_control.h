@@ -37,8 +37,8 @@
 #define TRANSLATION_SUM_OFFSET_MAX  40
 
 // SPEED
-#define MOTOR_NORMAL_SPEED          400
-#define MOTOR_CURVE_SPEED           300
+#define MOTOR_NORMAL_SPEED          450
+#define MOTOR_CURVE_SPEED           400
 
 typedef enum _MotorIndex
 {
@@ -56,9 +56,12 @@ typedef struct _Encoder
 } Encoder;
 
 typedef struct _RotationPID{
-    volatile float KP;
-    volatile float KI;
-    volatile float KD;
+             float normal_kp;
+             float normal_ki;
+             float normal_kd;
+             float curve_kp;
+             float curve_ki;
+             float curve_kd;
     volatile int32 offset;
     volatile int32 rotation_angle;
     volatile int32 last_offset;

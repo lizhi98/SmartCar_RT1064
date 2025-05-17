@@ -33,14 +33,16 @@ MotorPID motor_right_pid = {
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_rear_pid = {
-    .KP = 2.1,          .KI = 0.10,        .KD = 0.9,
+    .KP = 2.1,          .KI = 0.07,        .KD = 0.9,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 
 // 自转PID
 RotationPID rotation_pid = {
-    .KP = -2.6,          .KI = -0.05,        .KD = -0.4,
-    .last_offset = 0,    .sum_offset = 0,    .offset = 0,
+    .normal_kp  = -3.0,           .normal_ki  = -0.06,          .normal_kd  = -0.4,
+    // .normal_kp = -2.6,           .normal_ki = -0.05,          .normal_kd = -0.5,
+    .curve_kp  = -3.0,           .curve_ki  = -0.07,          .curve_kd  = -0.5,
+    .last_offset = 0,            .sum_offset = 0,             .offset = 0,
     .rotation_angle = 0
 };
 
@@ -189,42 +191,67 @@ void motor_encoder_pit_call(void){
 // ROTATION
 // 车体旋转PID计算
 void rotation_pid_calc(){
-    volatile double out = 0.;
-    // 分情况获取offset
-    switch (motion_control.motion_mode)
-    {
-    case LINE_FOLLOW:
-        rotation_pid.offset = image_result.offset;
-        break;
-    case CUBE_DISTANCE_POSITION:
-        // 需要测试决定
-        // rotation_pid.offset = image_result.offset;
-        rotation_pid.offset = (cube_info.x_center - CUBE_RIGHT_CENTER_X) / 5.0; // 需要测试决定
-        // rotation_pid.offset = 0.;
-        // rotation_pid.wl_out = 0;
-        // return;
-        break;
-    case CUBE_ANGLE_POSITION_LEFT:
-        rotation_pid.rotation_angle = 90;
-        rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 0.8 * rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
-        break;
-    case CUBE_ANGLE_POSITION_RIGHT:
-        rotation_pid.rotation_angle = -90;
-        rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 0.8*rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
-        break;
-    case LINE_BACK:
-        rotation_pid.offset = -1 * (int32)(motion_control.line_gyro_angle_z - gyroscope_result.angle_z) / 3; // 需要测试决定
-        break;
-    default:
+    if(run_flag == 0){
         rotation_pid.offset = 0;
-        break;
+        rotation_pid.wl_out = 0;
+        return;
+    }
+    volatile double out = 0.;
+    // // 分情况获取offset
+    // switch (motion_control.motion_mode)
+    // {
+    // case LINE_FOLLOW:
+    //     rotation_pid.offset = image_result.offset;
+    //     break;
+    // case CUBE_DISTANCE_POSITION:
+    //     // 需要测试决定
+    //     // rotation_pid.offset = image_result.offset;
+    //     rotation_pid.offset = (cube_info.x_center - CUBE_RIGHT_CENTER_X) / 5.0; // 需要测试决定
+    //     // rotation_pid.offset = 0.;
+    //     // rotation_pid.wl_out = 0;
+    //     // return;
+    //     break;
+    // case CUBE_ANGLE_POSITION_LEFT:
+    //     rotation_pid.rotation_angle = 90;
+    //     rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 0.8 * rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
+    //     break;
+    // case CUBE_ANGLE_POSITION_RIGHT:
+    //     rotation_pid.rotation_angle = -90;
+    //     rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 0.8*rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
+    //     break;
+    // case LINE_BACK:
+    //     rotation_pid.offset = -1 * (int32)(motion_control.line_gyro_angle_z - gyroscope_result.angle_z) / 3; // 需要测试决定
+    //     break;
+    // default:
+    //     rotation_pid.offset = 0;
+    //     break;
+    // }
+    rotation_pid.offset = image_result.offset;
+    float KP,KI,KD;
+    // if(image_result.element_type == Normal || image_result.element_type == Cross){
+    //     KP = rotation_pid.normal_kp;
+    //     KI = rotation_pid.normal_ki;
+    //     KD = rotation_pid.normal_kd;
+    // }else{
+    //     KP = rotation_pid.curve_kp;
+    //     KI = rotation_pid.curve_ki;
+    //     KD = rotation_pid.curve_kd;
+    // }
+    if(fabs(rotation_pid.offset) < 10.){
+        KP = rotation_pid.normal_kp;
+        KI = rotation_pid.normal_ki;
+        KD = rotation_pid.normal_kd;
+    }else{
+        KP = rotation_pid.curve_kp;
+        KI = rotation_pid.curve_ki;
+        KD = rotation_pid.curve_kd;
     }
     // 比例
-    out += (double) (rotation_pid.KP * rotation_pid.offset);
+    out += (double) (KP * rotation_pid.offset);
     // 积分
     rotation_pid.sum_offset += rotation_pid.offset;
     // 积分清零
-    if(rotation_pid.offset == 0){
+    if(rotation_pid.offset == 0 || (rotation_pid.offset * rotation_pid.last_offset < -140.)){
         rotation_pid.sum_offset = 0;
     }
     // 积分限幅
@@ -232,19 +259,19 @@ void rotation_pid_calc(){
         (rotation_pid.sum_offset > 0) ? (rotation_pid.sum_offset = ROTATION_SUM_OFFSET_MAX) : (rotation_pid.sum_offset = -ROTATION_SUM_OFFSET_MAX);
     }
     // 积分
-    out += (double) (rotation_pid.KI * rotation_pid.sum_offset);
+    out += (double) (KI * rotation_pid.sum_offset);
     // 微分
-    out += (double) (rotation_pid.KD * (rotation_pid.offset - rotation_pid.last_offset));
+    out += (double) (KD * (rotation_pid.offset - rotation_pid.last_offset));
 
     // 记录wrong
     rotation_pid.last_offset = rotation_pid.offset;
 
     // 输出
-    if(motion_control.motion_mode != LINE_FOLLOW){
-        if(fabs(out) > 150.0){
-            (out > 0) ? (out = 150.0) : (out = -150.0);
-        }
-    }
+    // if(motion_control.motion_mode != LINE_FOLLOW){
+    //     if(fabs(out) > 150.0){
+    //         (out > 0) ? (out = 150.0) : (out = -150.0);
+    //     }
+    // }
     rotation_pid.wl_out = (int32)out;
 
 }
@@ -260,6 +287,9 @@ void translation_pid_calc(void){
         case Normal:
         case Cross:
             translation_pid.front_speed_out = MOTOR_NORMAL_SPEED;
+            if(fabs(rotation_pid.offset) > 30.){
+                translation_pid.front_speed_out = MOTOR_CURVE_SPEED;    
+            }
             break;
         case Zebra:
         
