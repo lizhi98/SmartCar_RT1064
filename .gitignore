@@ -4,6 +4,7 @@
 *.uvguix.*
 uv4.log.lock
 mdk/.vscode
+Simulator
 
 # Node.js
 node_modules
