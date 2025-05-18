@@ -77,10 +77,10 @@ extern uint8 otsu_threshold;
 #define SPECIAL 5
 
 #define Y_SEARCH_MIN 35
-#define Y_NORMAL_MIN 75
-#define Y_BD_MIN 40
+#define Y_NORMAL_MIN 65
+#define Y_BD_MIN 38
 #define Y_BD_EARLY_MIN 80
-#define Y_BOTTOM_MIN 105
+#define Y_BOTTOM_MIN 78
 #define Y_LOOP_END_MIN 35
 #define Y_CROSS_TOP_MIN 50
 #define Y_CROSS_TOP_MAX 80
@@ -101,8 +101,8 @@ extern uint8 otsu_threshold;
 #define DX_BD_INV_MAX 4
 #define DX_M_MAX 2
 #define BD_LENGTH 85
-#define BD_NG_COUNT_MAX 5
-#define BD_G_COUNT_MAX 3
-#define BOTH_COUNT_MIN 25
+#define BD_NG_COUNT_MAX 3
+#define BD_G_COUNT_MAX 2
+#define BOTH_COUNT_MIN 20
 
 #endif 

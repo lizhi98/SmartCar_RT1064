@@ -96,6 +96,7 @@ void search(Image image) {
 #define SET_IMG(x, y, T) do { \
     image[y][x] = T; \
 } while (0)
+#define Z exit(1);
 #else
 #define SET_IMG(x, y, T)
 #endif
@@ -144,7 +145,7 @@ void search(Image image) {
     ml_set = mr_set = false;
     l_curve = r_curve = 0;
     l_segs = r_segs = 0;
-    if (el == LoopLeft || el == LoopLeftAfter || el == RampLeft) l_stop = true;
+    if (el == LoopLeftAfter || el == RampLeft) l_stop = true;
     else {
         for (y = Y_MAX; image[y][X_MIN] == ROAD && y > Y_BOTTOM_MIN; y --);
         if (y == Y_BOTTOM_MIN) l_stop = l_ng = true;
@@ -160,7 +161,7 @@ void search(Image image) {
         }
     }
 
-    if (el == LoopRight || el == LoopRightAfter || el == RampRight) r_stop = true;
+    if (el == LoopRightAfter || el == RampRight) r_stop = true;
     else {
         for (y = Y_MAX; image[y][X_MAX] == ROAD && y > Y_BOTTOM_MIN; y --);
         if (y == Y_BOTTOM_MIN) r_stop = r_ng = true;
@@ -312,7 +313,6 @@ void search(Image image) {
         r_g_count = 0;
         if (++ r_ng_count == BD_NG_COUNT_MAX) r_ng = true;
         right$:
-        ;
     }
     y_start = y;
     goto cross_bound$;
@@ -349,10 +349,8 @@ void search(Image image) {
         dx = xr - xl;
         if (dx > 5 && dx <= STD_WIDTH[y] * 3) break;
         cross_next_y:
-        printf("%d\n", dx);
         y += 3;
         if (y > Y_CROSS_TOP_MAX) {
-            // exit(1);
             goto cross_exit;
         }
     }
@@ -396,12 +394,21 @@ void search(Image image) {
     cross_bound$:
 
     // Analyze element type
-    if (el <= Normal) {
+    if (el == LoopLeft && l_segs == 1) {
+        el = image_result.element_type = Normal;
+    }
+
+    if (el <= CrossBefore) {
         if (l_segs >= 3) {
             image_result.element_type = LoopLeftBefore;
+            goto mid;
         }
-        else if (l_segs >= 2 && r_segs >= 2) {
-            image_result.element_type = CrossBefore;
+    }
+
+
+    if (el <= Normal) {
+        if (l_segs >= 2 && r_segs >= 2) {
+            el = image_result.element_type = CrossBefore;
         }
         else if (l_curve == 3) {
             image_result.element_type = CurveLeft;
@@ -424,8 +431,7 @@ void search(Image image) {
     }
 
     if (el == LoopLeftBefore) {
-        if (l_segs < 3) image_result.element_type = LoopLeft;
-        goto mid;
+        if (l_segs < 3) el = image_result.element_type = LoopLeft;
     }
 
     if (el == LoopLeft) {
@@ -501,17 +507,16 @@ void search(Image image) {
         xr = xrs[y];
         if (! xl && ! xr) continue;
         if (! xl) {
-            if (both_count > BOTH_COUNT_MIN) continue;
             dx = STD_WIDTH[y];
             xm = xr - dx;
         }
         else if (! xr) {
-            if (both_count > BOTH_COUNT_MIN) continue;
             dx = STD_WIDTH[y];
             xm = xl + dx;
         }
         else {
-            both_count ++;
+            if (++ both_count == BOTH_COUNT_MIN) break;
+            printf("%d %d\n", xl, xr);
             dx = xr - xl;
             xm = (xl + xr) >> 1;
         }
