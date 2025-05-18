@@ -455,13 +455,13 @@ void search(Image image) {
             goto bottom;
         }
         else {
-            uint8 yc = y;
-            double m = (double) ((xrs[Y_MAX] ? xrs[Y_MAX] : X_MAX) - xl) / (Y_MAX - yc);
+            double dx = 0;
+            mr = (double) ((xrs[Y_MAX] ? xrs[Y_MAX] : X_MAX) - xl) / (Y_MAX - y);
             so = 0;
             sw = 0;
-            for (y = yc + 1, dx = 0; y <= Y_MAX; y ++) {
+            for (y ++; y <= Y_MAX; y ++) {
                 if (y <= Y_MID_LINE_MIN) continue;
-                dx += m;
+                dx += mr;
                 xr = xl + dx;
                 SET_IMG(xr, y, BOUND_APP);
                 dx = STD_WIDTH[y];
@@ -499,7 +499,7 @@ void search(Image image) {
     // Calculate midline
     mid:
     uint8 dy_max = Y_MAX - max(y_bd_min, Y_MID_LINE_MIN);
-    uint8 both_count = 0;
+    // uint8 both_count = 0;
     so = 0;
     sw = 0;
     for (y = y_end; y >= y_start; y --) {
@@ -515,8 +515,6 @@ void search(Image image) {
             xm = xl + dx;
         }
         else {
-            if (++ both_count == BOTH_COUNT_MIN) break;
-            printf("%d %d\n", xl, xr);
             dx = xr - xl;
             xm = (xl + xr) >> 1;
         }
