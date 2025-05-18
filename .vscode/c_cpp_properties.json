@@ -8,7 +8,10 @@
             "compilerPath": "/run/current-system/sw/bin/clang",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "linux-clang-x64"
+            "intelliSenseMode": "linux-clang-x64",
+            "defines": [
+                "IMAGE_DEBUG"
+            ]
         }
     ],
     "version": 4

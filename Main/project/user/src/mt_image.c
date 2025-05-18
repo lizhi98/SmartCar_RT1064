@@ -100,7 +100,7 @@ void search(Image image) {
 #define SET_IMG(x, y, T)
 #endif
     ElementType el = image_result.element_type;
-    bool el_normal = el <= Normal;
+    bool prev_el_normal = el <= Normal;
 
     // Zebra detection
     if (image[Y_MAX][0] != ROAD) {
@@ -120,7 +120,7 @@ void search(Image image) {
     }
 
     uint8 xl, xr, xm, y, y_bd_min;
-    int8 dx, dy;
+    int8 dx;
     uint8 xls[HEIGHT] = { 0 }, xrs[HEIGHT] = { 0 };
     double ml, mr;
     bool ml_set = false, mr_set = false;
@@ -129,19 +129,21 @@ void search(Image image) {
     uint8 y_start, y_end;
     bool l_unset = true, r_unset = true;
     bool lost = false;
+    uint8 l_curve, r_curve;
 
     uint8 l_ng_count = 0, r_ng_count = 0;
     uint8 l_g_count = BD_G_COUNT_MAX, r_g_count = BD_G_COUNT_MAX;
     bool l_ng = true, r_ng = true, l_stop = false, r_stop = false;
-    uint8 l_segs = 0, r_segs = 0;
+    uint8 l_segs, r_segs;
     uint16 sw = 0;
-    uint8 w = 0;
     double so = 0;
 
     // Find the bottom
     bottom:
     y0l = y0r = 0;
     ml_set = mr_set = false;
+    l_curve = r_curve = 0;
+    l_segs = r_segs = 0;
     if (el == LoopLeft || el == LoopLeftAfter || el == RampLeft) l_stop = true;
     else {
         for (y = Y_MAX; image[y][X_MIN] == ROAD && y > Y_BOTTOM_MIN; y --);
@@ -177,7 +179,7 @@ void search(Image image) {
     normal_bound:
     y_end = Y_MAX;
     for (y = Y_MAX - 1, dx = 0; y >= Y_BD_MIN; y --) {
-        if (y == Y_NORMAL_MIN && el_normal && ! l_ng_count && ! r_ng_count && l_segs == 1 && r_segs == 1) {
+        if (y == Y_NORMAL_MIN && prev_el_normal && ! l_ng_count && ! r_ng_count && l_segs == 1 && r_segs == 1) {
             break;
         }
 
@@ -214,6 +216,9 @@ void search(Image image) {
             }
             xls[y] = xl;
             SET_IMG(xl, y, BOUND);
+            dx = xl - xls[y + 1];
+            if (dx >= DX_CURVE) if (++ r_curve == 3) break;
+            if (dx <= - DX_CURVE) if (++ l_curve == 3) break;
             if (l_ng_count) {
                 l_ng_count = 0;
                 if (y > Y_STRICT_G_MAX) l_g_count = BD_G_COUNT_MAX;
@@ -238,6 +243,8 @@ void search(Image image) {
         left$:
 
         if (r_stop) goto right$;
+
+        lost = false;
         for (dx = 0; image[y][xr] == EMPTY; dx --, xr --)
             if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; lost = true; break; }
         if (! dx && xr != X_MAX) {
@@ -279,6 +286,10 @@ void search(Image image) {
             }
             xrs[y] = xr;
             SET_IMG(xr, y, BOUND);
+            dx = - xr + xrs[y + 1];
+            if (dx >= DX_CURVE) if (++ l_curve == 3) break;
+            if (dx <= - DX_CURVE) if (++ r_curve == 3) break;
+
             if (r_ng_count) {
                 r_ng_count = 0;
                 if (y > Y_STRICT_G_MAX) r_g_count = BD_G_COUNT_MAX;
@@ -335,9 +346,10 @@ void search(Image image) {
                 }
             }
         }
-        uint8 w = xr - xl;
-        if (w > 5 && w <= STD_WIDTH[y] * 3) break;
+        dx = xr - xl;
+        if (dx > 5 && dx <= STD_WIDTH[y] * 3) break;
         cross_next_y:
+        printf("%d\n", dx);
         y += 3;
         if (y > Y_CROSS_TOP_MAX) {
             exit(1);
@@ -384,12 +396,21 @@ void search(Image image) {
     cross_bound$:
 
     // Analyze element type
-    if (el_normal) {
+    if (el <= Normal) {
         if (l_segs >= 3) {
             image_result.element_type = LoopLeftBefore;
         }
         else if (l_segs >= 2 && r_segs >= 2) {
             image_result.element_type = CrossBefore;
+        }
+        else if (l_curve == 3) {
+            image_result.element_type = CurveLeft;
+        }
+        else if (r_curve == 3) {
+            image_result.element_type = CurveRight;
+        }
+        else {
+            image_result.element_type = Normal;
         }
         goto mid;
     }
@@ -432,14 +453,15 @@ void search(Image image) {
             double m = (double) ((xrs[Y_MAX] ? xrs[Y_MAX] : X_MAX) - xl) / (Y_MAX - yc);
             so = 0;
             sw = 0;
-            for (dy = 1, y = yc + 1; y <= Y_MAX; y ++, dy ++) {
+            for (y = yc + 1, dx = 0; y <= Y_MAX; y ++) {
                 if (y <= Y_MID_LINE_MIN) continue;
-                xr = xl + m * dy;
+                dx += m;
+                xr = xl + dx;
                 SET_IMG(xr, y, BOUND_APP);
-                w = STD_WIDTH[y];
-                xm = xr - w;
-                so += (xm - X_MID) * w;
-                sw += w;
+                dx = STD_WIDTH[y];
+                xm = xr - dx;
+                so += (xm - X_MID) * dx;
+                sw += dx;
                 SET_IMG(xm, y, MID_LINE);
             }
             image_result.offset = so / sw - xm + X_MID;
@@ -458,8 +480,9 @@ void search(Image image) {
         uint8 yc = (y + Y_MAX) >> 1;
         double m = (double) xc / (Y_MAX - yc);
         so = 0;
-        for (dy = 0, y = Y_MAX; y >= yc && y >= Y_MID_LINE_MIN; y --, dy ++) {
-            xm = xc - m * dy;
+        for (y = Y_MAX, dx = 0; y >= yc && y >= Y_MID_LINE_MIN; y --) {
+            xm = xc - dx;
+            dx += m;
             SET_IMG(xm, y, MID_LINE);
             so += xm - X_MID;
         }
@@ -470,26 +493,30 @@ void search(Image image) {
     // Calculate midline
     mid:
     uint8 dy_max = Y_MAX - max(y_bd_min, Y_MID_LINE_MIN);
+    uint8 both_count = 0;
     so = 0;
     sw = 0;
-    for (y = y_start; y <= y_end; y ++) {
+    for (y = y_end; y >= y_start; y --) {
         xl = xls[y];
         xr = xrs[y];
         if (! xl && ! xr) continue;
         if (! xl) {
-            w = STD_WIDTH[y];
-            xm = xr - w;
+            if (both_count > BOTH_COUNT_MIN) continue;
+            dx = STD_WIDTH[y];
+            xm = xr - dx;
         }
         else if (! xr) {
-            w = STD_WIDTH[y];
-            xm = xl + w;
+            if (both_count > BOTH_COUNT_MIN) continue;
+            dx = STD_WIDTH[y];
+            xm = xl + dx;
         }
         else {
-            w = xr - xl;
+            both_count ++;
+            dx = xr - xl;
             xm = (xl + xr) >> 1;
         }
-        so += (xm - X_MID) * w;
-        sw += w;
+        so += (xm - X_MID) * dx;
+        sw += dx;
         SET_IMG(xm, y, MID_LINE);
     }
     image_result.offset = so / sw;
