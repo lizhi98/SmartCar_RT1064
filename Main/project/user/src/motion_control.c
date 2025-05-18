@@ -33,15 +33,15 @@ MotorPID motor_right_pid = {
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_rear_pid = {
-    .KP = 2.1,          .KI = 0.07,        .KD = 0.9,
+    .KP = 2.1,          .KI = 0.06,        .KD = 0.8,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 
 // 自转PID
 RotationPID rotation_pid = {
-    .normal_kp  = -3.0,           .normal_ki  = -0.06,          .normal_kd  = -0.4,
+    .normal_kp  = -2.8,           .normal_ki  = -0.03,          .normal_kd  = -0.3,
     // .normal_kp = -2.6,           .normal_ki = -0.05,          .normal_kd = -0.5,
-    .curve_kp  = -3.0,           .curve_ki  = -0.07,          .curve_kd  = -0.5,
+    .curve_kp  = -2.8,           .curve_ki  = -0.04,          .curve_kd  = -0.4,
     .last_offset = 0,            .sum_offset = 0,             .offset = 0,
     .rotation_angle = 0
 };
@@ -286,13 +286,13 @@ void translation_pid_calc(void){
         {
         case Normal:
         case Cross:
+        case CrossBefore:
+        case LoopLeftBefore:
+        case LoopRightBefore:
             translation_pid.front_speed_out = MOTOR_NORMAL_SPEED;
-            if(fabs(rotation_pid.offset) > 30.){
-                translation_pid.front_speed_out = MOTOR_CURVE_SPEED;    
-            }
             break;
         case Zebra:
-        
+            run_flag = 0;
             // translation_pid.front_speed_out = 0;
             break;
         default:
@@ -446,7 +446,13 @@ void target_motion_calc(void){
 
     //     }
     // }
-
+    if(run_flag == 0){
+        system_delay_ms(1500);
+        motor_run_with_speed(LEFT,0);
+        motor_run_with_speed(RIGHT,0);
+        motor_run_with_speed(REAR,0);
+        return;
+    }
     // if(zebra_valid_flag && (run_flag == 0)){
     //     // system_delay_ms(800);
     //     // while(1){

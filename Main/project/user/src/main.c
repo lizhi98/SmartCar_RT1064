@@ -77,7 +77,8 @@ int main(void)
     // uint32 zebra_time = 0;
     // 主循环
     while(1) {
-
+        // push_box();
+        // while(1);
 
         // if(zebra_valid_flag == 0){
         //     if(timer_get(GPT_TIM_1) >= 10000){
@@ -153,109 +154,99 @@ int main(void)
 }
 
 void push_box(){
+    // 初始化三个电机速度缓存
+    int32   motor_left_speed    = 0,
+            motor_right_speed   = 0,
+            motor_rear_speed    = 0;
+            
     float s_angle = gyroscope_result.angle_z;
-    while (1)
-    {
-        ips200_show_float(0, 0, gyroscope_result.angle_z, 4, 2); // 显示陀螺仪角度
-        if ((s_angle - gyroscope_result.angle_z + 90.0) < 0.)
-        {
-            int i = 1500;
-            while (i--)
-            {
-                int32 motor_left_speed = 0,
-                      motor_right_speed = 0,
-                      motor_rear_speed = 0;
-                // translation_pid.left_speed_out = 400;
-                // translation_pid.front_speed_out = 400;
-                // rotation_pid.wl_out = 0;
-                motor_left_speed = (int32)(-400 * COS_PI_D_6 + 0 * SIN_PI_D_6);
-                motor_right_speed = (int32)(400 * COS_PI_D_6 + 0 * SIN_PI_D_6);
-                motor_rear_speed = (int32)(0);
-
-                motor_left_speed += 0;
-                motor_right_speed += 0;
-                motor_rear_speed += 0;
-
-                // 应用速度
-                motor_run_with_speed(LEFT, motor_left_speed);
-                motor_run_with_speed(RIGHT, motor_right_speed);
-                motor_run_with_speed(REAR, motor_rear_speed);
-                system_delay_ms(1);
-            }
-            motor_run_with_speed(LEFT, 0);
-            motor_run_with_speed(RIGHT, 0);
-            motor_run_with_speed(REAR, 0);
-            // while(1);
-            int j = 1500;
-            while (j--)
-            {
-                int32 motor_left_speed = 0,
-                      motor_right_speed = 0,
-                      motor_rear_speed = 0;
-                // translation_pid.left_speed_out = 400;
-                // translation_pid.front_speed_out = 400;
-                // rotation_pid.wl_out = 0;
-                motor_left_speed = (int32)(400 * COS_PI_D_6 + 0 * SIN_PI_D_6);
-                motor_right_speed = (int32)(-400 * COS_PI_D_6 + 0 * SIN_PI_D_6);
-                motor_rear_speed = (int32)(0);
-
-                motor_left_speed += 0;
-                motor_right_speed += 0;
-                motor_rear_speed += 0;
-
-                // 应用速度
-                motor_run_with_speed(LEFT, motor_left_speed);
-                motor_run_with_speed(RIGHT, motor_right_speed);
-                motor_run_with_speed(REAR, motor_rear_speed);
-                system_delay_ms(1);
-            }
-            uint32 s_angle1 = gyroscope_result.angle_z;
-            while (1)
-            {
-                if ((gyroscope_result.angle_z - s_angle1 + 100.0) < 0.)
-                {
-                    break;
-                }
-                int32 motor_left_speed = 0,
-                      motor_right_speed = 0,
-                      motor_rear_speed = 0;
-                // translation_pid.left_speed_out = 400;
-                // translation_pid.front_speed_out = 400;
-                // rotation_pid.wl_out = 0;
-                motor_left_speed = (int32)(-0 * COS_PI_D_6 - 200 * SIN_PI_D_6);
-                motor_right_speed = (int32)(0 * COS_PI_D_6 - 200 * SIN_PI_D_6);
-                motor_rear_speed = (int32)(+200);
-
-                motor_left_speed += 60;
-                motor_right_speed += 60;
-                motor_rear_speed += 60;
-
-                // 应用速度
-                motor_run_with_speed(LEFT, motor_left_speed);
-                motor_run_with_speed(RIGHT, motor_right_speed);
-                motor_run_with_speed(REAR, motor_rear_speed);
-            }
-
-            return;
+    // 转90度
+    while(1){
+        if((gyroscope_result.angle_z - s_angle ) > 85.0){
+            motor_run_with_speed(LEFT,0);
+            motor_run_with_speed(RIGHT,0);
+            motor_run_with_speed(REAR,0);
+            break;
         }
-        int32 motor_left_speed = 0,
-              motor_right_speed = 0,
-              motor_rear_speed = 0;
-        // translation_pid.left_speed_out = 400;
-        // translation_pid.front_speed_out = 400;
-        // rotation_pid.wl_out = 0;
-        motor_left_speed = (int32)(-0 * COS_PI_D_6 + 200 * SIN_PI_D_6);
-        motor_right_speed = (int32)(0 * COS_PI_D_6 + 200 * SIN_PI_D_6);
-        motor_rear_speed = (int32)(-200);
 
-        motor_left_speed += -60;
-        motor_right_speed += -60;
-        motor_rear_speed += -60;
+        
+        motor_left_speed    =   (int32) (150* SIN_PI_D_6);
+        motor_right_speed   =   (int32) (150 * SIN_PI_D_6);
+        motor_rear_speed    =   (int32) (-150);
 
+        motor_left_speed    +=  -50;
+        motor_right_speed   +=  -50;
+        motor_rear_speed    +=  -50;
+        
         // 应用速度
-        motor_run_with_speed(LEFT, motor_left_speed);
-        motor_run_with_speed(RIGHT, motor_right_speed);
-        motor_run_with_speed(REAR, motor_rear_speed);
-        // break;
+        motor_run_with_speed(LEFT,motor_left_speed);
+        motor_run_with_speed(RIGHT,motor_right_speed);
+        motor_run_with_speed(REAR,motor_rear_speed);
     }
+
+    system_delay_ms(1000); // 转90度时间
+    
+    // 推箱子
+    // 初始化三个电机速度缓存
+    motor_left_speed    = 0,
+    motor_right_speed   = 0,
+    motor_rear_speed    = 0;
+    
+    motor_left_speed    =   (int32) (-100 * COS_PI_D_6);
+    motor_right_speed   =   (int32) ( 100 * COS_PI_D_6);
+    motor_rear_speed    =   (int32) (0.);
+    
+    // 应用速度
+    motor_run_with_speed(LEFT,motor_left_speed);
+    motor_run_with_speed(RIGHT,motor_right_speed);
+    motor_run_with_speed(REAR,motor_rear_speed);
+
+    system_delay_ms(2000); // 推箱子时间
+
+    // 返回
+    motor_left_speed    = 0,
+    motor_right_speed   = 0,
+    motor_rear_speed    = 0;
+
+    motor_left_speed    =   (int32) (100 * COS_PI_D_6);
+    motor_right_speed   =   (int32) (-100 * COS_PI_D_6);
+    motor_rear_speed    =   (int32) (0.);
+    
+    // 应用速度
+    motor_run_with_speed(LEFT,motor_left_speed);
+    motor_run_with_speed(RIGHT,motor_right_speed);
+    motor_run_with_speed(REAR,motor_rear_speed);
+
+    system_delay_ms(2000); // 返回时间
+
+
+    s_angle = gyroscope_result.angle_z;
+    // 转回到90度
+    while(1){
+        if((s_angle - gyroscope_result.angle_z) > 85.0){
+            motor_run_with_speed(LEFT,0);
+            motor_run_with_speed(RIGHT,0);
+            motor_run_with_speed(REAR,0);
+            break;
+        }
+        // 初始化三个电机速度缓存
+        motor_left_speed    = 0,
+        motor_right_speed   = 0,
+        motor_rear_speed    = 0;
+        
+        motor_left_speed    =   (int32) (-150* SIN_PI_D_6);
+        motor_right_speed   =   (int32) (-150 * SIN_PI_D_6);
+        motor_rear_speed    =   (int32) (150);
+
+        motor_left_speed    +=  50;
+        motor_right_speed   +=  50;
+        motor_rear_speed    +=  50;
+        
+        // 应用速度
+        motor_run_with_speed(LEFT,motor_left_speed);
+        motor_run_with_speed(RIGHT,motor_right_speed);
+        motor_run_with_speed(REAR,motor_rear_speed);
+    }
+
+    system_delay_ms(1000); // 转90度时间
 }

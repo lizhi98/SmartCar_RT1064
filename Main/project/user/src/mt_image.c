@@ -352,7 +352,7 @@ void search(Image image) {
         printf("%d\n", dx);
         y += 3;
         if (y > Y_CROSS_TOP_MAX) {
-            exit(1);
+            // exit(1);
             goto cross_exit;
         }
     }

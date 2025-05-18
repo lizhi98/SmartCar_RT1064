@@ -37,7 +37,7 @@
 #define TRANSLATION_SUM_OFFSET_MAX  40
 
 // SPEED
-#define MOTOR_NORMAL_SPEED          450
+#define MOTOR_NORMAL_SPEED          500
 #define MOTOR_CURVE_SPEED           400
 
 typedef enum _MotorIndex
