@@ -17,8 +17,10 @@ uint8 image_buffer[HEIGHT][REAL_WIDTH] = { 0 };
     #define SET_IMG(x, y, T) do { \
         image[y][x] = T; \
     } while (0)
+    #define debug(...) printf(__VA_ARGS__)
 #else
     #define SET_IMG(x, y, T)
+    #define debug(...)
 #endif
 
 void process_image(Image image) {
@@ -99,6 +101,12 @@ double calc_kw_by_m(double m) {
     return sqrt(m * m + 1);
 }
 
+int8 limit(int8 x, uint8 a) {
+    if (x < - a) return - a;
+    if (x > a) return a;
+    return x;
+}
+
 void search(Image image) {
     ElementType el = image_result.element_type;
     bool prev_el_normal = el <= Normal;
@@ -130,7 +138,8 @@ void search(Image image) {
     uint8 y_start, y_end;
     bool l_unset = true, r_unset = true;
     bool lost = false;
-    uint8 l_curve, r_curve;
+    int8 l_convex, r_convex;
+    int8 l_dx = 0, r_dx = 0;
 
     uint8 l_ng_count = 0, r_ng_count = 0;
     uint8 l_g_count = BD_G_COUNT_MAX, r_g_count = BD_G_COUNT_MAX;
@@ -143,36 +152,32 @@ void search(Image image) {
     bottom:
     y0l = y0r = 0;
     ml_set = mr_set = false;
-    l_curve = r_curve = 0;
+    l_convex = r_convex = 0;
     l_segs = r_segs = 0;
-    if (el == LoopLeftAfter || el == RampLeft) l_stop = true;
-    else {
-        for (y = Y_MAX; image[y][X_MIN] != EMPTY && y > Y_BOTTOM_MIN; y --);
-        if (y == Y_BOTTOM_MIN) l_stop = l_ng = true;
-        else {
-            if (el == LoopRightAfter || el == RampRight)
-                for (xr = X_MID; image[y][xr + 1] != EMPTY; xr ++);
-            else
-                for (xr = X_MAX; xr > X_MID && image[Y_MAX][xr] != ROAD; xr --);
 
-            for (xl = X_MIN; xl < X_MID && image[Y_MAX][xl] != ROAD; xl ++);
-            xls[y] = xl;
-            SET_IMG(xl, y, BOUND);
-        }
+    for (y = Y_MAX; image[y][X_MIN] != EMPTY && y > Y_BOTTOM_MIN; y --);
+    if (y == Y_BOTTOM_MIN) l_stop = l_ng = true;
+    else {
+        for (xl = X_MIN; xl < X_MID && image[Y_MAX][xl] != ROAD; xl ++);
+        xls[y] = xl;
+        SET_IMG(xl, y, BOUND);
     }
 
-    if (el == LoopRightAfter || el == RampRight) r_stop = true;
+    for (y = Y_MAX; image[y][X_MAX] != EMPTY && y > Y_BOTTOM_MIN; y --);
+    if (y == Y_BOTTOM_MIN) r_stop = r_ng = true;
     else {
-        for (y = Y_MAX; image[y][X_MAX] != EMPTY && y > Y_BOTTOM_MIN; y --);
-        if (y == Y_BOTTOM_MIN) r_stop = r_ng = true;
-        else {
-            if (el == LoopLeftAfter || el == RampLeft)
-                for (xr = X_MID; image[y][xr + 1] != EMPTY; xr ++);
-            else
-                for (xr = X_MAX; xr > X_MID && image[Y_MAX][xr] != ROAD; xr --);
-            xrs[y] = xr;
-            SET_IMG(xr, Y_MAX, BOUND);
-        }
+        for (xr = X_MAX; xr > X_MID && image[Y_MAX][xr] != ROAD; xr --);
+        xrs[y] = xr;
+        SET_IMG(xr, Y_MAX, BOUND);
+    }
+
+    if (el == LoopRight) {
+        if (! r_stop) goto loop;
+        else el = image_result.element_type = CurveRight;
+    }
+    else if (el == LoopRight) {
+        if (! l_stop) goto loop;
+        else el = image_result.element_type = CurveLeft;
     }
 
     // Find the bounds
@@ -189,8 +194,9 @@ void search(Image image) {
         lost = false;
         for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++)
             if (dx == DX_BD_MAX) { xl -= DX_BD_MAX; lost = true; break; }
-        if (! dx && xl != X_MIN) for (; image[y][xl - 1] != EMPTY && xl > X_MIN; dx --, xl --)
-            if (dx == - DX_BD_INV_MAX) { xl += DX_BD_INV_MAX; lost = true; break; }
+        if (! dx && xl != X_MIN)
+            for (; image[y][xl - 1] != EMPTY && xl > X_MIN; dx --, xl --)
+                if (dx == - DX_BD_INV_MAX) { xl += DX_BD_INV_MAX; lost = true; break; }
 
         if (xl == X_MIN) {
             l_unset = true;
@@ -202,8 +208,7 @@ void search(Image image) {
         }
 
         if (lost) {
-            if (el == LoopRightAfter || el == RampRight) break;
-            if (ml_set) {
+            if (ml_set && el <= Cross) {
                 xl = ml * (y - y0l) + xls[y0l];
                 xls[y] = xl;
                 SET_IMG(xl, y, BOUND_APP);
@@ -217,9 +222,19 @@ void search(Image image) {
             }
             xls[y] = xl;
             SET_IMG(xl, y, BOUND);
+
             dx = xl - xls[y + 1];
-            if (dx >= DX_CURVE) if (++ r_curve == 3) break;
-            if (dx <= - DX_CURVE) if (++ l_curve == 3) break;
+            l_convex += limit(dx - l_dx, CONVEX_LIMIT);
+            if (l_convex == CV_CONVEX) {
+                el = image_result.element_type = CurveRight;
+                break;
+            }
+            else if (l_convex == LP_CONVEX) {
+                el = image_result.element_type = LoopLeft;
+                goto loop;
+            }
+            l_dx = dx;
+
             if (l_ng_count) {
                 l_ng_count = 0;
                 if (y > Y_STRICT_G_MAX) l_g_count = BD_G_COUNT_MAX;
@@ -248,19 +263,9 @@ void search(Image image) {
         lost = false;
         for (dx = 0; image[y][xr] == EMPTY; dx --, xr --)
             if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; lost = true; break; }
-        if (! dx && xr != X_MAX) {
-            if (image[y][xr + 1] != EMPTY) {
-                if (el == LoopLeftAfter && y >= Y_RAMP_CHECKPOINT_MIN) {
-                    el = image_result.element_type = RampLeft;
-                    break;
-                }
-                while (true) {
-                    dx ++, xr ++;
-                    if (image[y][xr + 1] != ROAD) break;
-                    if (dx == DX_BD_MAX) { xr -= DX_BD_MAX; lost = true; break; }
-                }
-            }
-        }
+        if (! dx && xr != X_MAX)
+            for (; image[y][xr + 1] != EMPTY && xr < X_MAX; dx ++, xr ++)
+                if (dx == DX_BD_INV_MAX) { xl += DX_BD_INV_MAX; lost = true; break; }
 
         if (xr == X_MAX) {
             r_unset = true;
@@ -272,8 +277,7 @@ void search(Image image) {
         }
 
         if (lost) {
-            if (el == LoopLeftAfter || el == RampLeft) break;
-            if (mr_set) {
+            if (mr_set && el <= Cross) {
                 xr = mr * (y - y0r) + xrs[y0r];
                 xrs[y] = xr;
                 SET_IMG(xr, y, BOUND_APP);
@@ -287,9 +291,18 @@ void search(Image image) {
             }
             xrs[y] = xr;
             SET_IMG(xr, y, BOUND);
+
             dx = - xr + xrs[y + 1];
-            if (dx >= DX_CURVE) if (++ l_curve == 3) break;
-            if (dx <= - DX_CURVE) if (++ r_curve == 3) break;
+            r_convex += limit(dx - r_dx, CONVEX_LIMIT);
+            if (r_convex == CV_CONVEX) {
+                el = image_result.element_type = CurveLeft;
+                break;
+            }
+            else if (r_convex == LP_CONVEX) {
+                el = image_result.element_type = LoopRight;
+                goto loop;
+            }
+            r_dx = dx;
 
             if (r_ng_count) {
                 r_ng_count = 0;
@@ -316,6 +329,47 @@ void search(Image image) {
     }
     y_start = y;
     goto cross_bound$;
+
+    loop:
+    if (el == LoopLeft) {
+        for (y = Y_MAX; image[y][X_MAX] != EMPTY; y --);
+        for (; image[y][X_MAX] == EMPTY; y --);
+        for (; image[y - 1][X_MAX] != EMPTY; y --);
+        SET_IMG(X_MIN, y, BOUND);
+    }
+    else {
+        for (y = Y_MAX; image[y][X_MAX] != EMPTY; y --);
+        for (; image[y][X_MAX] == EMPTY; y --);
+        for (; image[y - 1][X_MAX] != EMPTY; y --);
+        SET_IMG(X_MAX, y, BOUND);
+
+        uint8 up_count = 0, xc, yc;
+        for (xr = X_MAX - 1; xr > X_MID; xr --) {
+            if (image[y - 1][xr] != EMPTY) {
+                if (++ up_count == LP_UP_MAX) {
+                    SET_IMG(xc, yc, SPECIAL);
+                    break;
+                }
+                for (y --; image[y - 1][xr] != EMPTY; y --);
+            }
+            else {
+                up_count = 0;
+                xc = xr;
+                y_start = yc = y;
+            }
+            while (image[y][xr] == EMPTY) y ++;
+            SET_IMG(xr, y, BOUND);
+        }
+        
+        double xlf = xls[Y_MAX];
+        double m = (double) (xc - xl) / (Y_MAX - yc);
+        for (y = Y_MAX - 1; y > yc; y --) {
+            xls[y] = (uint8) xlf;
+            SET_IMG((uint8) xlf, y, BOUND_APP);
+            xlf += m;
+        }
+    }
+    goto mid;
 
     cross_bound:
     // Find the cross top
@@ -394,26 +448,15 @@ void search(Image image) {
     cross_bound$:
 
     // Analyze element type
-    if (el == LoopLeft && l_segs == 1) {
-        el = image_result.element_type = Normal;
-    }
-
-    if (el <= CrossBefore) {
-        if (l_segs >= 3) {
-            image_result.element_type = LoopLeftBefore;
-            goto mid;
-        }
-    }
-
 
     if (el <= Normal) {
         if (l_segs >= 2 && r_segs >= 2) {
             el = image_result.element_type = CrossBefore;
         }
-        else if (l_curve == 3) {
+        else if (l_convex == 3) {
             image_result.element_type = CurveLeft;
         }
-        else if (r_curve == 3) {
+        else if (r_convex == 3) {
             image_result.element_type = CurveRight;
         }
         else {
@@ -428,72 +471,6 @@ void search(Image image) {
             goto cross_bound;
         }
         goto mid;
-    }
-
-    if (el == LoopLeftBefore) {
-        if (l_segs < 3) el = image_result.element_type = LoopLeft;
-    }
-
-    if (el == LoopLeft) {
-        y ++;
-        for (xl = xr ? xr : X_MAX; image[y][xl] != ROAD && xl >= X_MIN; xl --);
-        for (; image[y][xl - 1] != EMPTY && xl >= X_MIN; xl --);
-        SET_IMG(xl, y, SPECIAL);
-        for (dx = 0; y <= Y_MAX; y ++) {
-            for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++);
-            if (! dx) for (; image[y][xl - 1] != EMPTY; dx --, xl --)
-                if (dx == - DX_BD_MAX) {
-                    xl += DX_BD_MAX;
-                    SET_IMG(xl, y, SPECIAL);
-                    goto loop_left_corner$;
-                }
-        }
-        loop_left_corner$:
-
-        if (y > Y_MAX) {
-            el = image_result.element_type = LoopLeftAfter;
-            goto bottom;
-        }
-        else {
-            double dx = 0;
-            mr = (double) ((xrs[Y_MAX] ? xrs[Y_MAX] : X_MAX) - xl) / (Y_MAX - y);
-            so = 0;
-            sw = 0;
-            for (y ++; y <= Y_MAX; y ++) {
-                if (y <= Y_MID_LINE_MIN) continue;
-                dx += mr;
-                xr = xl + dx;
-                SET_IMG(xr, y, BOUND_APP);
-                dx = STD_WIDTH[y];
-                xm = xr - dx;
-                so += (xm - X_MID) * dx;
-                sw += dx;
-                SET_IMG(xm, y, MID_LINE);
-            }
-            image_result.offset = so / sw - xm + X_MID;
-            goto mid$;
-        }
-    }
-
-    if (el == RampLeft) {
-        if (! r_ng && y < Y_BD_MIN) {
-            image_result.element_type = Normal;
-            goto mid;
-        }
-        for (y = Y_RAMP_TOP_MIN; image[y][X_MIN] == EMPTY; y ++);
-        SET_IMG(X_MIN, y, SPECIAL);
-        uint8 xc = xrs[0] ? (xrs[0] + X_MIN) >> 1 : X_MID;
-        uint8 yc = (y + Y_MAX) >> 1;
-        double m = (double) xc / (Y_MAX - yc);
-        so = 0;
-        for (y = Y_MAX, dx = 0; y >= yc && y >= Y_MID_LINE_MIN; y --) {
-            xm = xc - dx;
-            dx += m;
-            SET_IMG(xm, y, MID_LINE);
-            so += xm - X_MID;
-        }
-        image_result.offset = so / (Y_MAX - y);
-        goto mid$;
     }
 
     // Calculate midline
@@ -518,7 +495,6 @@ void search(Image image) {
             dx = xr - xl;
             xm = (xl + xr) >> 1;
         }
-        printf("y=%d, xm=%d, dx=%d\n", y, xm, dx);
         so += (xm - X_MID) * dx;
         sw += dx;
         SET_IMG(xm, y, MID_LINE);
@@ -527,4 +503,9 @@ void search(Image image) {
     mid$:
 
     SET_IMG(X_MID + (int8) (image_result.offset), Y_MAX, SPECIAL);
+    debug(
+        "l_convex = %d\n"
+        "r_convex = %d\n",
+        l_convex, r_convex
+    );
 }

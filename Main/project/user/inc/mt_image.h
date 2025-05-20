@@ -63,10 +63,10 @@ extern ImageResult image_result;
 extern uint8 otsu_threshold;
 
 #define OSTU_COUNTER_MAX 10
-#define OTSU_THRESHOLD_MIN 50
+#define OTSU_THRESHOLD_MIN 20
 #define OTSU_THRESHOLD_MAX 200
-#define OTSU_COMPRESS_RATIO 2
-#define OTSU_COMPRESS_RATIO_SQUARE 4 // OTSU_COMPRESS_RATIO * OTSU_COMPRESS_RATIO
+#define OTSU_COMPRESS_RATIO 1
+#define OTSU_COMPRESS_RATIO_SQUARE 1 // OTSU_COMPRESS_RATIO * OTSU_COMPRESS_RATIO
 #define OTSU_THRESHOLD_DELTA 4
 
 #define EMPTY 0
@@ -77,7 +77,7 @@ extern uint8 otsu_threshold;
 #define SPECIAL 5
 
 #define Y_SEARCH_MIN 35
-#define Y_NORMAL_MIN 65
+#define Y_NORMAL_MIN 60
 #define Y_BD_MIN 38
 #define Y_BD_EARLY_MIN 80
 #define Y_BOTTOM_MIN 78
@@ -95,7 +95,6 @@ extern uint8 otsu_threshold;
 #define Y_LOOP_END_MAX 75
 #define X_LOOP_END_LEFT 50
 #define X_LOOP_END_RIGHT 135
-#define DX_CURVE 3
 #define X_CURVE_OFFSET 25
 #define DX_BD_MAX 5
 #define DX_BD_INV_MAX 4
@@ -103,6 +102,9 @@ extern uint8 otsu_threshold;
 #define BD_LENGTH 85
 #define BD_NG_COUNT_MAX 3
 #define BD_G_COUNT_MAX 2
-#define BOTH_COUNT_MIN 20
+#define CV_CONVEX 4
+#define LP_CONVEX (- 4)
+#define LP_UP_MAX 3
+#define CONVEX_LIMIT 2
 
 #endif 
