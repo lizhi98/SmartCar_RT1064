@@ -88,13 +88,8 @@ extern uint8 otsu_threshold;
 #define X_CROSS_TOP_MAX 143
 #define Y_CROSS_M_HEIGHT 5
 #define Y_CROSS_M_OFFSET 2
-#define Y_RAMP_CHECKPOINT_MIN 80
-#define Y_RAMP_TOP_MIN 50
 #define Y_STRICT_G_MAX 45
 #define Y_MID_LINE_MIN 95
-#define Y_LOOP_END_MAX 75
-#define X_LOOP_END_LEFT 50
-#define X_LOOP_END_RIGHT 135
 #define X_CURVE_OFFSET 25
 #define DX_BD_MAX 5
 #define DX_BD_INV_MAX 4
@@ -105,6 +100,7 @@ extern uint8 otsu_threshold;
 #define CV_CONVEX 4
 #define LP_CONVEX (- 4)
 #define LP_UP_MAX 3
+#define Y_LOOP_MIN 40
 #define CONVEX_LIMIT 2
 
 #endif 
