@@ -17,6 +17,7 @@
 #define screen_full(color)              ips200_full(color)
 
 void screen_init(void);
+void screen_show_info(void);
 
 
 #endif

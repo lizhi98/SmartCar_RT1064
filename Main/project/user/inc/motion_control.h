@@ -37,7 +37,7 @@
 #define TRANSLATION_SUM_OFFSET_MAX  40
 
 // SPEED
-#define MOTOR_NORMAL_SPEED          500
+#define MOTOR_NORMAL_SPEED          480
 #define MOTOR_CURVE_SPEED           400
 
 typedef enum _MotorIndex
@@ -128,6 +128,11 @@ typedef struct _MotionControl
              vint32      line_distance; // 当前距离赛道内部的距离
 }MotionControl;
 
+typedef struct _LineOffset{
+    uint32 times;
+    double sum_offset;
+}LineOffset;
+
 // MOTOR
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 // PID
@@ -136,6 +141,8 @@ extern TranslationPID   translation_pid;
 
 // TARGET MOTION
 extern MotionControl motion_control;
+
+extern LineOffset line_offset;
 
 extern vuint8 run_flag;
 

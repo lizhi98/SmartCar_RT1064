@@ -2,9 +2,8 @@
 
 #include "main.h"
 
-vuint8 zebra_count = 0;
 // #define HOST_DEBUG 
-// #define SEND_IMAGE
+//#define SEND_IMAGE
 // #define IPS_IMAGE
 
 // 斑马线有效标志
@@ -66,87 +65,47 @@ int main(void)
     // 主循环准备
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
-    run_flag = 1;
     char    ips200_str_buffer[64];
     char    ips200_str_buffer_1[64];
     char    ips200_str_buffer_2[64];
     char    ips200_str_buffer_3[64];
     char *  image_ele_buffer;
-    // target_speed_magnitude = 700;
-    motion_control.motion_mode = LINE_FOLLOW; // 运动模式初始化
-    // uint32 zebra_time = 0;
-    // 主循环
-    while(1) {
-        // push_box();
-        // while(1);
 
-        // if(zebra_valid_flag == 0){
-        //     if(timer_get(GPT_TIM_1) >= 10000){
-        //         zebra_valid_flag = 1; // 斑马线有效
-        //     }
-        // }
-        // 定时发送速度信息
-//         if (timer_get(GPT_TIM_1) > WIFI_SPI_SEND_INTERVAL) {
-// #if defined(HOST_DEBUG)
-//             // correspond_send_info_to_host();
-//             // timer_clear(GPT_TIM_1);
-// #endif
-//         }
+    motion_control.motion_mode = LINE_FOLLOW; // 运动模式初始化
+
+    // 主循环
+    run_flag = 1;
+    uint16 image_send_count = 0;
+    uint16 image_time_show_ips = 0;
+    while(1) {
+
         // 计算图像处理时间
         // 图像处理、发送与运动解算
         if (mt9v03x_finish_flag) {
             image_process_time_start = timer_get(GPT_TIM_1);
             
             process_image(mt9v03x_image);
-
-#if defined(IPS_IMAGE)
-            ips200_displayimage03x((uint8 *)&mt9v03x_image[0], MT9V03X_W, MT9V03X_H); // 显示图像
-
-            switch(image_result.element_type){
-                case Zebra: image_ele_buffer = "Zebra"; break;
-                case CurveLeft: image_ele_buffer = "CurveL"; break;
-                case CurveRight: image_ele_buffer = "CurveR"; break;
-                case Normal: image_ele_buffer = "Normal"; break;
-                case CrossBefore: image_ele_buffer = "CrossB"; break;
-                case Cross: image_ele_buffer = "Cross"; break;
-                case LoopLeftBefore: image_ele_buffer = "LoopLB"; break;
-                case LoopRightBefore: image_ele_buffer = "LoopRB"; break;
-                case LoopLeft: image_ele_buffer = "LoopL"; break;
-                case LoopRight: image_ele_buffer = "LoopR"; break;
-                case LoopLeftAfter: image_ele_buffer = "LoopLA"; break;
-                case LoopRightAfter: image_ele_buffer = "LoopRA"; break;
-                case RampLeft: image_ele_buffer = "RampL"; break;
-                case RampRight: image_ele_buffer = "RampR"; break;
-                default: image_ele_buffer = "Unknown"; break;
-            }
-
-            sprintf(ips200_str_buffer,"offset:%8.3lf,ele:%s,f:%1d",image_result.offset,image_ele_buffer,run_flag);
-            ips200_show_string(0, MT9V03X_H, ips200_str_buffer); // 显示图像处理结果
-            // sprintf(ips200_str_buffer_1,"state:%1d,x:%4d,y:%4d,mode:%1d",
-            //     cube_info.state,cube_info.x_center,cube_info.y_center,motion_control.motion_mode);
-            // sprintf(ips200_str_buffer_2,"yf:%5d,xf:%5d",
-            //     translation_pid.front_offset,translation_pid.left_offset);
-            // sprintf(ips200_str_buffer_3,"fs:%5d,ls:%5d,ro:%5d",
-            //     translation_pid.front_speed_out,translation_pid.left_speed_out,
-            //     rotation_pid.wl_out);
-            // ips200_show_string(0, MT9V03X_H, ips200_str_buffer_1);
-            // ips200_show_string(0, MT9V03X_H+30, ips200_str_buffer_2);
-            // ips200_show_string(0, MT9V03X_H+60, ips200_str_buffer_3);
-#endif
-#if defined(SEND_IMAGE)
-            // 发送图像到上位机
-            seekfree_assistant_camera_send();
-#endif
+            
+            // 累加offset
+            line_offset.sum_offset += image_result.offset;
+            line_offset.times++;
+            
             image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;          // 计算图像处理时间
+
+            if(++image_send_count >= 10){
+                // ips200_show_uint(0, 0, ++image_time_show_ips,5);
+#if defined(SEND_IMAGE)
+                seekfree_assistant_camera_send();
+#endif
+                image_send_count = 0;
+            }
+            
+#if defined(IPS_IMAGE)
+            screen_show_info();
+#endif
             mt9v03x_finish_flag = 0;
         }
-        // if(image_result.element_type == Zebra){
-        //     zebra_count++;
-        //     if(zebra_count >=1){
-        //         zebra_count = 0;
-        //         run_flag = 0;
-        //     }
-        // }
+        
         // 运动解算        
         target_motion_calc();
 
