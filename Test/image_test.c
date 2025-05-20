@@ -57,7 +57,6 @@ int main(int argc, char *argv[]) {
         printf("\x1B[2J\x1B[H\n");
         while (sscanf(ctrl, "%c:%[^;];%n", &ctrl_type, ctrl_arg, &len) > 0) {
             ctrl += len;
-            printf("%d %s\n", len, ctrl);
             switch (ctrl_type) {
                 case 'x': {
                     int x = atoi(ctrl_arg);

@@ -13,6 +13,14 @@ uint8 otsu_threshold = 0;
 
 uint8 image_buffer[HEIGHT][REAL_WIDTH] = { 0 };
 
+#ifdef IMAGE_DEBUG
+    #define SET_IMG(x, y, T) do { \
+        image[y][x] = T; \
+    } while (0)
+#else
+    #define SET_IMG(x, y, T)
+#endif
+
 void process_image(Image image) {
     memcpy(image_buffer, image, sizeof (uint8) * REAL_WIDTH * HEIGHT);
     if (otsu_counter) {
@@ -92,14 +100,6 @@ double calc_kw_by_m(double m) {
 }
 
 void search(Image image) {
-#ifdef IMAGE_DEBUG
-#define SET_IMG(x, y, T) do { \
-    image[y][x] = T; \
-} while (0)
-#define Z exit(1);
-#else
-#define SET_IMG(x, y, T)
-#endif
     ElementType el = image_result.element_type;
     bool prev_el_normal = el <= Normal;
 
@@ -121,7 +121,7 @@ void search(Image image) {
     }
 
     uint8 xl, xr, xm, y, y_bd_min;
-    int8 dx;
+    int16 dx;
     uint8 xls[HEIGHT] = { 0 }, xrs[HEIGHT] = { 0 };
     double ml, mr;
     bool ml_set = false, mr_set = false;
@@ -147,7 +147,7 @@ void search(Image image) {
     l_segs = r_segs = 0;
     if (el == LoopLeftAfter || el == RampLeft) l_stop = true;
     else {
-        for (y = Y_MAX; image[y][X_MIN] == ROAD && y > Y_BOTTOM_MIN; y --);
+        for (y = Y_MAX; image[y][X_MIN] != EMPTY && y > Y_BOTTOM_MIN; y --);
         if (y == Y_BOTTOM_MIN) l_stop = l_ng = true;
         else {
             if (el == LoopRightAfter || el == RampRight)
@@ -163,7 +163,7 @@ void search(Image image) {
 
     if (el == LoopRightAfter || el == RampRight) r_stop = true;
     else {
-        for (y = Y_MAX; image[y][X_MAX] == ROAD && y > Y_BOTTOM_MIN; y --);
+        for (y = Y_MAX; image[y][X_MAX] != EMPTY && y > Y_BOTTOM_MIN; y --);
         if (y == Y_BOTTOM_MIN) r_stop = r_ng = true;
         else {
             if (el == LoopLeftAfter || el == RampLeft)
@@ -189,7 +189,7 @@ void search(Image image) {
         lost = false;
         for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++)
             if (dx == DX_BD_MAX) { xl -= DX_BD_MAX; lost = true; break; }
-        if (! dx && xl != X_MIN) for (; image[y][xl - 1] == ROAD && xl > X_MIN; dx --, xl --)
+        if (! dx && xl != X_MIN) for (; image[y][xl - 1] != EMPTY && xl > X_MIN; dx --, xl --)
             if (dx == - DX_BD_INV_MAX) { xl += DX_BD_INV_MAX; lost = true; break; }
 
         if (xl == X_MIN) {
@@ -249,7 +249,7 @@ void search(Image image) {
         for (dx = 0; image[y][xr] == EMPTY; dx --, xr --)
             if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; lost = true; break; }
         if (! dx && xr != X_MAX) {
-            if (image[y][xr + 1] == ROAD) {
+            if (image[y][xr + 1] != EMPTY) {
                 if (el == LoopLeftAfter && y >= Y_RAMP_CHECKPOINT_MIN) {
                     el = image_result.element_type = RampLeft;
                     break;
@@ -322,25 +322,25 @@ void search(Image image) {
     y = Y_CROSS_TOP_MIN;
     while (true) {
         xl = xr = X_MID;
-        if (image[y][X_MID] == ROAD) {
-            while (image[y][xl - 1] == ROAD)
+        if (image[y][X_MID] != EMPTY) {
+            while (image[y][xl - 1] != EMPTY)
                 if (-- xl < X_CROSS_TOP_MIN) goto cross_next_y;
-            while (image[y][xr + 1] == ROAD)
+            while (image[y][xr + 1] != EMPTY)
                 if (++ xr > X_CROSS_TOP_MAX) goto cross_next_y;
         }
         else {
             while (true) {
                 if (-- xl < X_CROSS_TOP_MIN) goto cross_next_y;
-                if (image[y][xl] == ROAD) {
+                if (image[y][xl] != EMPTY) {
                     xr = xl;
-                    while (image[y][xl - 1] == ROAD)
+                    while (image[y][xl - 1] != EMPTY)
                         if (-- xl < X_CROSS_TOP_MIN) goto cross_next_y;
                     break;
                 }
                 xr ++;
-                if (image[y][xr + 1] == ROAD) {
+                if (image[y][xr + 1] != EMPTY) {
                     xl = xr;
-                    while (image[y][xr + 1] == ROAD)
+                    while (image[y][xr + 1] != EMPTY)
                         if (++ xr > X_CROSS_TOP_MAX) goto cross_next_y;
                     break;
                 }
@@ -360,12 +360,12 @@ void search(Image image) {
     bool cross_top = true;
     // Find the cross bound
     for (y ++; y < Y_MAX; y ++) {
-        for (dx = 0; image[y][xl - 1] == ROAD; dx ++, xl --)
+        for (dx = 0; image[y][xl - 1] != EMPTY; dx ++, xl --)
             if (dx == DX_BD_MAX) { cross_top = false; break; }
         if (! dx) for (; image[y][xl] == EMPTY; xl ++);
         xls[y] = xl;
         SET_IMG(xl, y, BOUND);
-        for (dx = 0; image[y][xr + 1] == ROAD; dx ++, xr ++)
+        for (dx = 0; image[y][xr + 1] != EMPTY; dx ++, xr ++)
             if (dx == DX_BD_MAX) { cross_top = false; break; }
         if (! dx) for (; image[y][xr] == EMPTY; xr --);
         xrs[y] = xr;
@@ -437,7 +437,7 @@ void search(Image image) {
     if (el == LoopLeft) {
         y ++;
         for (xl = xr ? xr : X_MAX; image[y][xl] != ROAD && xl >= X_MIN; xl --);
-        for (; image[y][xl - 1] == ROAD && xl >= X_MIN; xl --);
+        for (; image[y][xl - 1] != EMPTY && xl >= X_MIN; xl --);
         SET_IMG(xl, y, SPECIAL);
         for (dx = 0; y <= Y_MAX; y ++) {
             for (dx = 0; image[y][xl] == EMPTY; dx ++, xl ++);
@@ -518,6 +518,7 @@ void search(Image image) {
             dx = xr - xl;
             xm = (xl + xr) >> 1;
         }
+        printf("y=%d, xm=%d, dx=%d\n", y, xm, dx);
         so += (xm - X_MID) * dx;
         sw += dx;
         SET_IMG(xm, y, MID_LINE);
