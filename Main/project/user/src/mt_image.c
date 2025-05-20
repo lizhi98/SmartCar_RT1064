@@ -222,14 +222,14 @@ void search(Image image) {
 
             dx = xl - xls[y + 1];
             l_convex += limit(dx - l_dx, CONVEX_LIMIT);
-            if (l_convex == CV_CONVEX) {
+            if (l_convex >= CV_CONVEX) {
                 el = image_result.element_type = CurveRight;
                 break;
             }
-            // else if (l_convex == LP_CONVEX) {
-            //     el = image_result.element_type = LoopLeft;
-            //     goto loop;
-            // }
+            else if (l_convex <= LP_CONVEX && el == LoopLeftBefore) {
+                el = image_result.element_type = LoopLeft;
+                goto loop;
+            }
             l_dx = dx;
 
             if (l_ng_count) {
@@ -291,11 +291,11 @@ void search(Image image) {
 
             dx = - xr + xrs[y + 1];
             r_convex += limit(dx - r_dx, CONVEX_LIMIT);
-            if (r_convex == CV_CONVEX) {
+            if (r_convex >= CV_CONVEX) {
                 el = image_result.element_type = CurveLeft;
                 break;
             }
-            else if (r_convex == LP_CONVEX && el == LoopRightBefore) {
+            else if (r_convex <= LP_CONVEX && el == LoopRightBefore) {
                 el = image_result.element_type = LoopRight;
                 goto loop;
             }
@@ -366,7 +366,7 @@ void search(Image image) {
             }
             else {
                 up_count = 0;
-                xc = xr;
+                xc = xr + 10;
                 y_start = yc = y;
             }
             while (image[y][xr] == EMPTY) y ++;
