@@ -100,6 +100,7 @@ extern uint8 otsu_threshold;
 #define CV_CONVEX 4
 #define LP_CONVEX (- 4)
 #define LP_UP_MAX 3
+#define LP_UP_FAILED_MAX 3
 #define Y_LOOP_MIN 40
 #define CONVEX_LIMIT 2
 

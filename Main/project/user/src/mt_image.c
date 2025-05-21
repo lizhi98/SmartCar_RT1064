@@ -344,25 +344,28 @@ void search(Image image) {
         for (; image[y - 1][X_MAX] != EMPTY; y --)
             if (y == Y_LOOP_MIN) {
                 el = image_result.element_type = Normal;
-                return;
                 goto normal_bound;
             }
         SET_IMG(X_MAX, y, BOUND);
 
         uint8 up_count = 0, xc, yc;
+        uint8 up_failed_count = 0, y0;
         for (xr = X_MAX - 1; xr > X_MID; xr --) {
             if (image[y - 1][xr] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
                     SET_IMG(xc, yc, SPECIAL);
                     break;
                 }
-                for (y --; image[y - 1][xr] != EMPTY; y --)
-                    if (y == Y_LOOP_MIN) {
-                        el = image_result.element_type = Normal;
-                        goto normal_bound;
-                        goto mid;
-                        return;
-                    }
+                for (y0 = y, y --; image[y - 1][xr] != EMPTY; y --)
+                    if (y == Y_LOOP_MIN)
+                        if (++ up_failed_count == LP_UP_FAILED_MAX) {
+                            el = image_result.element_type = Normal;
+                            goto normal_bound;
+                        }
+                        else {
+                            y = y0;
+                            break;
+                        }
             }
             else {
                 up_count = 0;
