@@ -7,7 +7,12 @@
 
 #include <stdbool.h>
 
+#define CUBE_DEBUG
+
+#define LED_WHITE(x)    gpio_set_level(gpio_led_white,  (uint8)x)
+
 char ips_buff[32];
+gpio_struct gpio_led_white =    {GPIO2, 11u};
 
 #ifdef CUBE_DEBUG
 uint16 scc8660_image_buff[SCC8660_W * SCC8660_H];
@@ -24,10 +29,11 @@ int main(void)
     rt1064_uart_init_wait();
     // 初始化 IPS200 模块
     ips200_init(); 
-
+	
     // 初始化 SCC8660 摄像头
     scc8660_init();
-
+    gpio_init(gpio_led_white, GPO, 1, PULL_UP);
+	LED_WHITE(0);
     while (1) {
         if (! scc8660_finish) continue;
 
@@ -40,8 +46,9 @@ int main(void)
         rt1064_uart_send_cube_info();
 
 #ifdef CUBE_DEBUG
-        ips200_show_scc8660(scc8660_image_buff);
+        // ips200_show_scc8660(scc8660_image_buff);
         if (cube_info.exist) {
+            ips200_full(RGB565_WHITE);
             int xc = cube_info.x_center;
             int yc = cube_info.y_center;
             int x1 = cube_info.x_min;

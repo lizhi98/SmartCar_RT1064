@@ -1,7 +1,7 @@
 #include "motion_control.h"
 
-#define CUBE_RIGHT_CENTER_X  160
-#define CUBE_RIGHT_CENTER_Y  200
+#define CUBE_RIGHT_CENTER_X  150
+#define CUBE_RIGHT_CENTER_Y  150
 
 vuint8 run_flag = 0;
 
@@ -43,9 +43,8 @@ MotorPID motor_rear_pid = {
 RotationPID rotation_pid = {
     .normal_kp  = -2.8,           .normal_ki  = -0.015,          .normal_kd  = -0.2,
     // .normal_kp = -2.6,           .normal_ki = -0.05,          .normal_kd = -0.5,
-    .curve_kp  = -2.8,           .curve_ki  = -0.02,          .curve_kd  = -0.2,
+    .curve_kp  = -3.0,           .curve_ki  = -0.02,          .curve_kd  = -0.2,
     .last_offset = 0,            .sum_offset = 0,             .offset = 0,
-    .rotation_angle = 0
 };
 
 // 平移PID
@@ -278,6 +277,13 @@ void rotation_pid_calc(){
 }
 
 void translation_pid_calc(void){
+    // run_flag
+    if(!run_flag){
+        translation_pid.front_speed_out = 0;
+        translation_pid.left_speed_out  = 0;
+        return;
+    }
+
     // 分情况获取offset，或者直接输出speed_out
     switch (motion_control.motion_mode)
     {
@@ -293,10 +299,6 @@ void translation_pid_calc(void){
             translation_pid.front_speed_out = MOTOR_NORMAL_SPEED;
             break;
         case Zebra:
-            if(zebra_valid_flag){
-
-                run_flag = 0;
-            }
             // translation_pid.front_speed_out = 0;
             break;
         default:
@@ -386,7 +388,7 @@ void motion_pid_callback(void){
 
 uint8 cube_distance_position_ok(){
     // 立方体坐标定位是否正确
-    if( (abs(cube_info.x_center - CUBE_RIGHT_CENTER_X) <= 30) && ( abs(cube_info.y_center - CUBE_RIGHT_CENTER_Y) <= 20 )){
+    if( (abs(cube_info.x_center - CUBE_RIGHT_CENTER_X) <= 25) && ( abs(cube_info.y_center - CUBE_RIGHT_CENTER_Y) <= 15 )){
         return 1u;
     }else{
         return 0u;
@@ -442,29 +444,52 @@ uint32 push_box_valid_time = 0;
 // 车运动解算函数
 void target_motion_calc(void){
     motion_control.motion_mode = LINE_FOLLOW;
-    if(!run_flag && zebra_valid_flag){
-        system_delay_ms(1500);
+    if(!run_flag){
+        system_delay_ms(500);
         motor_run_with_speed(LEFT,0);
         motor_run_with_speed(RIGHT,0);
         motor_run_with_speed(REAR,0);
-			  while(1){}
+        while(1){}
         return;
     }
     
-    // if(motion_control.motion_mode == LINE_FOLLOW && cube_info.state == CUBE_INSIDE_VIEW){
-    //     motion_control.motion_mode = CUBE_DISTANCE_POSITION;
-    //     while(!cube_distance_position_ok());
-    //     // 先停车
-    //     motor_run_with_speed(LEFT,0);
-    //     motor_run_with_speed(RIGHT,0);
-    //     motor_run_with_speed(REAR,0);
-    //     system_delay_ms(500);
-    //     push_box();
-    //     motion_control.motion_mode = LINE_FOLLOW;
-    //     return;
-    // }
+    if(motion_control.motion_mode == LINE_FOLLOW && cube_info.state == CUBE_INSIDE_VIEW){
+        motion_control.motion_mode = CUBE_DISTANCE_POSITION;
+        while(!cube_distance_position_ok()){
+            target_speed_calc();
+        }
+        // 先停车
+        motor_run_with_speed(LEFT,0);
+        motor_run_with_speed(RIGHT,0);
+        motor_run_with_speed(REAR,0);
+        system_delay_ms(500);
+        push_box();
+        motion_control.motion_mode = LINE_FOLLOW;
+        return;
+    }
 
-    // ======================电机速度解算====================
+    target_speed_calc();
+}
+
+void target_speed_calc(){
+    // // ！！！顺时针为正方向，逆时针为负方向！！！
+
+    // // 初始化三个电机速度缓存
+    // int32   motor_left_speed    = 0,
+    //         motor_right_speed   = 0,
+    //         motor_rear_speed    = 0;
+    
+    // // 后轮速度     =   wl + V左
+    // motor_rear_speed    = (int32) (rotation_pid.wl_out + translation_pid.left_speed_out);
+    // // 左轮这速度   =   wl + V前 * cos(30) + V左 * cos(60)
+    // motor_left_speed    = (int32) (rotation_pid.wl_out - translation_pid.left_speed_out * COS_PI_D_3 + translation_pid.front_speed_out * COS_PI_D_6);
+    // // 右轮速度     =   wl - V前 * cos(30) - V左 * cos(60)
+    // motor_right_speed   = (int32) (rotation_pid.wl_out - translation_pid.left_speed_out * COS_PI_D_3 - translation_pid.front_speed_out * COS_PI_D_6);
+
+    // // 应用速度
+    // motor_run_with_speed(LEFT,motor_left_speed);
+    // motor_run_with_speed(RIGHT,motor_right_speed);
+    // motor_run_with_speed(REAR,motor_rear_speed);
     // 初始化三个电机速度缓存
     int32   motor_left_speed    = 0,
             motor_right_speed   = 0,
@@ -485,25 +510,4 @@ void target_motion_calc(void){
 
     // 记录运动模式
     motion_control.last_motion_mode = motion_control.motion_mode;
-}
-
-void target_motion_calc_new(){
-    // ！！！顺时针为正方向，逆时针为负方向！！！
-
-    // 初始化三个电机速度缓存
-    int32   motor_left_speed    = 0,
-            motor_right_speed   = 0,
-            motor_rear_speed    = 0;
-    
-    // 后轮速度     =   wl + V左
-    motor_rear_speed    = (int32) (rotation_pid.wl_out + translation_pid.left_speed_out);
-    // 左轮这速度   =   wl + V前 * cos(30) + V左 * cos(60)
-    motor_left_speed    = (int32) (rotation_pid.wl_out - translation_pid.left_speed_out * COS_PI_D_3 + translation_pid.front_speed_out * COS_PI_D_6);
-    // 右轮速度     =   wl - V前 * cos(30) - V左 * cos(60)
-    motor_right_speed   = (int32) (rotation_pid.wl_out - translation_pid.left_speed_out * COS_PI_D_3 - translation_pid.front_speed_out * COS_PI_D_6);
-
-    // 应用速度
-    motor_run_with_speed(LEFT,motor_left_speed);
-    motor_run_with_speed(RIGHT,motor_right_speed);
-    motor_run_with_speed(REAR,motor_rear_speed);
 }

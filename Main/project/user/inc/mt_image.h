@@ -6,6 +6,7 @@
 #ifndef __linux__
     #include "zf_device_mt9v03x.h"
 	#include "zf_common_typedef.h"
+    #include "zf_device_ips200.h"
 #else
 	#define uint8 unsigned char
     #define int8 char
@@ -101,7 +102,7 @@ extern uint8 otsu_threshold;
 #define LP_CONVEX (- 4)
 #define LP_UP_MAX 3
 #define LP_UP_FAILED_MAX 3
-#define Y_LOOP_MIN 40
+#define Y_LOOP_MIN 30
 #define CONVEX_LIMIT 2
 
 #endif 

@@ -33,11 +33,11 @@
 #define MOTION_PID_PIT              PIT_CH1
 #define MOTION_PID_PIT_TIME         10
 
-#define ROTATION_SUM_OFFSET_MAX     200
+#define ROTATION_SUM_OFFSET_MAX     400
 #define TRANSLATION_SUM_OFFSET_MAX  40
 
 // SPEED
-#define MOTOR_NORMAL_SPEED          480
+#define MOTOR_NORMAL_SPEED          450
 #define MOTOR_CURVE_SPEED           400
 
 typedef enum _MotorIndex
@@ -62,10 +62,9 @@ typedef struct _RotationPID{
              float curve_kp;
              float curve_ki;
              float curve_kd;
-    volatile int32 offset;
-    volatile int32 rotation_angle;
-    volatile int32 last_offset;
-    volatile int32 sum_offset;
+    volatile double offset;
+    volatile double last_offset;
+    volatile double sum_offset;
     volatile int32 wl_out;
 } RotationPID;
 
@@ -173,6 +172,7 @@ void encoder_all_init(void);
 #define encoder_get_speed(encoder_index) encoder_get_count(encoder_index)
 
 // 车运动解算函数
+void target_speed_calc(void);
 void target_motion_calc(void);
 
 #endif

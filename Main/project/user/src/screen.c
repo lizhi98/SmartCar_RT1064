@@ -10,7 +10,7 @@ void screen_init(void){
 void screen_show_info(){
     uint16 y = 0; // 当前显示指针y坐标
 
-    ips200_displayimage03x(mt9v03x_image[0], MT9V03X_W, MT9V03X_H); // 显示图像
+    ips200_show_gray_image(0, 0, mt9v03x_image[0], MT9V03X_W, MT9V03X_H, MT9V03X_W, MT9V03X_H, otsu_threshold);
     y += MT9V03X_H + 20; // 更新y坐标
 
     switch(image_result.element_type){

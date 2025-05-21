@@ -3,8 +3,8 @@
 #include "main.h"
 
 // #define HOST_DEBUG 
-//#define SEND_IMAGE
-// #define IPS_IMAGE
+#define SEND_IMAGE
+//#define IPS_IMAGE
 
 // 斑马线有效标志
 uint8 zebra_valid_flag = 0;
@@ -65,11 +65,6 @@ int main(void)
     // 主循环准备
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
-    char    ips200_str_buffer[64];
-    char    ips200_str_buffer_1[64];
-    char    ips200_str_buffer_2[64];
-    char    ips200_str_buffer_3[64];
-    char *  image_ele_buffer;
 
     motion_control.motion_mode = LINE_FOLLOW; // 运动模式初始化
 
@@ -79,9 +74,8 @@ int main(void)
     uint16 image_time_show_ips = 0;
     while(1) {
 
-        // 计算图像处理时间
-        // 图像处理、发送与运动解算
-        if (mt9v03x_finish_flag) {
+        if (mt9v03x_finish_flag)
+        {
             image_process_time_start = timer_get(GPT_TIM_1);
             
             process_image(mt9v03x_image);
@@ -92,18 +86,25 @@ int main(void)
             
             image_process_time = timer_get(GPT_TIM_1) - image_process_time_start;          // 计算图像处理时间
 
-            if(++image_send_count >= 10){
+            if(1){
                 // ips200_show_uint(0, 0, ++image_time_show_ips,5);
 #if defined(SEND_IMAGE)
                 seekfree_assistant_camera_send();
 #endif
                 image_send_count = 0;
             }
+            if(zebra_valid_flag && (image_result.element_type == Zebra)){
+                // run_flag = 0;
+            }
             
 #if defined(IPS_IMAGE)
             screen_show_info();
 #endif
             mt9v03x_finish_flag = 0;
+        }
+
+        if(timer_get(GPT_TIM_1) > 3000){
+            zebra_valid_flag = 1;
         }
         
         // 运动解算        
@@ -151,8 +152,8 @@ void push_box(){
     motor_right_speed   = 0,
     motor_rear_speed    = 0;
     
-    motor_left_speed    =   (int32) (-100 * COS_PI_D_6);
-    motor_right_speed   =   (int32) ( 100 * COS_PI_D_6);
+    motor_left_speed    =   (int32) (-150 * COS_PI_D_6);
+    motor_right_speed   =   (int32) ( 150 * COS_PI_D_6);
     motor_rear_speed    =   (int32) (0.);
     
     // 应用速度
@@ -160,15 +161,15 @@ void push_box(){
     motor_run_with_speed(RIGHT,motor_right_speed);
     motor_run_with_speed(REAR,motor_rear_speed);
 
-    system_delay_ms(2000); // 推箱子时间
+    system_delay_ms(1500); // 推箱子时间
 
     // 返回
     motor_left_speed    = 0,
     motor_right_speed   = 0,
     motor_rear_speed    = 0;
 
-    motor_left_speed    =   (int32) (100 * COS_PI_D_6);
-    motor_right_speed   =   (int32) (-100 * COS_PI_D_6);
+    motor_left_speed    =   (int32) (150 * COS_PI_D_6);
+    motor_right_speed   =   (int32) (-150 * COS_PI_D_6);
     motor_rear_speed    =   (int32) (0.);
     
     // 应用速度
@@ -176,13 +177,13 @@ void push_box(){
     motor_run_with_speed(RIGHT,motor_right_speed);
     motor_run_with_speed(REAR,motor_rear_speed);
 
-    system_delay_ms(2000); // 返回时间
+    system_delay_ms(1500); // 返回时间
 
 
     s_angle = gyroscope_result.angle_z;
     // 转回到90度
     while(1){
-        if((s_angle - gyroscope_result.angle_z) > 85.0){
+        if((s_angle - gyroscope_result.angle_z) > 90.0){
             motor_run_with_speed(LEFT,0);
             motor_run_with_speed(RIGHT,0);
             motor_run_with_speed(REAR,0);

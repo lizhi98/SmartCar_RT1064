@@ -19,7 +19,16 @@ uint8 image_buffer[HEIGHT][REAL_WIDTH] = { 0 };
     } while (0)
     #define debug(...) printf(__VA_ARGS__)
 #else
-    #define SET_IMG(x, y, T)
+    #include <zf_common_font.h>
+    void SET_IMG(uint8 x, uint8 y, uint8 T) {
+        uint16 color;
+        if (T == MID_LINE) color = RGB565_YELLOW;
+        else if (T == BOUND) color = RGB565_GREEN;
+        else if (T == BOUND_APP) color = RGB565_CYAN;
+        else if (T == SPECIAL) color = RGB565_MAGENTA;
+        else color = RGB565_RED;
+        ips200_draw_point(x % 188, y % 120, color);
+    }
     #define debug(...)
 #endif
 
@@ -222,7 +231,7 @@ void search(Image image) {
 
             dx = xl - xls[y + 1];
             l_convex += limit(dx - l_dx, CONVEX_LIMIT);
-            if (l_convex >= CV_CONVEX) {
+            if (l_convex >= CV_CONVEX && prev_el_normal) {
                 el = image_result.element_type = CurveRight;
                 break;
             }
@@ -291,7 +300,7 @@ void search(Image image) {
 
             dx = - xr + xrs[y + 1];
             r_convex += limit(dx - r_dx, CONVEX_LIMIT);
-            if (r_convex >= CV_CONVEX) {
+            if (r_convex >= CV_CONVEX && prev_el_normal) {
                 el = image_result.element_type = CurveLeft;
                 break;
             }
@@ -466,10 +475,10 @@ void search(Image image) {
     // Analyze element type
 
     if (el <= Normal) {
-        if (l_segs + l_ng >= 3 && r_segs == 1) {
+        if (l_segs >= 3 && r_segs == 1) {
             el = image_result.element_type = LoopLeftBefore;
         }
-        else if (l_segs == 1 && r_segs + r_ng >= 3) {
+        else if (l_segs == 1 && r_segs >= 3) {
             el = image_result.element_type = LoopRightBefore;
         }
         else if (l_segs >= 2 && r_segs >= 2) {

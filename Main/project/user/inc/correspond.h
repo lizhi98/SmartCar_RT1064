@@ -16,9 +16,9 @@
 #include "main.h"
 
 // WIRELESS CONFIG
-#define WIFI_SSID                               "Koishi_SmartCar"
-#define WIFI_PASS                               "KOISHI123"
-#define HOST_IP                                 "192.168.110.62"
+#define WIFI_SSID                               "TianGang"
+#define WIFI_PASS                               "12341234"
+#define HOST_IP                                 "192.168.110.64"
 
 // WIFI SPI CONFIG
 #define WIFI_SPI_CONNECT_MODE                   "UDP"
