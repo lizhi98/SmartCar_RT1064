@@ -377,10 +377,49 @@ void search(Image image) {
     loop:
     y_end = Y_MAX;
     if (el == LoopLeft) {
-        for (y = Y_MAX; image[y][X_MAX] != EMPTY; y --);
-        for (; image[y][X_MAX] == EMPTY; y --);
-        for (; image[y - 1][X_MAX] != EMPTY; y --);
-        SET_IMG(X_MIN, y, BOUND);
+        if (! l_stop) {
+            for (y = Y_MAX; image[y][X_MIN] != EMPTY; y --);
+            for (; image[y][X_MIN] == EMPTY && y > Y_LP_MIN; y --);
+        }
+        for (; image[y - 1][X_MAX] != EMPTY; y --)
+            if (y == Y_LP_MIN) goto loop_cancel;
+        SET_IMG(X_MAX, y, BOUND);
+
+        uint8 y0, xc, yc;
+        uint8 up_count = 0, up_failed_count = 0;
+
+        for (xl = X_MIN + 1; ; xl ++) {
+            if (xl == X_XR_TOP_MIN) goto loop_cancel;
+            if (image[y - 1][xl] != EMPTY) {
+                if (++ up_count == LP_UP_MAX) {
+                    if (xl < X_LP_CORNER_L_MIN) goto loop_cancel;
+                    xc = max((int8) xl - X_LP_CORNER_OFFSET, X_MIN);
+                    y_start = yc = y;
+                    SET_IMG(xc, yc, SPECIAL);
+                    break;
+                }
+                for (y0 = y, y --; image[y - 1][xl] != EMPTY; y --)
+                    if (y == Y_LP_MIN) {
+                        if (++ up_failed_count == LP_UP_FAILED_MAX) goto loop_cancel;
+                        y = y0;
+                        break;
+                    }
+            }
+            else {
+                up_count = 0;
+            }
+            while (image[y][xl] == EMPTY && y < Y_MAX) y ++;
+            SET_IMG(xl, y, BOUND);
+        }
+        
+        double xrf = xrs[Y_MAX];
+        SET_IMG(xls[Y_MAX], Y_MAX, SPECIAL);
+        double m = (double) (xc - xrf) / (Y_MAX - yc);
+        for (y = Y_MAX - 1; y > yc; y --) {
+            xrf += m;
+            xrs[y] = (uint8) xrf;
+            SET_IMG((uint8) xrf, y, BOUND_APP);
+        }
     }
     else {
         if (! r_stop) {
@@ -398,7 +437,6 @@ void search(Image image) {
             if (xr == X_XR_TOP_MIN) goto loop_cancel;
             if (image[y - 1][xr] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
-                    debug("xr = %d\n", xr);
                     if (xr > X_LP_CORNER_R_MAX) goto loop_cancel;
                     xc = min(xr + X_LP_CORNER_OFFSET, X_MAX);
                     y_start = yc = y;
@@ -514,7 +552,7 @@ void search(Image image) {
 
     if (el <= Normal) {
         if (l_segs >= 3 && r_segs == 1) {
-            // el = image_result.element_type = LoopLeftBefore;
+            el = image_result.element_type = LoopLeftBefore;
         }
         else if (l_segs == 1 && r_segs >= 3) {
             el = image_result.element_type = LoopRightBefore;
