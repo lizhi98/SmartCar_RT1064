@@ -389,7 +389,7 @@ void search(Image image) {
         uint8 up_count = 0, up_failed_count = 0;
 
         for (xl = X_MIN + 1; ; xl ++) {
-            if (xl == X_XR_TOP_MIN) goto loop_cancel;
+            if (xl == X_LP_CORNER_L_MAX) goto loop_cancel;
             if (image[y - 1][xl] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
                     if (xl < X_LP_CORNER_L_MIN) goto loop_cancel;
@@ -434,7 +434,7 @@ void search(Image image) {
         uint8 up_count = 0, up_failed_count = 0;
 
         for (xr = X_MAX - 1; ; xr --) {
-            if (xr == X_XR_TOP_MIN) goto loop_cancel;
+            if (xr == X_LP_CORNER_R_MIN) goto loop_cancel;
             if (image[y - 1][xr] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
                     if (xr > X_LP_CORNER_R_MAX) goto loop_cancel;
