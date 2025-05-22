@@ -21,6 +21,9 @@
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b)) 
 #endif
+#ifndef min
+#define min(a, b) ((a) < (b) ? (a) : (b))
+#endif
 
 #define HEIGHT 120
 #define REAL_WIDTH 188
@@ -80,15 +83,15 @@ extern uint8 otsu_threshold;
 #define Y_SEARCH_MIN 35
 #define Y_NORMAL_MIN 60
 #define Y_BD_MIN 38
-#define Y_BD_EARLY_MIN 80
 #define Y_BOTTOM_MIN 78
-#define Y_LOOP_END_MIN 35
-#define Y_CROSS_TOP_MIN 50
-#define Y_CROSS_TOP_MAX 80
-#define X_CROSS_TOP_MIN 45
-#define X_CROSS_TOP_MAX 143
-#define Y_CROSS_M_HEIGHT 5
-#define Y_CROSS_M_OFFSET 2
+#define Y_BOTTOM_BOTH_LOST_MIN 110
+#define Y_LP_END_MIN 35
+#define Y_XR_TOP_MIN 50
+#define Y_XR_TOP_MAX 80
+#define X_XR_TOP_MIN 45
+#define X_XR_TOP_MAX 143
+#define Y_XR_M_HEIGHT 5
+#define Y_XR_M_OFFSET 2
 #define Y_STRICT_G_MAX 45
 #define Y_MID_LINE_MIN 95
 #define X_CURVE_OFFSET 25
@@ -102,9 +105,10 @@ extern uint8 otsu_threshold;
 #define LP_CONVEX (- 4)
 #define LP_UP_MAX 3
 #define LP_UP_FAILED_MAX 3
-#define Y_LOOP_MIN 30
-#define X_LOOP_CORNER_R_MIN 80
-#define X_LOOP_CORNER_R_MAX 150
+#define Y_LP_MIN 30
+#define X_LP_CORNER_R_MIN 80
+#define X_LP_CORNER_R_MAX 150
+#define X_LP_CORNER_OFFSET 30
 #define CONVEX_LIMIT 2
 
 #endif 

@@ -160,21 +160,55 @@ void search(Image image) {
     // Find the bottom
     bottom:
 
-    for (y = Y_MAX; image[y][X_MIN] != EMPTY && y > Y_BOTTOM_MIN; y --);
-    if (y == Y_BOTTOM_MIN) l_stop = l_ng = true;
-    else {
-        for (xl = X_MIN; xl < X_MID && image[Y_MAX][xl] != ROAD; xl ++);
-        xls[y] = xl;
-        SET_IMG(xl, y, BOUND);
+    for (y = Y_MAX; y > Y_BOTTOM_BOTH_LOST_MIN; y --) {
+        xl = xr = X_MID;
+        if (image[y][X_MID] != EMPTY) {
+            while (image[y][xl - 1] != EMPTY)
+                if (-- xl == X_MIN) break;
+            while (image[y][xr + 1] != EMPTY)
+                if (++ xr == X_MAX) break;
+        }
+        else {
+            while (true) {
+                if (-- xl == X_MIN) break;
+                if (image[y][xl] != EMPTY) {
+                    xr = xl;
+                    while (image[y][xl - 1] != EMPTY)
+                        if (-- xl == X_MIN) break;
+                    break;
+                }
+                xr ++;
+                if (image[y][xr + 1] != EMPTY) {
+                    xl = xr;
+                    while (image[y][xr + 1] != EMPTY)
+                        if (++ xr == X_MAX) break;
+                    break;
+                }
+            }
+        }
+        debug("%d %d\n", xl, xr);
+        if (xl != X_MIN || xr != X_MAX) break;
     }
 
-    for (y = Y_MAX; image[y][X_MAX] != EMPTY && y > Y_BOTTOM_MIN; y --);
-    if (y == Y_BOTTOM_MIN) r_stop = r_ng = true;
-    else {
-        for (xr = X_MAX; xr > X_MID && image[Y_MAX][xr] != ROAD; xr --);
-        xrs[y] = xr;
-        SET_IMG(xr, Y_MAX, BOUND);
-    }
+    y_end = y;
+    xls[y] = xl;
+    xrs[y] = xr;
+    SET_IMG(xl, y, BOUND);
+    SET_IMG(xr, Y_MAX, BOUND);
+
+    if (xl == X_MIN)
+        while (image[y][X_MIN] == ROAD)
+            if (-- y == Y_BOTTOM_MIN) {
+                l_stop = l_ng = true;
+                break;
+            }
+
+    if (xr == X_MAX)
+        while (image[y][X_MAX] == ROAD)
+            if (-- y == Y_BOTTOM_MIN) {
+                r_stop = r_ng = true;
+                break;
+            }
 
     if (el == LoopRight) goto loop;
     else if (el == LoopLeft) goto loop;
@@ -351,28 +385,28 @@ void search(Image image) {
     else {
         if (! r_stop) {
             for (y = Y_MAX; image[y][X_MAX] != EMPTY; y --);
-            for (; image[y][X_MAX] == EMPTY && y > Y_LOOP_MIN; y --);
+            for (; image[y][X_MAX] == EMPTY && y > Y_LP_MIN; y --);
         }
         for (; image[y - 1][X_MAX] != EMPTY; y --)
-            if (y == Y_LOOP_MIN) goto loop_cancel;
+            if (y == Y_LP_MIN) goto loop_cancel;
         SET_IMG(X_MAX, y, BOUND);
 
         uint8 y0, xc, yc;
         uint8 up_count = 0, up_failed_count = 0;
 
         for (xr = X_MAX - 1; ; xr --) {
-            if (xr == X_CROSS_TOP_MIN) goto loop_cancel;
+            if (xr == X_XR_TOP_MIN) goto loop_cancel;
             if (image[y - 1][xr] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
                     debug("xr = %d\n", xr);
-                    if (xr > X_LOOP_CORNER_R_MAX) goto loop_cancel;
-                    xc = xr + 10;
+                    if (xr > X_LP_CORNER_R_MAX) goto loop_cancel;
+                    xc = min(xr + X_LP_CORNER_OFFSET, X_MAX);
                     y_start = yc = y;
                     SET_IMG(xc, yc, SPECIAL);
                     break;
                 }
                 for (y0 = y, y --; image[y - 1][xr] != EMPTY; y --)
-                    if (y == Y_LOOP_MIN) {
+                    if (y == Y_LP_MIN) {
                         if (++ up_failed_count == LP_UP_FAILED_MAX) goto loop_cancel;
                         y = y0;
                         break;
@@ -402,29 +436,29 @@ void search(Image image) {
 
     cross_bound:
     // Find the cross top
-    y = Y_CROSS_TOP_MIN;
+    y = Y_XR_TOP_MIN;
     while (true) {
         xl = xr = X_MID;
         if (image[y][X_MID] != EMPTY) {
             while (image[y][xl - 1] != EMPTY)
-                if (-- xl < X_CROSS_TOP_MIN) goto cross_next_y;
+                if (-- xl < X_XR_TOP_MIN) goto cross_next_y;
             while (image[y][xr + 1] != EMPTY)
-                if (++ xr > X_CROSS_TOP_MAX) goto cross_next_y;
+                if (++ xr > X_XR_TOP_MAX) goto cross_next_y;
         }
         else {
             while (true) {
-                if (-- xl < X_CROSS_TOP_MIN) goto cross_next_y;
+                if (-- xl < X_XR_TOP_MIN) goto cross_next_y;
                 if (image[y][xl] != EMPTY) {
                     xr = xl;
                     while (image[y][xl - 1] != EMPTY)
-                        if (-- xl < X_CROSS_TOP_MIN) goto cross_next_y;
+                        if (-- xl < X_XR_TOP_MIN) goto cross_next_y;
                     break;
                 }
                 xr ++;
                 if (image[y][xr + 1] != EMPTY) {
                     xl = xr;
                     while (image[y][xr + 1] != EMPTY)
-                        if (++ xr > X_CROSS_TOP_MAX) goto cross_next_y;
+                        if (++ xr > X_XR_TOP_MAX) goto cross_next_y;
                     break;
                 }
             }
@@ -433,7 +467,7 @@ void search(Image image) {
         if (dx > 5 && dx <= STD_WIDTH[y] * 3) break;
         cross_next_y:
         y += 3;
-        if (y > Y_CROSS_TOP_MAX) {
+        if (y > Y_XR_TOP_MAX) {
             goto cross_exit;
         }
     }
@@ -463,8 +497,8 @@ void search(Image image) {
     }
     cross_app:
     // Append the cross bound
-    uint8 y0 = max(y_start, y - Y_CROSS_M_HEIGHT - Y_CROSS_M_OFFSET);
-    uint8 y1 = y - Y_CROSS_M_OFFSET;
+    uint8 y0 = max(y_start, y - Y_XR_M_HEIGHT - Y_XR_M_OFFSET);
+    uint8 y1 = y - Y_XR_M_OFFSET;
     ml = (double) (xls[y1] - xls[y0]) / (y1 - y0);
     mr = (double) (xrs[y1] - xrs[y0]) / (y1 - y0);
 
@@ -480,7 +514,7 @@ void search(Image image) {
 
     if (el <= Normal) {
         if (l_segs >= 3 && r_segs == 1) {
-            el = image_result.element_type = LoopLeftBefore;
+            // el = image_result.element_type = LoopLeftBefore;
         }
         else if (l_segs == 1 && r_segs >= 3) {
             el = image_result.element_type = LoopRightBefore;
