@@ -271,7 +271,7 @@ void search(Image image) {
             if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; lost = true; break; }
         if (! dx && xr != X_MAX)
             for (; image[y][xr + 1] != EMPTY && xr < X_MAX; dx ++, xr ++)
-                if (dx == DX_BD_INV_MAX) { xl += DX_BD_INV_MAX; lost = true; break; }
+                if (dx == DX_BD_INV_MAX) { xr -= DX_BD_INV_MAX; lost = true; break; }
 
         if (xr == X_MAX) {
             r_unset = true;
@@ -288,6 +288,9 @@ void search(Image image) {
                 xrs[y] = xr;
                 SET_IMG(xr, y, BOUND_APP);
                 goto right_ng;
+            }
+            else {
+
             }
         }
         else if (xr != X_MAX) {
@@ -351,37 +354,34 @@ void search(Image image) {
             for (; image[y][X_MAX] == EMPTY && y > Y_LOOP_MIN; y --);
         }
         for (; image[y - 1][X_MAX] != EMPTY; y --)
-            if (y == Y_LOOP_MIN) {
-                el = image_result.element_type = Normal;
-                goto normal_bound;
-            }
+            if (y == Y_LOOP_MIN) goto loop_cancel;
         SET_IMG(X_MAX, y, BOUND);
 
-        uint8 up_count = 0, xc, yc;
-        uint8 up_failed_count = 0, y0;
-        for (xr = X_MAX - 1; xr > X_MID; xr --) {
+        uint8 y0, xc, yc;
+        uint8 up_count = 0, up_failed_count = 0;
+
+        for (xr = X_MAX - 1; ; xr --) {
+            if (xr == X_CROSS_TOP_MIN) goto loop_cancel;
             if (image[y - 1][xr] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
+                    debug("xr = %d\n", xr);
+                    if (xr > X_LOOP_CORNER_R_MAX) goto loop_cancel;
+                    xc = xr + 10;
+                    y_start = yc = y;
                     SET_IMG(xc, yc, SPECIAL);
                     break;
                 }
                 for (y0 = y, y --; image[y - 1][xr] != EMPTY; y --)
-                    if (y == Y_LOOP_MIN)
-                        if (++ up_failed_count == LP_UP_FAILED_MAX) {
-                            el = image_result.element_type = Normal;
-                            goto normal_bound;
-                        }
-                        else {
-                            y = y0;
-                            break;
-                        }
+                    if (y == Y_LOOP_MIN) {
+                        if (++ up_failed_count == LP_UP_FAILED_MAX) goto loop_cancel;
+                        y = y0;
+                        break;
+                    }
             }
             else {
                 up_count = 0;
-                xc = xr + 10;
-                y_start = yc = y;
             }
-            while (image[y][xr] == EMPTY) y ++;
+            while (image[y][xr] == EMPTY && y < Y_MAX) y ++;
             SET_IMG(xr, y, BOUND);
         }
         
@@ -395,6 +395,10 @@ void search(Image image) {
         }
     }
     goto mid;
+
+    loop_cancel:
+    el = image_result.element_type = Normal;
+    goto normal_bound;
 
     cross_bound:
     // Find the cross top

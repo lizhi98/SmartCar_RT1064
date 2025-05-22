@@ -103,6 +103,8 @@ extern uint8 otsu_threshold;
 #define LP_UP_MAX 3
 #define LP_UP_FAILED_MAX 3
 #define Y_LOOP_MIN 30
+#define X_LOOP_CORNER_R_MIN 80
+#define X_LOOP_CORNER_R_MAX 150
 #define CONVEX_LIMIT 2
 
 #endif 
