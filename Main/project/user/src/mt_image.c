@@ -159,7 +159,6 @@ void search(Image image) {
 
     // Find the bottom
     bottom:
-
     for (y = Y_MAX; y > Y_BOTTOM_BOTH_LOST_MIN; y --) {
         xl = xr = X_MID;
         if (image[y][X_MID] != EMPTY) {
@@ -170,7 +169,9 @@ void search(Image image) {
         }
         else {
             while (true) {
-                if (-- xl == X_MIN) break;
+                if (-- xl == X_MIN) {
+                    break;
+                }
                 if (image[y][xl] != EMPTY) {
                     xr = xl;
                     while (image[y][xl - 1] != EMPTY)
@@ -186,15 +187,14 @@ void search(Image image) {
                 }
             }
         }
-        debug("%d %d\n", xl, xr);
+        xls[y] = xl;
+        xrs[y] = xr;
         if (xl != X_MIN || xr != X_MAX) break;
     }
 
     y_end = y;
-    xls[y] = xl;
-    xrs[y] = xr;
     SET_IMG(xl, y, BOUND);
-    SET_IMG(xr, Y_MAX, BOUND);
+    SET_IMG(xr, y, BOUND);
 
     if (xl == X_MIN)
         while (image[y][X_MIN] == ROAD)
@@ -248,7 +248,8 @@ void search(Image image) {
         }
 
         if (lost) {
-            if (ml_set && el <= Cross) {
+            if (el > Cross) l_stop = true;
+            else if (ml_set) {
                 xl = ml * (y - y0l) + xls[y0l];
                 xls[y] = xl;
                 SET_IMG(xl, y, BOUND_APP);
@@ -317,14 +318,12 @@ void search(Image image) {
         }
 
         if (lost) {
-            if (mr_set && el <= Cross) {
+            if (el > Cross) r_stop = true;
+            else if (mr_set) {
                 xr = mr * (y - y0r) + xrs[y0r];
                 xrs[y] = xr;
                 SET_IMG(xr, y, BOUND_APP);
                 goto right_ng;
-            }
-            else {
-
             }
         }
         else if (xr != X_MAX) {
@@ -413,7 +412,7 @@ void search(Image image) {
         }
         
         double xrf = xrs[Y_MAX];
-        SET_IMG(xls[Y_MAX], Y_MAX, SPECIAL);
+        SET_IMG(xrs[Y_MAX], Y_MAX, SPECIAL);
         double m = (double) (xc - xrf) / (Y_MAX - yc);
         for (y = Y_MAX - 1; y > yc; y --) {
             xrf += m;
