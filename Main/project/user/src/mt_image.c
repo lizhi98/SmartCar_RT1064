@@ -560,13 +560,13 @@ void search(Image image) {
 
     // Analyze element type
 
-    if (el == LoopLeftBefore2 && ! l_pad && l_r < 2) {
+    if (el == LoopLeftBefore2 && (! l_pad && l_r < 2) || l_stop) {
         debug("l_pad = %d\n", l_pad);
         debug("-> LoopLeft\n");
         el = image_result.element_type = LoopLeft;
         goto loop;
     }
-    else if (el == LoopRightBefore2 && ! r_pad && r_l < 2) {
+    else if (el == LoopRightBefore2 && (! r_pad && r_l < 2 || r_stop)) {
         el = image_result.element_type = LoopRight;
         goto loop;
     }
