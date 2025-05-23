@@ -107,7 +107,7 @@ const uint8 STD_WIDTH[HEIGHT] = {
 };
 
 double calc_kw_by_m(double m) {
-    return sqrt(m * m + 1);
+    return sqrt(0.3 * m * m + 1);
 }
 
 int8 limit(int8 x, uint8 a) {
@@ -148,6 +148,7 @@ void search(Image image) {
     bool l_unset = true, r_unset = true;
     bool lost = false;
     int8 l_convex, r_convex;
+    uint8 l_l, l_r, r_l, r_r;
     int8 l_dx = 0, r_dx = 0;
 
     uint8 l_ng_count = 0, r_ng_count = 0;
@@ -156,6 +157,7 @@ void search(Image image) {
     uint8 l_segs, r_segs;
     uint16 sw = 0;
     double so = 0;
+    double kw = 1;
 
     // Find the bottom
     bottom:
@@ -223,6 +225,7 @@ void search(Image image) {
     l_unset = r_unset = true;
     ml_set = mr_set = false;
     l_convex = r_convex = 0;
+    l_l = l_r = r_l = r_r = false;
     l_segs = r_segs = 0;
     y_end = Y_MAX;
 
@@ -267,14 +270,16 @@ void search(Image image) {
             SET_IMG(xl, y, BOUND);
 
             dx = xl - xls[y + 1];
+            if (dx > 0) l_r ++;
+            else l_l ++;
             l_convex += limit(dx - l_dx, CONVEX_LIMIT);
             if (l_convex >= CV_CONVEX && prev_el_normal) {
                 el = image_result.element_type = CurveRight;
                 break;
             }
             else if (l_convex <= LP_CONVEX && el == LoopLeftBefore) {
-                el = image_result.element_type = LoopLeft;
-                goto loop;
+                el = image_result.element_type = LoopLeftBefore2;
+                prev_el_normal = false;
             }
             l_dx = dx;
 
@@ -337,14 +342,16 @@ void search(Image image) {
             SET_IMG(xr, y, BOUND);
 
             dx = - xr + xrs[y + 1];
+            if (dx > 0) r_l ++;
+            else r_r ++;
             r_convex += limit(dx - r_dx, CONVEX_LIMIT);
             if (r_convex >= CV_CONVEX && prev_el_normal) {
                 el = image_result.element_type = CurveLeft;
                 break;
             }
             else if (r_convex <= LP_CONVEX && el == LoopRightBefore) {
-                el = image_result.element_type = LoopRight;
-                goto loop;
+                el = image_result.element_type = LoopRightBefore2;
+                prev_el_normal = false;
             }
             r_dx = dx;
 
@@ -378,15 +385,12 @@ void search(Image image) {
     loop:
     y_end = Y_MAX;
     if (el == LoopLeft) {
-        if (! l_stop) {
-            for (y = Y_MAX; image[y][X_MIN] != EMPTY; y --);
-            for (; image[y][X_MIN] == EMPTY && y > Y_LP_MIN; y --);
-        }
+        for (; image[y][X_MIN] == EMPTY && y > Y_LP_MIN; y --);
         for (; image[y - 1][X_MIN] != EMPTY; y --)
             if (y == Y_LP_MIN) goto loop_cancel;
         SET_IMG(X_MIN, y, SPECIAL);
 
-        uint8 y0, xc, yc;
+        uint8 y0, y1, xc, yc;
         uint8 up_count = 0, up_failed_count = 0;
 
         for (xl = X_MIN + 1; ; xl ++) {
@@ -394,28 +398,34 @@ void search(Image image) {
             if (image[y - 1][xl] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
                     if (xl < X_LP_CORNER_L_MIN) goto loop_cancel;
-                    xc = max((int16) xl - X_LP_CORNER_L_OFFSET, X_MIN);
-                    y_start = yc = y;
+                    xc = max((int16) xl - LP_UP_MAX - X_LP_CORNER_L_OFFSET, X_MIN);
+                    y_start = yc = y = y0;
                     SET_IMG(xc, yc, SPECIAL);
                     break;
                 }
-                for (y0 = y, y --; image[y - 1][xl] != EMPTY; y --)
+                for (y1 = y, y --; image[y - 1][xl] != EMPTY; y --)
                     if (y == Y_LP_MIN) {
                         if (++ up_failed_count == LP_UP_FAILED_MAX) goto loop_cancel;
-                        y = y0;
+                        y = y1;
                         break;
                     }
             }
             else {
                 up_count = 0;
+                y0 = y;
             }
-            while (image[y][xl] == EMPTY && y < Y_MAX) y ++;
+            for (y1 = y; image[y][xl] == EMPTY; y ++)
+                if (y == y1 - LP_UP_MAX) {
+                    y = y1;
+                    break;
+                }
             SET_IMG(xl, y, BOUND);
         }
         
         double xrf = xrs[Y_MAX];
         SET_IMG(xrs[Y_MAX], Y_MAX, SPECIAL);
         double m = (double) (xc - xrf) / (Y_MAX - yc);
+        kw *= calc_kw_by_m(m);
         for (y = Y_MAX - 1; y > yc; y --) {
             xrf += m;
             xrs[y] = (uint8) xrf;
@@ -423,10 +433,7 @@ void search(Image image) {
         }
     }
     else {
-        if (! r_stop) {
-            for (y = Y_MAX; image[y][X_MAX] != EMPTY; y --);
-            for (; image[y][X_MAX] == EMPTY && y > Y_LP_MIN; y --);
-        }
+        for (; image[y][X_MAX] == EMPTY && y > Y_LP_MIN; y --);
         for (; image[y - 1][X_MAX] != EMPTY; y --)
             if (y == Y_LP_MIN) goto loop_cancel;
         SET_IMG(X_MAX, y, BOUND);
@@ -461,6 +468,7 @@ void search(Image image) {
         double xlf = xls[Y_MAX];
         SET_IMG(xls[Y_MAX], Y_MAX, SPECIAL);
         double m = (double) (xc - xlf) / (Y_MAX - yc);
+        kw *= calc_kw_by_m(m);
         for (y = Y_MAX - 1; y > yc; y --) {
             xlf += m;
             xls[y] = (uint8) xlf;
@@ -551,6 +559,15 @@ void search(Image image) {
 
     // Analyze element type
 
+    if (el == LoopLeftBefore2 && l_r < 2) {
+        el = image_result.element_type = LoopLeft;
+        goto loop;
+    }
+    else if (el == LoopRightBefore2 && r_l < 2) {
+        el = image_result.element_type = LoopRight;
+        goto loop;
+    }
+
     if (el <= Normal) {
         if (l_segs >= 3 && r_segs == 1) {
             el = image_result.element_type = LoopLeftBefore;
@@ -585,11 +602,11 @@ void search(Image image) {
         xr = xrs[y];
         if (! xl && ! xr) continue;
         if (! xl || el == LoopLeft) {
-            dx = STD_WIDTH[y];
+            dx = kw * STD_WIDTH[y];
             xm = xr - dx;
         }
         else if (! xr || el == LoopRight) {
-            dx = STD_WIDTH[y];
+            dx = kw * STD_WIDTH[y];
             xm = xl + dx;
         }
         else {

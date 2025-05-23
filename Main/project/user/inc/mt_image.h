@@ -45,6 +45,8 @@ typedef enum ElementType_t {
     Cross,
     LoopLeftBefore,
     LoopRightBefore,
+    LoopLeftBefore2,
+    LoopRightBefore2,
     LoopLeft,
     LoopRight,
     LoopLeftAfter,
@@ -110,8 +112,9 @@ extern uint8 otsu_threshold;
 #define X_LP_CORNER_R_MAX 150
 #define X_LP_CORNER_L_MIN 20
 #define X_LP_CORNER_L_MAX X_MAX
-#define X_LP_CORNER_L_OFFSET 15
+#define X_LP_CORNER_L_OFFSET 0
 #define X_LP_CORNER_R_OFFSET 25
+#define X_LP_BOTTOM_L_MIN 
 #define CONVEX_LIMIT 2
 
 #endif 
