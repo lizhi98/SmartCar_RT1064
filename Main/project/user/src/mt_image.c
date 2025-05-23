@@ -137,11 +137,12 @@ void search(Image image) {
         if (el == Zebra) image_result.element_type = Normal;
     }
 
-    uint8 xl, xr, xm, y;
-    int16 dx;
+    uint8 xl, xr, y;
+    int16 dx, xm;
     uint8 xls[HEIGHT] = { 0 }, xrs[HEIGHT] = { 0 };
     double ml, mr;
     bool ml_set = false, mr_set = false;
+    bool l_pad = false, r_pad = false;
 
     uint8 y0l, y0r;
     uint8 y_start, y_end;
@@ -171,9 +172,7 @@ void search(Image image) {
         }
         else {
             while (true) {
-                if (-- xl == X_MIN) {
-                    break;
-                }
+                if (-- xl == X_MIN) break;
                 if (image[y][xl] != EMPTY) {
                     xr = xl;
                     while (image[y][xl - 1] != EMPTY)
@@ -193,6 +192,8 @@ void search(Image image) {
         xrs[y] = xr;
         if (xl != X_MIN || xr != X_MAX) break;
     }
+    l_pad = xls[Y_MAX] == X_MIN;
+    r_pad = xrs[Y_MAX] == X_MAX;
 
     y_end = y;
     SET_IMG(xl, y, BOUND);
@@ -225,7 +226,7 @@ void search(Image image) {
     l_unset = r_unset = true;
     ml_set = mr_set = false;
     l_convex = r_convex = 0;
-    l_l = l_r = r_l = r_r = false;
+    l_l = l_r = r_l = r_r = 0;
     l_segs = r_segs = 0;
     y_end = Y_MAX;
 
@@ -385,7 +386,7 @@ void search(Image image) {
     loop:
     y_end = Y_MAX;
     if (el == LoopLeft) {
-        for (; image[y][X_MIN] == EMPTY && y > Y_LP_MIN; y --);
+        for (y = Y_MAX; image[y][X_MIN] == EMPTY && y > Y_LP_MIN; y --);
         for (; image[y - 1][X_MIN] != EMPTY; y --)
             if (y == Y_LP_MIN) goto loop_cancel;
         SET_IMG(X_MIN, y, SPECIAL);
@@ -433,7 +434,7 @@ void search(Image image) {
         }
     }
     else {
-        for (; image[y][X_MAX] == EMPTY && y > Y_LP_MIN; y --);
+        for (y = Y_MAX; image[y][X_MAX] == EMPTY && y > Y_LP_MIN; y --);
         for (; image[y - 1][X_MAX] != EMPTY; y --)
             if (y == Y_LP_MIN) goto loop_cancel;
         SET_IMG(X_MAX, y, BOUND);
@@ -559,11 +560,13 @@ void search(Image image) {
 
     // Analyze element type
 
-    if (el == LoopLeftBefore2 && l_r < 2) {
+    if (el == LoopLeftBefore2 && ! l_pad && l_r < 2) {
+        debug("l_pad = %d\n", l_pad);
+        debug("-> LoopLeft\n");
         el = image_result.element_type = LoopLeft;
         goto loop;
     }
-    else if (el == LoopRightBefore2 && r_l < 2) {
+    else if (el == LoopRightBefore2 && ! r_pad && r_l < 2) {
         el = image_result.element_type = LoopRight;
         goto loop;
     }
@@ -594,7 +597,6 @@ void search(Image image) {
 
     // Calculate midline
     mid:
-    // uint8 both_count = 0;
     so = 0;
     sw = 0;
     for (y = y_end; y >= y_start; y --) {
