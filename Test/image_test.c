@@ -18,7 +18,9 @@ const char *TRACK_DISPLAY[] = { "None", "Left", "Right", "Both" };
 const char *ELEMENT_DISPLAY[] = {
     "Zebra", "CurveLeft", "CurveRight", "Normal",
     "CrossBefore", "Cross",
-    "LoopLeftBefore", "LoopRightBefore", "LoopLeft", "LoopRight", "LoopLeftAfter", "LoopRightAfter",
+    "LoopLeftBefore", "LoopRightBefore",
+    "LoopLeftBefore2", "LoopRightBefore2",
+    "LoopLeft", "LoopRight", "LoopLeftAfter", "LoopRightAfter",
     "RampLeft", "RampRight"
 };
 
@@ -37,10 +39,10 @@ int main(int argc, char *argv[]) {
 
     if (strlen(prev_data)) {
         sscanf(prev_data,
-            "[prev element = %*d (%*[a-zA-Z])]\n"
+            "[prev element = %*d (%*[a-zA-Z0-9])]\n"
             "[offset = %f]\n"
             "[time = %*d ms]\n"
-            "[element = %d (%*[a-zA-Z])]\n",
+            "[element = %d (%*[a-zA-Z0-9])]\n",
             &image_result.offset,
             &image_result.element_type
         );
