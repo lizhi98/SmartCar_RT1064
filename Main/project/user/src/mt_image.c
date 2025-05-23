@@ -382,9 +382,9 @@ void search(Image image) {
             for (y = Y_MAX; image[y][X_MIN] != EMPTY; y --);
             for (; image[y][X_MIN] == EMPTY && y > Y_LP_MIN; y --);
         }
-        for (; image[y - 1][X_MAX] != EMPTY; y --)
+        for (; image[y - 1][X_MIN] != EMPTY; y --)
             if (y == Y_LP_MIN) goto loop_cancel;
-        SET_IMG(X_MAX, y, BOUND);
+        SET_IMG(X_MIN, y, SPECIAL);
 
         uint8 y0, xc, yc;
         uint8 up_count = 0, up_failed_count = 0;
@@ -394,7 +394,7 @@ void search(Image image) {
             if (image[y - 1][xl] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
                     if (xl < X_LP_CORNER_L_MIN) goto loop_cancel;
-                    xc = max((int8) xl - X_LP_CORNER_OFFSET, X_MIN);
+                    xc = max((int16) xl - X_LP_CORNER_L_OFFSET, X_MIN);
                     y_start = yc = y;
                     SET_IMG(xc, yc, SPECIAL);
                     break;
@@ -439,7 +439,7 @@ void search(Image image) {
             if (image[y - 1][xr] != EMPTY) {
                 if (++ up_count == LP_UP_MAX) {
                     if (xr > X_LP_CORNER_R_MAX) goto loop_cancel;
-                    xc = min(xr + X_LP_CORNER_OFFSET, X_MAX);
+                    xc = min(xr + X_LP_CORNER_R_OFFSET, X_MAX);
                     y_start = yc = y;
                     SET_IMG(xc, yc, SPECIAL);
                     break;
