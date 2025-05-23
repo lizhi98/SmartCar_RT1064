@@ -106,10 +106,10 @@ extern uint8 otsu_threshold;
 #define LP_UP_MAX 3
 #define LP_UP_FAILED_MAX 3
 #define Y_LP_MIN 30
-#define X_LP_CORNER_R_MIN 80
+#define X_LP_CORNER_R_MIN X_MIN
 #define X_LP_CORNER_R_MAX 150
 #define X_LP_CORNER_L_MIN 20
-#define X_LP_CORNER_L_MAX 120
+#define X_LP_CORNER_L_MAX X_MAX
 #define X_LP_CORNER_OFFSET 30
 #define CONVEX_LIMIT 2
 

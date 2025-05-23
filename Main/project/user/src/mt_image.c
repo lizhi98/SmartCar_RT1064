@@ -197,14 +197,14 @@ void search(Image image) {
     SET_IMG(xr, y, BOUND);
 
     if (xl == X_MIN)
-        while (image[y --][X_MIN] != EMPTY)
+        for (y = y_end; image[y --][X_MIN] != EMPTY; )
             if (y == Y_BOTTOM_MIN) {
                 l_stop = l_ng = true;
                 break;
             }
 
     if (xr == X_MAX)
-        while (image[y --][X_MAX] != EMPTY)
+        for (y = y_end; image[y --][X_MAX] != EMPTY;)
             if (y == Y_BOTTOM_MIN) {
                 r_stop = r_ng = true;
                 break;
