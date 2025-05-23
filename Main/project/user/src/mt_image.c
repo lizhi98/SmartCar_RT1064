@@ -197,18 +197,20 @@ void search(Image image) {
     SET_IMG(xr, y, BOUND);
 
     if (xl == X_MIN)
-        while (image[y][X_MIN] == ROAD)
-            if (-- y == Y_BOTTOM_MIN) {
+        while (image[y --][X_MIN] != EMPTY)
+            if (y == Y_BOTTOM_MIN) {
                 l_stop = l_ng = true;
                 break;
             }
 
     if (xr == X_MAX)
-        while (image[y][X_MAX] == ROAD)
-            if (-- y == Y_BOTTOM_MIN) {
+        while (image[y --][X_MAX] != EMPTY)
+            if (y == Y_BOTTOM_MIN) {
                 r_stop = r_ng = true;
                 break;
             }
+    
+    debug("l_stop: %d\nr_stop: %d\n", l_stop, r_stop);
 
     if (el == LoopRight) goto loop;
     else if (el == LoopLeft) goto loop;
