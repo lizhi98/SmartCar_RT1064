@@ -18,7 +18,7 @@
 // WIRELESS CONFIG
 #define WIFI_SSID                               "TianGang"
 #define WIFI_PASS                               "12341234"
-#define HOST_IP                                 "192.168.110.64"
+#define HOST_IP                                 "192.168.110.65"
 
 // WIFI SPI CONFIG
 #define WIFI_SPI_CONNECT_MODE                   "UDP"

@@ -27,21 +27,21 @@ Encoder encoder_rear = {
 
 // 电机速度PID
 MotorPID motor_left_pid = {
-    .KP = 2.1,          .KI = 0.05,        .KD = 0.8,
+    .KP = 1.9,          .KI = 0.05,        .KD = 0.5,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_right_pid = {
-    .KP = 2.1,          .KI = 0.05,        .KD = 0.8,
+    .KP = 1.9,          .KI = 0.05,        .KD = 0.5,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_rear_pid = {
-    .KP = 2.1,          .KI = 0.06,        .KD = 0.8,
+    .KP = 1.9,          .KI = 0.05,        .KD = 0.5,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 
 // 自转PID
 RotationPID rotation_pid = {
-    .normal_kp  = -2.8,           .normal_ki  = -0.015,          .normal_kd  = -0.2,
+    .normal_kp  = -2.8,           .normal_ki  = -0.02,          .normal_kd  = -0.2,
     // .normal_kp = -2.6,           .normal_ki = -0.05,          .normal_kd = -0.5,
     .curve_kp  = -3.0,           .curve_ki  = -0.02,          .curve_kd  = -0.2,
     .last_offset = 0,            .sum_offset = 0,             .offset = 0,
