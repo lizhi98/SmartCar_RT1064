@@ -621,21 +621,29 @@ void search(Image image) {
     mid:
     so = 0;
     sw = 0;
+    int8 dxm = 0;
+    bool is_both = false;
     for (y = y_end; y >= y_start; y --) {
         xl = xls[y];
         xr = xrs[y];
-        if (! xl && ! xr) continue;
-        if (! xl || el == LoopLeft) {
-            dx = kw * STD_WIDTH[y];
-            xm = xr - dx;
-        }
-        else if (! xr || el == LoopRight) {
-            dx = kw * STD_WIDTH[y];
-            xm = xl + dx;
-        }
-        else {
+        if (xl && xr) {
             dx = xr - xl;
             xm = (xl + xr) >> 1;
+            is_both = true;
+        }
+        else {
+            if (! xl && ! xr);
+            else if (! xl || el == LoopLeft) {
+                dx = kw * STD_WIDTH[y];
+                if (is_both) dxm = xm - (xr - dx);
+                else xm = xr - dx + dxm;
+            }
+            else if (! xr || el == LoopRight) {
+                dx = kw * STD_WIDTH[y];
+                if (is_both) dxm = xm - (xl + dx);
+                else xm = xl + dx + dxm;
+            }
+            is_both = false;
         }
         so += (xm - X_MID) * dx;
         sw += dx;
