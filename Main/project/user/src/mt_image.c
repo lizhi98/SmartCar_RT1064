@@ -313,7 +313,35 @@ void search(Image image) {
             if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; lost = true; break; }
         if (! dx && xr != X_MAX)
             for (; image[y][xr + 1] != EMPTY && xr < X_MAX; dx ++, xr ++)
-                if (dx == DX_BD_INV_MAX) { xr -= DX_BD_INV_MAX; lost = true; break; }
+                if (dx == DX_BD_INV_MAX) {
+                    xr -= DX_BD_INV_MAX;
+                    if (l_stop0 && image[y - 1][xr] == EMPTY) {
+                        uint8 xc = xr, yc = y;
+                        uint8 dy = 0;
+                        for (; xc >= X_MIN; xc --) {
+                            for (dy = 0; image[yc][xc] == EMPTY; yc ++)
+                                if (++ dy == LE_DN_MAX) goto r_loop_exit_lost;
+                            for (dy = 0; image[yc - 1][xc] != EMPTY; yc --)
+                                if (++ dy == LE_UP_MAX) goto r_loop_exit_lost;
+                            SET_IMG(xc, yc, BOUND);
+                        }
+                        if (xc < X_MIN) {
+                            y_start = yc;
+                            double xrf = xrs[Y_MAX];
+                            SET_IMG(xrs[Y_MAX], Y_MAX, SPECIAL);
+                            double m = (double) (xc - xrf) / (Y_MAX - yc);
+                            for (y = Y_MAX - 1; y > yc; y --) {
+                                xrf += m;
+                                xrs[y] = (uint8) xrf;
+                                SET_IMG((uint8) xrf, y, BOUND_APP);
+                            }
+                            goto mid;
+                        }
+                    }
+                    r_loop_exit_lost:
+                    lost = true;
+                    break;
+                }
 
         if (xr == X_MAX) {
             r_unset = true;
@@ -425,7 +453,6 @@ void search(Image image) {
         double xrf = xrs[Y_MAX];
         SET_IMG(xrs[Y_MAX], Y_MAX, SPECIAL);
         double m = (double) (xc - xrf) / (Y_MAX - yc);
-        kw *= calc_kw_by_m(m);
         for (y = Y_MAX - 1; y > yc; y --) {
             xrf += m;
             xrs[y] = (uint8) xrf;
@@ -468,7 +495,6 @@ void search(Image image) {
         double xlf = xls[Y_MAX];
         SET_IMG(xls[Y_MAX], Y_MAX, SPECIAL);
         double m = (double) (xc - xlf) / (Y_MAX - yc);
-        kw *= calc_kw_by_m(m);
         for (y = Y_MAX - 1; y > yc; y --) {
             xlf += m;
             xls[y] = (uint8) xlf;
@@ -558,7 +584,6 @@ void search(Image image) {
     cross_bound$:
 
     // Analyze element type
-
     if (el == LoopLeftBefore2 && (! l_pad && l_r < 2 || l_stop0)) {
         el = image_result.element_type = LoopLeft;
         goto loop;
