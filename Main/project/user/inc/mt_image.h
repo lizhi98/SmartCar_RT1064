@@ -28,7 +28,6 @@
 #define HEIGHT 120
 #define REAL_WIDTH 188
 #define WIDTH 187
-#define PIXEL 22560 // REAL_WIDTH * HEIGHT
 #define X_MID 93
 #define X_MIN 1
 #define X_MAX 186
@@ -113,7 +112,7 @@ extern uint8 otsu_threshold;
 #define X_LP_CORNER_L_MIN 20
 #define X_LP_CORNER_L_MAX X_MAX
 #define X_LP_CORNER_L_OFFSET 5
-#define X_LP_CORNER_R_OFFSET 20
+#define X_LP_CORNER_R_OFFSET 5
 #define CONVEX_LIMIT 2
 
 #endif 

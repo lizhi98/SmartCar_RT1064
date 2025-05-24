@@ -20,8 +20,7 @@ const char *ELEMENT_DISPLAY[] = {
     "CrossBefore", "Cross",
     "LoopLeftBefore", "LoopRightBefore",
     "LoopLeftBefore2", "LoopRightBefore2",
-    "LoopLeft", "LoopRight", "LoopLeftAfter", "LoopRightAfter",
-    "RampLeft", "RampRight"
+    "LoopLeft", "LoopRight",
 };
 
 int main(int argc, char *argv[]) {

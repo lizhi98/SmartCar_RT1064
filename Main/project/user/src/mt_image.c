@@ -154,7 +154,8 @@ void search(Image image) {
 
     uint8 l_ng_count = 0, r_ng_count = 0;
     uint8 l_g_count = BD_G_COUNT_MAX, r_g_count = BD_G_COUNT_MAX;
-    bool l_ng = true, r_ng = true, l_stop = false, r_stop = false;
+    bool l_ng = true, r_ng = true;
+    bool l_stop0 = false, r_stop0 = false, l_stop = false, r_stop = false;
     uint8 l_segs, r_segs;
     uint16 sw = 0;
     double so = 0;
@@ -202,19 +203,17 @@ void search(Image image) {
     if (xl == X_MIN)
         for (y = y_end; image[y --][X_MIN] != EMPTY; )
             if (y == Y_BOTTOM_MIN) {
-                l_stop = l_ng = true;
+                l_stop0 = l_stop = l_ng = true;
                 break;
             }
 
     if (xr == X_MAX)
         for (y = y_end; image[y --][X_MAX] != EMPTY;)
             if (y == Y_BOTTOM_MIN) {
-                r_stop = r_ng = true;
+                r_stop0 = r_stop0 = r_ng = true;
                 break;
             }
     
-    debug("l_stop: %d\nr_stop: %d\n", l_stop, r_stop);
-
     if (el == LoopRight) goto loop;
     else if (el == LoopLeft) goto loop;
 
@@ -560,13 +559,11 @@ void search(Image image) {
 
     // Analyze element type
 
-    if (el == LoopLeftBefore2 && (! l_pad && l_r < 2) || l_stop) {
-        debug("l_pad = %d\n", l_pad);
-        debug("-> LoopLeft\n");
+    if (el == LoopLeftBefore2 && (! l_pad && l_r < 2 || l_stop0)) {
         el = image_result.element_type = LoopLeft;
         goto loop;
     }
-    else if (el == LoopRightBefore2 && (! r_pad && r_l < 2 || r_stop)) {
+    else if (el == LoopRightBefore2 && (! r_pad && r_l < 2 || r_stop0)) {
         el = image_result.element_type = LoopRight;
         goto loop;
     }
