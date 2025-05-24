@@ -9,7 +9,7 @@ import { type ZodTypeProvider, validatorCompiler, serializerCompiler } from 'fas
 import { pino } from 'pino'
 import { execa, ExecaError } from 'execa'
 
-import { CompileReq, CompileRes, CreateSessionReq, CreateSessionRes, DatasetListRes, DeleteSessionReq, DeleteSessionRes, RunFrameReq, RunFrameRes, Session } from 'car-debugger-shared'
+import { CompileReq, CompileRes, CreateSessionReq, CreateSessionRes, DatasetListRes, DeleteSessionReq, DeleteSessionRes, ELEMENT_DISPLAY, RunFrameReq, RunFrameRes, Session, SetElementReq, SetElementRes } from 'car-debugger-shared'
 import { z } from 'zod'
 
 const logger = pino({
@@ -73,27 +73,34 @@ const runSession = async (session: Session) => {
 
 const sessions = new Map<string, Session>()
 
+const getDatasetList = async (): Promise<DatasetListRes> =>
+  JSON.parse(await fs.readFile(path.join(datasetPath, 'index.json'), 'utf-8'))
+
 fastify.get('/dataset-list', {
   schema: {
     response: {
       200: DatasetListRes
     }
   }
-}, async () => {
-  return JSON.parse(
-    await fs.readFile(path.join(datasetPath, 'index.json'), 'utf-8')
-  )
-})
+}, getDatasetList)
 
-fastify.get('/dataset-image/:file', {
+fastify.get('/list-session', () => Object.fromEntries(sessions.entries()))
+
+fastify.get('/dataset-image/:datasetName/:frameIndex', {
   schema: {
     params: z.object({
-      file: z.string()
+      datasetName: z.string(),
+      frameIndex: z.string(),
     })
   }
 }, async (req, res) => {
-  const { file } = req.params
-  const imagePath = path.join(datasetPath, 'Images', `${file}.jpg`)
+  const { datasetName, frameIndex } = req.params
+  const datasetList = await getDatasetList()
+  const dataset = datasetList.find(({ name }) => name === datasetName)
+  if (! dataset) {
+    return res.status(404)
+  }
+  const imagePath = path.join(datasetPath, 'Images', `${datasetName}_${frameIndex}.${dataset.ext}`)
   const imageStream = fsSync.createReadStream(imagePath)
   return res
     .type('image/jpeg')
@@ -207,6 +214,25 @@ fastify.post('/run-frame', {
       reason: stderr as string,
     }
   }
+})
+
+fastify.post('/set-element', {
+  schema: {
+    body: SetElementReq,
+    response: {
+      200: SetElementRes,
+    }
+  }
+}, async (req) => {
+  const { id, element } = req.body
+  const session = sessions.get(id)
+  if (! session) throw new SessionNotFoundError(id)
+
+  const elementId = ELEMENT_DISPLAY.indexOf(element)
+  session.prevDataStr = session.prevDataStr
+    .replace(/\[element = \d+ \(\w+\)\]/, `[element = ${elementId} (${element})]`)
+  
+  return { status: 'success' as const }
 })
 
 if (import.meta.env.PROD) {

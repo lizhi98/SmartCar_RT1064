@@ -6,15 +6,18 @@ import {
   type ColorName
 } from 'ansi-sequence-parser'
 
-import { computed, nextTick, onMounted, onUnmounted, reactive, ref, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref, useTemplateRef, watch } from 'vue'
 import Await from './components/Await.vue'
 
-import { Api, Dataset, Session, CompileRes } from 'car-debugger-shared'
+import { Api, Dataset, Session, CompileRes, ElementDisplay, ELEMENT_DISPLAY } from 'car-debugger-shared'
+import { storeReactive } from './utils/storage'
+import { useEventListener } from '@vueuse/core'
 
 const WIDTH = 188
 const HEIGHT = 120
 const Y_INSET = 35
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || `//${location.hostname}:1660`
+const OFFSET_HISTORY_SIZE = 15
 
 const http = axios.create({
   baseURL: BACKEND_URL,
@@ -38,10 +41,14 @@ const api = async <P extends keyof typeof Api>(path: P, body: z.infer<Api[P]['re
   }
 }
 
-const session = reactive<{ value: Session | null }>({ value: null })
-
+const session = storeReactive<{ value: Session | null }>('session', { value: null })
+const datasetName = ref<string | null>(session.value?.datasetName ?? null)
 const datasetList = ref<Dataset[] | null>(null)
-const dataset = ref<Dataset | null>(null)
+const dataset = computed(() => {
+  if (! datasetList.value) return null
+  const name = datasetName.value
+  return datasetList.value.find(dataset => dataset.name === name)
+})
 
 const getDatasetList = async () => {
   return datasetList.value = await api('/dataset-list', {})
@@ -49,16 +56,113 @@ const getDatasetList = async () => {
 
 const createSession = async () => {
   session.value = await api('/create-session', {
-    datasetName: dataset.value!.name,
+    datasetName: datasetName.value!,
   })
   await runFrame()
+}
+const deleteSession = async () => {
+  if (! session.value) return
+  const { id } = session.value
+  await api('/delete-session', { id })
+  session.value = null
 }
 const taskCreateSession = ref<ReturnType<typeof createSession> | null>(null)
 
 const cellWidth = ref(3)
 const cellHeight = ref(3)
 
-const nextFrame = async () => {
+const isAutoPlaying = ref(false)
+const interval = ref(50)
+
+const speedUp = () => {
+  if (interval.value > 50) interval.value -= 50
+}
+const speedDown = () => {
+  if (interval.value < 2000) interval.value += 50
+}
+
+const autoPlay = async () => {
+  if (isAutoPlaying.value) await runNext()
+  setTimeout(autoPlay, interval.value)
+}
+
+const debugOutput = ref<string | null>(null)
+const imageOutput = ref<AnsiParseToken[][] | null>(null)
+const frameError = ref<string | null>(null)
+const dataOutput = ref<string | null>(null)
+const history = reactive<{ frameIndex: number, offset: number }[]>([])
+const isLoadingFrame = ref(false)
+const loadedFrameIndex = ref(1)
+const loadedFrameBackground = computed(() =>
+  session.value
+    ? `url(${BACKEND_URL}/dataset-image/${session.value.datasetName}/${loadedFrameIndex.value})`
+    : undefined
+)
+const loadingTime = ref(0)
+const compileResult = ref<CompileRes | null>(null)
+
+const DISPLAY_MODES = [ 'both', 'image', 'text' ] as const
+const displayMode = ref<typeof DISPLAY_MODES[number]>(DISPLAY_MODES[0])
+const nextDisplayMode = () => {
+  const index = DISPLAY_MODES.indexOf(displayMode.value)
+  displayMode.value = DISPLAY_MODES[(index + 1) % DISPLAY_MODES.length]
+}
+
+const canvas = useTemplateRef('canvas')
+
+const runFrame = async ({
+  doNotClearCompileResult = false,
+}: {
+  doNotClearCompileResult?: boolean
+} = {}) => {
+  const sess = session.value
+  if (! sess) return
+
+  if (history[0]?.frameIndex === sess.frameIndex) history.shift()
+
+  if (compileResult.value && ! doNotClearCompileResult) {
+    compileResult.value = null
+  }
+
+  if (isLoadingFrame.value) return
+
+  isLoadingFrame.value = true
+  const startTime = Date.now()
+  try {
+    const { id, frameIndex } = sess
+    const result = await api('/run-frame', {
+      id,
+      frameIndex,
+    })
+    if (result.status === 'failure') {
+      debugOutput.value = imageOutput.value = null
+      frameError.value = result.reason
+      isLoadingFrame.value = false
+      return
+    }
+    const { stdout, stderr } = result.value
+    const [ debugStr, imageStr ] = stdout.split('\x1B[2J\x1B[H')
+    debugOutput.value = debugStr
+    imageOutput.value = imageStr
+      .trim()
+      .split('\n')
+      .map(line => parseAnsiSequences(line.slice(4)))
+    frameError.value = null
+
+    const dataStr = dataOutput.value = stderr
+    const offset = + dataStr.match(/\[offset = (.+?)\]/)![1]
+    history.unshift({ frameIndex, offset })
+    if (history.length > OFFSET_HISTORY_SIZE) history.pop()
+
+    loadedFrameIndex.value = frameIndex
+  }
+  finally {
+    isLoadingFrame.value = false
+    loadingTime.value = Date.now() - startTime
+  }
+}
+
+const runNext = async () => {
   const sess = session.value
   if (! sess) return
   const { size } = dataset.value!
@@ -67,9 +171,10 @@ const nextFrame = async () => {
   await runFrame()
 }
 
-const prevFrame = async () => {
+const runPrev = async () => {
   const sess = session.value
   if (! sess) return
+  if (history[0]?.frameIndex === sess.frameIndex) history.shift()
   const { size } = dataset.value!
   sess.frameIndex = (sess.frameIndex - 1 + size) % size
 
@@ -90,113 +195,16 @@ const compile = async () => {
   }
 }
 
-const isAutoPlaying = ref(false)
-const interval = ref(50)
-
-const speedUp = () => {
-  if (interval.value > 50) interval.value -= 50
-}
-const speedDown = () => {
-  if (interval.value < 2000) interval.value += 50
-}
-
-const autoPlay = () => {
-  if (isAutoPlaying.value) nextFrame()
-  setTimeout(autoPlay, interval.value)
-}
-
-onMounted(() => {
-  autoPlay()
-})
-
-const debugOutput = ref<string | null>(null)
-const imageOutput = ref<AnsiParseToken[][] | null>(null)
-const frameError = ref<string | null>(null)
-const dataStr = ref<string | null>(null)
-const isLoadingFrame = ref(false)
-const loadedFrameIndex = ref(1)
-const loadedFrameBackground = computed(() =>
-  session.value
-    ? `url(${BACKEND_URL}/dataset-image/${session.value.datasetName}_${loadedFrameIndex.value})`
-    : undefined
-)
-const loadingTime = ref(0)
-const compileResult = ref<CompileRes | null>(null)
-
-const canvas = useTemplateRef('canvas')
-
-watch([ imageOutput, cellWidth, cellHeight ], async ([ matrix, cw, ch ]) => {
-  if (! canvas.value || ! matrix) return
-  await nextTick()
-
-  const ctx = canvas.value.getContext('2d')!
-  ctx.resetTransform()
-  ctx.scale(cw, ch)
-  ctx.clearRect(0, 0, WIDTH, HEIGHT)
-
-  if (displayMode.value === 'image') return
-
-  for (const [ y0, row ] of matrix.entries()) {
-    const y = y0 + Y_INSET
-    for (const [ x, cell ] of row.entries()) {
-      const color = getColor(cell.background, x, y)
-      if (color) ctx.fillStyle = color
-      ctx.fillRect(x, y, 1, 1)
-    }
-  }
-})
-
-const runFrame = async ({
-  doNotClearCompileResult = false,
-}: {
-  doNotClearCompileResult?: boolean
-} = {}) => {
+const setElement = async () => {
   const sess = session.value
   if (! sess) return
+  if (! element.value) return
 
-  if (compileResult.value && ! doNotClearCompileResult) {
-    compileResult.value = null
-  }
+  const { id } = sess
+  await api('/set-element', { id, element: element.value })
 
-  if (isLoadingFrame.value) return
-
-  isLoadingFrame.value = true
-  const startTime = Date.now()
-  try {
-
-    const { id, frameIndex } = sess
-    const result = await api('/run-frame', {
-      id,
-      frameIndex,
-    })
-    if (result.status === 'failure') {
-      debugOutput.value = imageOutput.value = null
-      frameError.value = result.reason
-      isLoadingFrame.value = false
-      return
-    }
-    const { stdout, stderr } = result.value
-    const [ debugStr, imageStr ] = stdout.split('\x1B[2J\x1B[H')
-    debugOutput.value = debugStr
-    imageOutput.value = imageStr
-      .trim()
-      .split('\n')
-      .map(line => parseAnsiSequences(line.slice(4)))
-    frameError.value = null
-    dataStr.value = stderr
-    loadedFrameIndex.value = frameIndex
-  }
-  finally {
-    isLoadingFrame.value = false
-    loadingTime.value = Date.now() - startTime
-  }
+  await runFrame()
 }
-
-onUnmounted(async () => {
-  if (! session.value) return
-  const { id } = session.value
-  await api('/delete-session', { id })
-})
 
 const COLOR_MAP: Record<ColorName, string> = {
   black: '#000000',
@@ -236,13 +244,6 @@ const getColor = (color: AnsiColor | null, x: number, y: number): string | undef
   }
 }
 
-const DISPLAY_MODES = [ 'both', 'image', 'text' ] as const
-const displayMode = ref<typeof DISPLAY_MODES[number]>(DISPLAY_MODES[0])
-const nextDisplayMode = () => {
-  const index = DISPLAY_MODES.indexOf(displayMode.value)
-  displayMode.value = DISPLAY_MODES[(index + 1) % DISPLAY_MODES.length]
-}
-
 const lineX = ref<number | null>(null)
 const lineY = ref<number | null>(null)
 const lineXs = reactive<Record<number, boolean>>({})
@@ -255,6 +256,58 @@ const toggleLineY = () => {
   if (lineY.value === null) return
   lineYs[lineY.value] = ! lineYs[lineY.value]
 }
+
+onMounted(async () => {
+  autoPlay()
+})
+
+const element = ref<ElementDisplay | null>(null)
+
+watch(
+  [ imageOutput, displayMode, cellWidth, cellHeight, lineXs, lineYs ],
+  async ([ matrix, _, cw, ch ]) => {
+    if (! canvas.value || ! matrix) return
+    await nextTick()
+
+    const ctx = canvas.value.getContext('2d')!
+    ctx.resetTransform()
+    ctx.scale(cw, ch)
+    ctx.clearRect(0, 0, WIDTH, HEIGHT)
+
+    if (displayMode.value === 'image') return
+
+    for (const [ y0, row ] of matrix.entries()) {
+      const y = y0 + Y_INSET
+      for (const [ x, cell ] of row.entries()) {
+        const color = getColor(cell.background, x, y)
+        if (color) ctx.fillStyle = color
+        ctx.fillRect(x, y, 1, 1)
+      }
+    }
+  }
+)
+
+watch(() => !! session, async (hasSession) => {
+  if (hasSession) await runFrame()
+}, { immediate: true })
+
+useEventListener('beforeunload', async () => {
+  await deleteSession()
+})
+
+useEventListener('keydown', (ev: KeyboardEvent) => {
+  if (ev.key === 'ArrowLeft') runPrev()
+  else if (ev.key === 'ArrowRight') runNext()
+  else if (ev.key === 'Space') {
+    isAutoPlaying.value = ! isAutoPlaying.value
+  }
+  else if (ev.key === 'Enter') {
+    runFrame()
+  }
+  else if (ev.key === 'c') {
+    compile()
+  }
+})
 </script>
 
 <template>
@@ -268,15 +321,16 @@ const toggleLineY = () => {
           <div class="flex">
             <span>
               Dataset:
-              <select v-model="dataset">
-                <option v-for="dataset of datasetIndex" :value="dataset">{{ dataset.name }}</option>
+              <select v-model="datasetName">
+                <option v-for="{ name } of datasetIndex" :value="name">{{ name }}</option>
               </select>
             </span>
             <button
               v-if="! session.value"
-              :disabled="! dataset"
+              :disabled="! datasetName"
               @click="taskCreateSession = createSession()"
             >Start debugging</button>
+            <button v-else @click="deleteSession">Exit</button>
           </div>
         </template>
       </Await>
@@ -290,12 +344,12 @@ const toggleLineY = () => {
 
     <main v-if="session.value">
       <div class="flex control-buttons">
-        <button :disabled="isLoadingFrame" @click="prevFrame">&lt;</button>
+        <button :disabled="isLoadingFrame" @click="runPrev">&lt;</button>
         <input :disabled="isLoadingFrame" type="number" v-model="session.value.frameIndex" />
         <button :disabled="isLoadingFrame" @click="runFrame()">@</button>
         <button :disabled="isLoadingFrame" @click="compile">C</button>
         <button @click="isAutoPlaying = ! isAutoPlaying">{{ isAutoPlaying ? '||' : '|>' }}</button>
-        <button :disabled="isLoadingFrame" @click="nextFrame">&gt;</button>
+        <button :disabled="isLoadingFrame" @click="runNext">&gt;</button>
         <button @click="speedUp">S+</button>
         <button @click="speedDown">S-</button>
         <button @click="cellWidth ++">W+</button>
@@ -309,6 +363,10 @@ const toggleLineY = () => {
         <button @click="toggleLineX">LX</button>
         <input type="number" v-model="lineY" />
         <button @click="toggleLineY">LY</button>
+        <select v-model="element">
+          <option v-for="el of ELEMENT_DISPLAY" :value="el">{{ el }}</option>
+        </select>
+        <button @click="setElement">EL</button>
       </div>
 
       <div class="result flex">
@@ -329,8 +387,8 @@ const toggleLineY = () => {
           <pre>Error: {{ frameError }}</pre>
         </div>
 
-        <div class="box">
-          <pre>{{ dataStr }}</pre>
+        <div class="box data-output">
+          <pre>{{ dataOutput }}</pre>
           <br />
           <pre>[loading time = {{ loadingTime }} ms]</pre>
           <template v-if="compileResult">
@@ -340,6 +398,23 @@ const toggleLineY = () => {
               <pre>{{ compileResult.reason }}</pre>
             </template>
           </template>
+        </div>
+
+        <div class="box">
+          <svg width="300" height="250" class="chart">
+            <template v-for="{ offset }, i of history">
+              <rect
+                :x="offset < 0 ? 100 + offset * 2 : 100"
+                :y="10 + i * 15"
+                :width="Math.abs(offset) * 2"
+                :height="5"
+              ></rect>
+              <text
+                :x="210"
+                :y="14 + i * 15"
+              >{{ offset.toFixed(2) }}</text>
+            </template>
+          </svg>
         </div>
 
         <div v-if="debugOutput" class="box">
@@ -370,14 +445,23 @@ main {
   background-size: 100% 100%;
 }
 
-.control-buttons {
-  margin: .25rem 0;
+.data-output {
+  min-width: 15rem;
 }
 
-.control-buttons > input {
+.control-buttons {
+  margin: .25rem 0;
+  align-items: center;
+}
+
+.control-buttons > input, .control-buttons > select {
   width: 3rem;
   height: 2rem;
   box-sizing: border-box;
+}
+
+.control-buttons > select {
+  width: 8.5rem;
 }
 
 .control-buttons > button {
@@ -395,5 +479,19 @@ pre {
 .result {
   flex-wrap: wrap;
   align-items: flex-start;
+}
+
+.chart rect {
+  dominant-baseline: middle;
+  fill: #0000FF;
+}
+
+.chart rect:first-child {
+  fill: #00FFFF
+}
+
+.chart text {
+  dominant-baseline: middle;
+  font-family: monospace;
 }
 </style>

@@ -1,7 +1,7 @@
 import { type Method } from 'axios'
 
 import { z } from 'zod'
-import { Dataset, Empty, Failure, Result, Session, SessionId, Success } from '.'
+import { Dataset, Empty, Result, Session, SessionId } from '.'
 
 interface ApiDefinition {
   method: Method
@@ -47,6 +47,26 @@ export const CompileRes = Result(
 )
 export type CompileRes = z.infer<typeof CompileRes>
 
+export const ELEMENT_DISPLAY = [
+  'Zebra', 'CurveLeft', 'CurveRight', 'Normal',
+  'CrossBefore', 'Cross',
+  'LoopLeftBefore', 'LoopRightBefore',
+  'LoopLeftBefore2', 'LoopRightBefore2',
+  'LoopLeft', 'LoopRight',
+] as const
+
+export const ElementDisplay = z.enum(ELEMENT_DISPLAY)
+export type ElementDisplay = z.infer<typeof ElementDisplay>
+
+export const SetElementReq = z.intersection(SessionId, z.object({
+  element: ElementDisplay,
+}))
+export type SetElementReq = z.infer<typeof SetElementReq>
+export const SetElementRes = Result(
+  z.undefined(),
+  z.string(),
+)
+
 export const Api = {
   '/create-session': {
     method: 'POST',
@@ -73,6 +93,11 @@ export const Api = {
     req: CompileReq,
     res: CompileRes,
   },
+  '/set-element': {
+    method: 'POST',
+    req: SetElementReq,
+    res: SetElementRes,
+  }
 } satisfies Record<string, ApiDefinition>
 
 export type Api = typeof Api

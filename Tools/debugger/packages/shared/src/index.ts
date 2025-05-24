@@ -18,6 +18,7 @@ export const SessionId = z.object({
 export const Dataset = z.object({
   name: z.string(),
   size: z.number(),
+  ext: z.string(),
 })
 export type Dataset = z.infer<typeof Dataset>
 
