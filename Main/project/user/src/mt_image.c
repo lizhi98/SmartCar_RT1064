@@ -652,7 +652,7 @@ void search(Image image) {
     so = 0;
     sw = 0;
     int8 dxm = 0;
-    bool is_both = false;
+    bool both_count = 0;
     for (y = y_end; y >= y_start; y --) {
         xl = xls[y];
         xr = xrs[y];
@@ -660,21 +660,22 @@ void search(Image image) {
             dx = xr - xl;
             xm = (xl + xr) >> 1;
             dxm = 0;
-            is_both = true;
+            both_count ++;
         }
         else {
             if (! xl && ! xr);
             else if (! xl || el == LoopLeft) {
+                debug("dxm = %d\n", dxm);
                 dx = kw * STD_WIDTH[y];
-                if (is_both) dxm = xm - (xr - dx);
+                if (both_count > BOTH_COUNT_MIN) dxm = xm - (xr - dx);
                 else xm = xr - dx + dxm;
             }
             else if (! xr || el == LoopRight) {
                 dx = kw * STD_WIDTH[y];
-                if (is_both) dxm = xm - (xl + dx);
+                if (both_count > BOTH_COUNT_MIN) dxm = xm - (xl + dx);
                 else xm = xl + dx + dxm;
             }
-            is_both = false;
+            both_count = 0;
         }
         so += (xm - X_MID) * dx;
         sw += dx;
