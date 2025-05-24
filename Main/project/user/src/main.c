@@ -3,8 +3,9 @@
 #include "main.h"
 
 // #define HOST_DEBUG 
-#define SEND_IMAGE
-//#define IPS_IMAGE
+// #define SEND_IMAGE
+// #define IPS_IMAGE
+// #define CUBE_INFO_SHOW
 
 // 斑马线有效标志
 uint8 zebra_valid_flag = 0;
@@ -66,7 +67,7 @@ int main(void)
     timer_init(GPT_TIM_1, TIMER_MS);
     timer_start(GPT_TIM_1);
 
-    motion_control.motion_mode = LINE_FOLLOW; // 运动模式初始化
+    // motion_control.motion_mode = LINE_FOLLOW; // 运动模式初始化
 
     // 主循环
     run_flag = 1;
@@ -94,7 +95,7 @@ int main(void)
                 image_send_count = 0;
             }
             if(zebra_valid_flag && (image_result.element_type == Zebra)){
-                // run_flag = 0;
+                run_flag = 0;
             }
             
 #if defined(IPS_IMAGE)
@@ -102,7 +103,9 @@ int main(void)
 #endif
             mt9v03x_finish_flag = 0;
         }
-
+#if defined(HOST_DEBUG)
+        correspond_send_info_to_host();
+#endif
         if(timer_get(GPT_TIM_1) > 3000){
             zebra_valid_flag = 1;
         }
@@ -120,9 +123,10 @@ void push_box(){
             motor_rear_speed    = 0;
             
     float s_angle = gyroscope_result.angle_z;
+    motion_control.motion_mode = CUBE_ANGLE_POSITION_LEFT;
     // 转90度
     while(1){
-        if((gyroscope_result.angle_z - s_angle ) > 85.0){
+        if((gyroscope_result.angle_z - s_angle ) >  70.0){
             motor_run_with_speed(LEFT,0);
             motor_run_with_speed(RIGHT,0);
             motor_run_with_speed(REAR,0);
@@ -144,9 +148,21 @@ void push_box(){
         motor_run_with_speed(REAR,motor_rear_speed);
     }
 
-    system_delay_ms(1000); // 转90度时间
+    system_delay_ms(500); // 转90度时间
     
+    while(!cube_distance_position_ok()){
+        motion_control.motion_mode = CUBE_DISTANCE_POSITION;
+        if(cube_info.state == CUBE_OUTSIDE_VIEW){
+            goto angle_back;
+            motion_control.motion_mode = LINE_FOLLOW;
+            return;
+        }
+    }
+    motion_control.motion_mode = CUBE_PUSH;
+    system_delay_ms(500);
+cube_push:
     // 推箱子
+    motion_control.motion_mode = CUBE_PUSH;
     // 初始化三个电机速度缓存
     motor_left_speed    = 0,
     motor_right_speed   = 0,
@@ -162,7 +178,8 @@ void push_box(){
     motor_run_with_speed(REAR,motor_rear_speed);
 
     system_delay_ms(1500); // 推箱子时间
-
+line_back:
+    motion_control.motion_mode = CUBE_ANGLE_POSITION_LEFT;
     // 返回
     motor_left_speed    = 0,
     motor_right_speed   = 0,
@@ -182,6 +199,8 @@ void push_box(){
 
     s_angle = gyroscope_result.angle_z;
     // 转回到90度
+angle_back:
+    motion_control.motion_mode = LINE_BACK;
     while(1){
         if((s_angle - gyroscope_result.angle_z) > 90.0){
             motor_run_with_speed(LEFT,0);
@@ -209,4 +228,6 @@ void push_box(){
     }
 
     system_delay_ms(1000); // 转90度时间
+    motion_control.motion_mode = LINE_FOLLOW;
 }
+

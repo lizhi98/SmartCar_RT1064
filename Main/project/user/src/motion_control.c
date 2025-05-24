@@ -27,23 +27,23 @@ Encoder encoder_rear = {
 
 // 电机速度PID
 MotorPID motor_left_pid = {
-    .KP = 1.9,          .KI = 0.05,        .KD = 0.5,
+    .KP = 2.0,          .KI = 0.00,        .KD = 0.0,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_right_pid = {
-    .KP = 1.9,          .KI = 0.05,        .KD = 0.5,
+    .KP = 2.0,          .KI = 0.00,        .KD = 0.0,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 MotorPID motor_rear_pid = {
-    .KP = 1.9,          .KI = 0.05,        .KD = 0.5,
+    .KP = 2.0,          .KI = 0.00,        .KD = 0.0,
     .last_wrong = 0,    .sum_wrong = 0,    .wrong = 0,
 };
 
 // 自转PID
 RotationPID rotation_pid = {
-    .normal_kp  = -2.8,           .normal_ki  = -0.02,          .normal_kd  = -0.2,
-    // .normal_kp = -2.6,           .normal_ki = -0.05,          .normal_kd = -0.5,
-    .curve_kp  = -3.0,           .curve_ki  = -0.02,          .curve_kd  = -0.2,
+    .normal_kp  = -2.9,           .normal_ki  = -0.03,          .normal_kd  = -0.3,
+ // .normal_kp = -2.6,           .normal_ki = -0.05,          .normal_kd = -0.5,
+    .curve_kp  = -3.0,           .curve_ki  = -0.03,          .curve_kd  = -0.2,
     .last_offset = 0,            .sum_offset = 0,             .offset = 0,
 };
 
@@ -192,42 +192,16 @@ void motor_encoder_pit_call(void){
 // ROTATION
 // 车体旋转PID计算
 void rotation_pid_calc(){
+    if(motion_control.motion_mode != LINE_FOLLOW ){
+        rotation_pid.wl_out = 0;
+        return;
+    }
     if(run_flag == 0){
         rotation_pid.offset = 0;
         rotation_pid.wl_out = 0;
         return;
     }
-    volatile double out = 0.;
-    // // 分情况获取offset
-    // switch (motion_control.motion_mode)
-    // {
-    // case LINE_FOLLOW:
-    //     rotation_pid.offset = image_result.offset;
-    //     break;
-    // case CUBE_DISTANCE_POSITION:
-    //     // 需要测试决定
-    //     // rotation_pid.offset = image_result.offset;
-    //     rotation_pid.offset = (cube_info.x_center - CUBE_RIGHT_CENTER_X) / 5.0; // 需要测试决定
-    //     // rotation_pid.offset = 0.;
-    //     // rotation_pid.wl_out = 0;
-    //     // return;
-    //     break;
-    // case CUBE_ANGLE_POSITION_LEFT:
-    //     rotation_pid.rotation_angle = 90;
-    //     rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 0.8 * rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
-    //     break;
-    // case CUBE_ANGLE_POSITION_RIGHT:
-    //     rotation_pid.rotation_angle = -90;
-    //     rotation_pid.offset = (int32)(motion_control.line_gyro_angle_z + 0.8*rotation_pid.rotation_angle - gyroscope_result.angle_z) / 4; // 需要测试决定
-    //     break;
-    // case LINE_BACK:
-    //     rotation_pid.offset = -1 * (int32)(motion_control.line_gyro_angle_z - gyroscope_result.angle_z) / 3; // 需要测试决定
-    //     break;
-    // default:
-    //     rotation_pid.offset = 0;
-    //     break;
-    // }
-    // rotation_pid.offset = image_result.offset;
+    double out = 0.;
 
     // 获取offset
     if(line_offset.times > 0){
@@ -237,6 +211,9 @@ void rotation_pid_calc(){
     }else{
         rotation_pid.offset = image_result.offset;
     }
+    // if(motion_control.motion_mode == CUBE_DISTANCE_POSITION){
+    //     rotation_pid.offset = (CUBE_RIGHT_CENTER_X - cube_info.x_center) * -0.2;
+    // }
 
     float KP,KI,KD;
     if(image_result.element_type == Normal || image_result.element_type == Cross || image_result.element_type == CrossBefore
@@ -250,6 +227,9 @@ void rotation_pid_calc(){
         KI = rotation_pid.curve_ki;
         KD = rotation_pid.curve_kd;
     }
+    // if(motion_control.motion_mode == CUBE_DISTANCE_POSITION){
+    //     rotation_pid.offset = (CUBE_RIGHT_CENTER_X - cube_info.x_center) * -0.2;
+    // }
     // 比例
     out += (double) (KP * rotation_pid.offset);
     // 积分
@@ -265,14 +245,14 @@ void rotation_pid_calc(){
 
     // 记录wrong
     rotation_pid.last_offset = rotation_pid.offset;
-
-    // 输出
-    // if(motion_control.motion_mode != LINE_FOLLOW){
-    //     if(fabs(out) > 150.0){
-    //         (out > 0) ? (out = 150.0) : (out = -150.0);
-    //     }
-    // }
-    rotation_pid.wl_out = (int32)out;
+    // 限幅
+    if(out > 100.0){
+        rotation_pid.wl_out = 100;
+    }else if(out < -100.0){
+        rotation_pid.wl_out = -100;
+    }else{
+        rotation_pid.wl_out = (int32)out;
+    }
 
 }
 
@@ -314,23 +294,24 @@ void translation_pid_calc(void){
         return;
         break;
     case CUBE_DISTANCE_POSITION:
-        translation_pid.left_offset  = (CUBE_RIGHT_CENTER_X - cube_info.x_center)/4.0;
-        translation_pid.front_offset =-1 * ( -CUBE_RIGHT_CENTER_Y + cube_info.y_center)/1.5;
+        translation_pid.left_offset  = (CUBE_RIGHT_CENTER_X - cube_info.x_center)/3.0;
+        translation_pid.front_offset =-1 * ( -CUBE_RIGHT_CENTER_Y + cube_info.y_center)/1.2;
         break;
     case CUBE_ANGLE_POSITION_LEFT:
     case CUBE_ANGLE_POSITION_RIGHT:
-        translation_pid.left_offset  = (CUBE_RIGHT_CENTER_X - cube_info.x_center)/3.0;
-        translation_pid.front_offset =-1 * ( -CUBE_RIGHT_CENTER_Y + cube_info.y_center)/1.5;
-        // translation_pid.front_speed_out = 0;
-        // translation_pid.left_speed_out  = 0;
-        // return;
+        translation_pid.front_speed_out = 0;
+        translation_pid.left_speed_out  = 0;
+        return;
         break;
     case CUBE_PUSH:
-        translation_pid.front_offset = (500 - motion_control.line_distance) / 10;
-        translation_pid.left_offset  = 0;
+        translation_pid.front_speed_out = 0;
+        translation_pid.left_speed_out  = 0;
+        return;
         break;
     case LINE_BACK:
-        translation_pid.front_offset = -motion_control.line_distance / 10;
+        translation_pid.front_speed_out = 0;
+        translation_pid.left_speed_out  = 0;
+        return;
         break;
     default:
         translation_pid.left_speed_out  = 0;
@@ -347,12 +328,12 @@ void translation_pid_calc(void){
     translation_pid.front_sum_offset += translation_pid.front_offset;
     translation_pid.left_sum_offset  += translation_pid.left_offset;
     // 积分清零
-    if(translation_pid.front_offset == 0){
-        translation_pid.front_sum_offset = 0;
-    }
-    if(translation_pid.left_offset == 0){
-        translation_pid.left_sum_offset = 0;
-    }
+    // if(translation_pid.front_offset == 0){
+    //     translation_pid.front_sum_offset = 0;
+    // }
+    // if(translation_pid.left_offset == 0){
+    //     translation_pid.left_sum_offset = 0;
+    // }
     // 积分限幅
     if(abs(translation_pid.front_sum_offset) > TRANSLATION_SUM_OFFSET_MAX){
         (translation_pid.front_sum_offset > 0) ? (translation_pid.front_sum_offset = ROTATION_SUM_OFFSET_MAX) : (translation_pid.front_sum_offset = -ROTATION_SUM_OFFSET_MAX);
@@ -382,13 +363,15 @@ void motion_pid_pit_init(void){
 }
 
 void motion_pid_callback(void){
-    rotation_pid_calc();
+    
     translation_pid_calc();
+    rotation_pid_calc();
+    target_speed_calc();
 }
 
 uint8 cube_distance_position_ok(){
     // 立方体坐标定位是否正确
-    if( (abs(cube_info.x_center - CUBE_RIGHT_CENTER_X) <= 25) && ( abs(cube_info.y_center - CUBE_RIGHT_CENTER_Y) <= 15 )){
+    if( (abs(cube_info.x_center - CUBE_RIGHT_CENTER_X) <= 15) && ( abs(cube_info.y_center - CUBE_RIGHT_CENTER_Y) <= 15 )){
         return 1u;
     }else{
         return 0u;
@@ -443,7 +426,8 @@ uint8 line_back_ok(){
 uint32 push_box_valid_time = 0;
 // 车运动解算函数
 void target_motion_calc(void){
-    motion_control.motion_mode = LINE_FOLLOW;
+    // motion_control.motion_mode = CUBE_DISTANCE_POSITION;
+    // motion_control.motion_mode = LINE_FOLLOW;
     if(!run_flag){
         system_delay_ms(500);
         motor_run_with_speed(LEFT,0);
@@ -456,8 +440,11 @@ void target_motion_calc(void){
     if(motion_control.motion_mode == LINE_FOLLOW && cube_info.state == CUBE_INSIDE_VIEW){
         motion_control.motion_mode = CUBE_DISTANCE_POSITION;
         while(!cube_distance_position_ok()){
-            target_speed_calc();
+        if(cube_info.state == CUBE_OUTSIDE_VIEW){
+            motion_control.motion_mode = LINE_FOLLOW;
+            return;
         }
+    }
         // 先停车
         motor_run_with_speed(LEFT,0);
         motor_run_with_speed(RIGHT,0);
@@ -468,10 +455,17 @@ void target_motion_calc(void){
         return;
     }
 
-    target_speed_calc();
+    // target_speed_calc();
 }
 
 void target_speed_calc(){
+    
+    if(motion_control.motion_mode != CUBE_DISTANCE_POSITION && (motion_control.motion_mode != LINE_FOLLOW || run_flag == 0)){
+        return;
+    }
+    if(motion_control.motion_mode == CUBE_PUSH || motion_control.motion_mode == LINE_BACK){
+        return;
+    }
     // // ！！！顺时针为正方向，逆时针为负方向！！！
 
     // // 初始化三个电机速度缓存

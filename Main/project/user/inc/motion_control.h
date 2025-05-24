@@ -34,7 +34,7 @@
 #define MOTION_PID_PIT_TIME         10
 
 #define ROTATION_SUM_OFFSET_MAX     400
-#define TRANSLATION_SUM_OFFSET_MAX  40
+#define TRANSLATION_SUM_OFFSET_MAX  10
 
 // SPEED
 #define MOTOR_NORMAL_SPEED          450
@@ -174,5 +174,7 @@ void encoder_all_init(void);
 // 车运动解算函数
 void target_speed_calc(void);
 void target_motion_calc(void);
+
+uint8 cube_distance_position_ok();
 
 #endif

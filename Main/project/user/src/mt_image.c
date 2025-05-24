@@ -453,6 +453,7 @@ void search(Image image) {
         double xrf = xrs[Y_MAX];
         SET_IMG(xrs[Y_MAX], Y_MAX, SPECIAL);
         double m = (double) (xc - xrf) / (Y_MAX - yc);
+        // kw *= calc_kw_by_m(m);
         for (y = Y_MAX - 1; y > yc; y --) {
             xrf += m;
             xrs[y] = (uint8) xrf;
@@ -495,6 +496,7 @@ void search(Image image) {
         double xlf = xls[Y_MAX];
         SET_IMG(xls[Y_MAX], Y_MAX, SPECIAL);
         double m = (double) (xc - xlf) / (Y_MAX - yc);
+        // kw *= calc_kw_by_m(m);
         for (y = Y_MAX - 1; y > yc; y --) {
             xlf += m;
             xls[y] = (uint8) xlf;
