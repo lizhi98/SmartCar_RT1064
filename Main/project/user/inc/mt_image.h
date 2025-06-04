@@ -116,5 +116,6 @@ extern uint8 otsu_threshold;
 #define X_LP_CORNER_L_OFFSET 5
 #define X_LP_CORNER_R_OFFSET 10
 #define CONVEX_LIMIT 2
+#define BOTH_COUNT_MIN 5
 
 #endif 
