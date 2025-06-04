@@ -53,16 +53,16 @@ void screen_show_info(){
         default:                ips200_show_info_ele_buffer = "Unknown"; break;
     }
     
-    sprintf(ips200_show_info_str_buffer, "Ele:%s", ips200_show_info_ele_buffer);
-    ips200_show_string(0, y, ips200_show_info_str_buffer); // 显示元素类型
-    sprintf(ips200_show_info_str_buffer, "offset:%7.1f", image_result.offset);
-    ips200_show_string(IPS200_X_MAX / 2, y, ips200_show_info_str_buffer); // 显示偏移量
-    y += 20; // 更新y坐标
+    // sprintf(ips200_show_info_str_buffer, "Ele:%s", ips200_show_info_ele_buffer);
+    // ips200_show_string(0, y, ips200_show_info_str_buffer); // 显示元素类型
+    // sprintf(ips200_show_info_str_buffer, "offset:%7.1f", image_result.offset);
+    // ips200_show_string(IPS200_X_MAX / 2, y, ips200_show_info_str_buffer); // 显示偏移量
+    // y += 20; // 更新y坐标
 
-    sprintf(ips200_show_info_str_buffer, "fSpeed:%4d", translation_pid.front_speed_out);
-    ips200_show_string(0, y, ips200_show_info_str_buffer); // 显示前进速度
-    sprintf(ips200_show_info_str_buffer, "lSpeed:%4d", translation_pid.left_speed_out);
-    ips200_show_string(IPS200_X_MAX / 2, y, ips200_show_info_str_buffer); // 显示左y移速度
+    // sprintf(ips200_show_info_str_buffer, "fSpeed:%4d", translation_pid.front_speed_out);
+    // ips200_show_string(0, y, ips200_show_info_str_buffer); // 显示前进速度
+    // sprintf(ips200_show_info_str_buffer, "lSpeed:%4d", translation_pid.left_speed_out);
+    // ips200_show_string(IPS200_X_MAX / 2, y, ips200_show_info_str_buffer); // 显示左y移速度
 
 }
 
@@ -70,15 +70,6 @@ void screen_show_cube_picture(void){
     screen_clear();
     uint16 y = 0; // 当前显示指针y坐标
     
-    sprintf(ips200_show_info_str_buffer, "Ele:%s", ips200_show_info_ele_buffer);
-    ips200_show_string(0, y, ips200_show_info_str_buffer); // 显示元素类型
-    sprintf(ips200_show_info_str_buffer, "offset:%7.1f", image_result.offset);
-    ips200_show_string(IPS200_X_MAX / 2, y, ips200_show_info_str_buffer); // 显示偏移量
-    y += 20; // 更新y坐标
-
-    sprintf(ips200_show_info_str_buffer, "fSpeed:%4d", translation_pid.front_speed_out);
-    ips200_show_string(0, y, ips200_show_info_str_buffer); // 显示前进速度
-    sprintf(ips200_show_info_str_buffer, "lSpeed:%4d", translation_pid.left_speed_out);
-    ips200_show_string(IPS200_X_MAX / 2, y, ips200_show_info_str_buffer); // 显示左y移速度
+    
 }
 

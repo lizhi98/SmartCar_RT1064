@@ -103,17 +103,11 @@ void correspond_host_cmd_pit_call(void){
 void correspond_send_info_to_host(){
 #if CORRESPOND_SEND_INFO_MODE == 1
     sprintf(wifi_uart_send_buffer_temp, 
-        "%d.0,%d.0,%d.0,%f,%d,%d,%d,%d,%d\n",
+        "%d,%d,%d   %d,%d,%d\n",
         motors[LEFT].current_speed, motors[RIGHT].current_speed, motors[REAR].current_speed,  // 左右后电机速度
-        image_result.offset,  image_process_time,// 图像
-        motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty,  // 电机实时PWM
-        rotation_pid.wl_out  // 角速度PID输出
+        // image_result.offset,  image_process_time,// 图像
+        motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty  // 电机实时PWM
     );
-    // sprintf(wifi_uart_send_buffer_temp, 
-    //     "%lf,%d,%d,%d\n",
-    //     image_result.offset,  image_process_time,image_result.element_type,
-    //     rotation_pid.wl_out  // 角速度PID输出
-    // );
 #elif CORRESPOND_SEND_INFO_MODE == 2
     sprintf(wifi_uart_send_buffer_temp, 
         "%f,%f,%f\n",
@@ -121,6 +115,7 @@ void correspond_send_info_to_host(){
     );
 #endif
     wifi_uart_send_buffer((uint8 *)wifi_uart_send_buffer_temp, strlen(wifi_uart_send_buffer_temp));
+    // ips200_show_string(0, 60, wifi_uart_send_buffer_temp); // 显示发送的内容
 }
 
 void correspond_host_cmd_pit_init(void){

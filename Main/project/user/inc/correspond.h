@@ -11,21 +11,21 @@
 #include "seekfree_assistant_interface.h"
 #include "seekfree_assistant.h"
 
-#include "motion_control.h"
+#include "motion_control_new.h"
 #include "gyroscope.h"
 #include "main.h"
 
 // WIRELESS CONFIG
-#define WIFI_SSID                               "TianGang"
-#define WIFI_PASS                               "12341234"
-#define HOST_IP                                 "192.168.110.67"
+#define WIFI_SSID                               "Koishi_SmartCar"
+#define WIFI_PASS                               "KOISHI123"
+#define HOST_IP                                 "192.168.110.70"
 
 // WIFI SPI CONFIG
 #define WIFI_SPI_CONNECT_MODE                   "UDP"
 #define WIFI_SPI_HOST_PORT                      "9894"
 
 // WIFI UART CONFIG
-#define WIFI_UART_HOST_PORT                     "9895"
+#define WIFI_UART_HOST_PORT                     "9995"
 // #define WIFI_UART_LOCAL_PORT                    "9999"
 #define WIFI_UART_READ_BUFFER_TEMP_SIZE         24
 #define WIFI_UART_READ_BUFFER_HEAD              "[["

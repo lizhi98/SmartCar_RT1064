@@ -6,7 +6,7 @@ Test/Data
 *.uvmpw.*
 *.uvguix.*
 uv4.log.lock
-mdk/.vscode
+mdk
 Simulator
 
 # Node.js

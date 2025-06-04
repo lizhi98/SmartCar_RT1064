@@ -19,15 +19,15 @@ void PIT_IRQHandler(void)
     
     if(pit_flag_get(PIT_CH1))
     {
-        motion_pid_callback();
+        motion_control_pid_callback();
 
         pit_flag_clear(PIT_CH1);
     }
     
     if(pit_flag_get(PIT_CH2))
     {
-        motor_encoder_pit_call();
-        motor_pid_pit_call();
+        motor_encoder_pit_callback();
+        // motor_pid_pit_call();
         pit_flag_clear(PIT_CH2);
     }
     

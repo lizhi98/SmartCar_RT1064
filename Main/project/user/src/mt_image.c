@@ -27,7 +27,7 @@ uint8 image_buffer[HEIGHT][REAL_WIDTH] = { 0 };
         else if (T == BOUND_APP) color = RGB565_CYAN;
         else if (T == SPECIAL) color = RGB565_MAGENTA;
         else color = RGB565_RED;
-        ips200_draw_point(x % 188, y % 120, color);
+        // ips200_draw_point(x % 188, y % 120, color);
     }
     #define debug(...)
 #endif
