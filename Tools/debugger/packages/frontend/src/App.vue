@@ -66,6 +66,8 @@ const deleteSession = async () => {
   await api('/delete-session', { id })
   session.value = null
 }
+
+const taskGetDataList = ref<ReturnType<typeof getDatasetList> | null>(null)
 const taskCreateSession = ref<ReturnType<typeof createSession> | null>(null)
 
 const cellWidth = ref(3)
@@ -258,10 +260,29 @@ const toggleLineY = () => {
 }
 
 onMounted(async () => {
+  taskGetDataList.value = getDatasetList()
   autoPlay()
 })
 
 const element = ref<ElementDisplay | null>(null)
+
+const progressEl = useTemplateRef('progress')
+const progressIndex = ref<number | null>(null)
+useEventListener('mousemove', ev => {
+  const rect = progressEl.value!.getBoundingClientRect()
+  const x = ev.clientX - rect.left
+  const y = ev.clientY - rect.top
+  const { width, height } = rect
+  progressIndex.value = x >= 0 && x < width && y >= 0 && y <= height
+    ? Math.floor((x / width) * dataset.value!.size) + 1
+    : null
+})
+
+const gotoProgress = () => {
+  if (progressIndex.value === null) return
+  session.value!.frameIndex = progressIndex.value
+  runFrame()
+}
 
 watch(
   [ imageOutput, displayMode, cellWidth, cellHeight, lineXs, lineYs ],
@@ -298,10 +319,12 @@ useEventListener('beforeunload', async () => {
 useEventListener('keydown', (ev: KeyboardEvent) => {
   if (ev.key === 'ArrowLeft') runPrev()
   else if (ev.key === 'ArrowRight') runNext()
-  else if (ev.key === 'Space') {
+  else if (ev.key === ' ') {
+    ev.preventDefault()
     isAutoPlaying.value = ! isAutoPlaying.value
   }
   else if (ev.key === 'Enter') {
+    ev.preventDefault()
     runFrame()
   }
   else if (ev.key === 'c') {
@@ -313,7 +336,7 @@ useEventListener('keydown', (ev: KeyboardEvent) => {
 <template>
   <div class="session-state">
     <header>
-      <Await :promise="getDatasetList()">
+      <Await v-if="taskGetDataList" :promise="taskGetDataList">
         <template #pending>
           Loading dataset index...
         </template>
@@ -381,6 +404,27 @@ useEventListener('keydown', (ev: KeyboardEvent) => {
             }"
             ref="canvas"
           ></canvas>
+          <div
+            class="progress"
+            ref="progress"
+            @click="gotoProgress"
+          >
+            <template v-if="dataset">
+              <div
+                v-if="progressIndex !== null"
+                class="progress-tooltip"
+                :style="{
+                  left: `${(progressIndex / dataset.size) * 100}%`
+                }"
+              >{{ progressIndex }}</div>
+              <div
+                class="progress-inner" 
+                :style="{
+                  width: `${(loadedFrameIndex / dataset.size) * 100}%`,
+                }"
+              ></div>
+            </template>
+          </div>
         </div>
 
         <div v-if="frameError !== null" class="box">
@@ -443,6 +487,31 @@ main {
 
 .image-output > canvas {
   background-size: 100% 100%;
+}
+
+.progress {
+  position: relative;
+  width: 100%;
+  height: .5rem;
+  cursor: crosshair;
+}
+
+.progress-tooltip {
+  position: absolute;
+  top: 1rem;
+  width: 2rem;
+  margin-left: -1rem;
+  padding-bottom: .2rem;
+  line-height: 1;
+  border: 1px solid black;
+  background-color: white;
+  text-align: center;
+  z-index: 1;
+}
+
+.progress-inner {
+  height: 100%;
+  background-color: blue;
 }
 
 .data-output {
