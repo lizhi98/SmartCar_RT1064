@@ -212,6 +212,10 @@ void search(Image image) {
                 r_stop0 = r_stop0 = r_ng = true;
                 break;
             }
+
+    if (l_stop0 && r_stop0) {
+        return;
+    }
     
     if (el == LoopRight) goto loop;
     else if (el == LoopLeft) goto loop;
