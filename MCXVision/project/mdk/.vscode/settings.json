@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "zf_device_ips200.h": "c"
+        "zf_device_ips200.h": "c",
+        "zf_common_headfile.h": "c",
+        "locale": "c"
     }
 }

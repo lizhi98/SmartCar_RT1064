@@ -100,7 +100,7 @@ void timer_clear (timer_index_enum index)
 // 参数说明     index           TIMER 外设模块号
 // 参数说明     mode            计时方式
 // 返回参数     void
-// 使用示例     timer_init
+// 使用示例     timer_init(TIM_1, TIMER_US);
 // 备注信息     
 //-------------------------------------------------------------------------------------------------------------------
 void timer_init (timer_index_enum index, timer_mode_enum mode)

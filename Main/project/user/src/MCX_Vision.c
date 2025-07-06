@@ -11,6 +11,7 @@ CubeInfo cube_info ={
     .state = CUBE_OUTSIDE_VIEW,
     .x_center = 0,
     .y_center = 0,
+    .p_count = 0
 };
 
 // MCX_Vision 数据缓冲和标志位
@@ -106,7 +107,7 @@ void mcx_cube_data_handle_pit_call(){
             // 加上\0
             mcx_data_buffer[MCX_DATA_LENGTH - 1] = '\0'; // 添加结束符
             // 解析数据
-            sscanf((char *)&mcx_data_buffer[0],"s:%d,xf:%d,yf:%d\n",&cube_info.state,&cube_info.x_center,&cube_info.y_center); // 解析数据
+            sscanf((char *)&mcx_data_buffer[0],"s:%d,xf:%d,yf:%d,p:%d\n",&cube_info.state,&cube_info.x_center,&cube_info.y_center,&cube_info.p_count); // 解析数据
         }else{
             mcx_data_length = MCX_DATA_LENGTH - 1; // 重置数据长度,防止fifo_read_buffer修改length
         }

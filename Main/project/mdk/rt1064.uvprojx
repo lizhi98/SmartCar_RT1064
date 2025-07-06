@@ -444,6 +444,16 @@
               <FileType>1</FileType>
               <FilePath>..\user\src\motion_control.c</FilePath>
             </File>
+            <File>
+              <FileName>motion_control_new.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\motion_control_new.c</FilePath>
+            </File>
+            <File>
+              <FileName>pid_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\pid_control.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -508,6 +518,16 @@
               <FileName>motion_control.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\inc\motion_control.h</FilePath>
+            </File>
+            <File>
+              <FileName>motion_control_new.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\motion_control_new.h</FilePath>
+            </File>
+            <File>
+              <FileName>pid_control.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\pid_control.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1128,6 +1148,16 @@
               <FileName>zf_device_ble6a20.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\libraries\zf_device\zf_device_ble6a20.h</FilePath>
+            </File>
+            <File>
+              <FileName>zf_device_ips200pro.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\libraries\zf_device\zf_device_ips200pro.c</FilePath>
+            </File>
+            <File>
+              <FileName>zf_device_ips200pro.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\libraries\zf_device\zf_device_ips200pro.h</FilePath>
             </File>
           </Files>
         </Group>

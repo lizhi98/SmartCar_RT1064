@@ -1,5 +1,8 @@
 #include "motion_control_new.h"
 
+#define CUBE_RIGHT_CENTER_X  160
+#define CUBE_RIGHT_CENTER_Y  170
+
 Encoder encoder_left = {
     .encoder_index      = QTIMER1_ENCODER1,
     .encoder_channel_1  = QTIMER1_ENCODER1_CH1_C0,
@@ -13,7 +16,7 @@ Encoder encoder_right = {
 Encoder encoder_rear = {
     .encoder_index      = QTIMER2_ENCODER1,
     .encoder_channel_1  = QTIMER2_ENCODER1_CH1_C3,
-    .encoder_channel_2  = QTIMER2_ENCODER1_CH2_C4,
+    .encoder_channel_2  = QTIMER2_ENCODER1_CH2_C25,
 };
 
 MotionControl motion_mode ={
@@ -28,25 +31,25 @@ MovingAverageFilter encoder_filter[MOTOR_INDEX_MAX_PLUS_ONE];
 // 内环 电机速度PID
 PID
 motor_left_pid = {
-    .type = PID_INC, .kp = 10.0, .ki = 0.8, .kd = 0.5,
+    .type = PID_INC, .kp = 12.0, .ki = 4.0, .kd = 0.5,
 },
 motor_right_pid = {
-    .type = PID_INC, .kp = 10.0, .ki = 0.8, .kd = 0.5,
+    .type = PID_INC, .kp = 12.0, .ki = 4.0, .kd = 0.5,
 },
 motor_rear_pid = {
-    .type = PID_INC, .kp = -10.0, .ki = -1.0, .kd = -0.3,
+    .type = PID_INC, .kp = -12.0, .ki = -4.0, .kd = -0.3,
 };
 
 // 中间环 角速度，平移速度  
 PID
 angular_v_pid = {
-    .type = PID_POI, .kp = 1.0, .ki = 0.01, .kd = 0.1, .error_limit = 100,
+    .type = PID_POI, .kp = 1.0, .ki = 0.02, .kd = 0.1, .error_limit = 200,
 },
 translation_forward_v_pid = {
-    .type = PID_POI, .kp = 1.0, .ki = 0.02, .kd = 0.0, .error_limit = 200,
+    .type = PID_POI, .kp = 1.0, .ki = 0.00, .kd = 0.0, .error_limit = 200,
 },
 translation_left_v_pid = {
-    .type = PID_POI, .kp = 1.0, .ki = 0.02, .kd = 0.0, .error_limit = 200,
+    .type = PID_POI, .kp = 1.0, .ki = 0.00, .kd = 0.0, .error_limit = 200,
 };
 
 // 外环 平移距离，旋转角度
@@ -58,7 +61,7 @@ translation_forward_pid = {
     .type = PID_POI, .kp = 1.0, .ki = 0.00, .kd = 0.0, .error_limit = 100,
 },
 translation_left_pid = {
-    .type = PID_POI, .kp = 1.0, .ki = 0.00, .kd = 0.0, .error_limit = 100,
+    .type = PID_POI, .kp = 0.7, .ki = 0.00, .kd = 0.0, .error_limit = 100,
 };
 
 
@@ -71,7 +74,7 @@ Motor motors[MOTOR_INDEX_MAX_PLUS_ONE] = {
     },
     [RIGHT] =
     {
-        .index = RIGHT,             .pwm_channel_pin = PWM2_MODULE3_CHB_D3,   .gpio_dir_pin = D2,
+        .index = RIGHT,             .pwm_channel_pin = PWM2_MODULE1_CHA_C8,   .gpio_dir_pin = C9,
         .pwm_duty = 0,              .current_speed = 0,                       .set_speed = 0,
         .encoder = &encoder_right,  .pid_controller = &motor_right_pid,
     },
@@ -88,12 +91,16 @@ MotionControl motion_control = {
     .motion_mode        = LINE_FOLLOW,  .last_motion_mode = LINE_FOLLOW,        .line_gyro_angle_z  = 0.0f,
 };
 
+uint8 motor_rotation_translation_pid_calc_flag = 0;
+uint8 motor_translation_angular_v_pid_calc_flag = 0;
+uint8 motor_speed_pid_calc_flag = 0;
+
 // 启动所有电机PWM通道输出，占空比为0
 void motor_all_init(void){
     for(int i = 0; i < MOTOR_INDEX_MAX_PLUS_ONE; i++){
         PID_clean(  motors[i].pid_controller);
         pwm_init(   motors[i].pwm_channel_pin,     MOTOR_PWM_FREQUENCY,    0);
-        gpio_init(  motors[i].gpio_dir_pin,       GPO,                    1,     GPO_PUSH_PULL);
+        gpio_init(  motors[i].gpio_dir_pin,        GPO,                    1,     GPO_PUSH_PULL);
     }
 }
 
@@ -123,11 +130,24 @@ void motor_plus_duty(MotorIndex index, int32 delta_duty){
 void motor_run_with_speed(MotorIndex index, int32 speed){
     motors[index].set_speed = speed;
 }
-void motor_unpower(MotorIndex index){
-    motor_set_duty(index,0);
+void motor_all_unpower(){
+    // 停止所有PID运算
+    motor_rotation_translation_pid_calc_flag = 0; // 外环PID
+    motor_translation_angular_v_pid_calc_flag = 0; // 中环PID
+    motor_speed_pid_calc_flag = 0; // 内环PID
+    // 停止所有电机动力
+    for(MotorIndex index = 0; index < MOTOR_INDEX_MAX_PLUS_ONE; index ++){
+        motor_set_duty(index,0);
+    }
 }
 void motor_all_stop(void){
-    for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
+    // return ;
+    // 停止外环和中环PID运算
+    motor_rotation_translation_pid_calc_flag = 0; // 外环PID
+    motor_translation_angular_v_pid_calc_flag = 0; // 中环PID
+    // system_delay_ms(10); // 等待一段时间，确保电机停止
+    // 设置速度为0
+    for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE; index ++){
         motors[index].set_speed = 0;
     }
 }
@@ -164,7 +184,7 @@ void motor_encoder_pit_init(void){
     pit_ms_init(MOTOR_ENCODER_PIT,MOTOR_ENCODER_PIT_TIME);
 }
 void motor_encoder_pit_callback(void){
-    // 获取两个正交编码器的速度
+    // 获取正交编码器的速度
     for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
         // 获取速度
         motors[index].current_speed = MAF_Update( &encoder_filter[index], encoder_get_speed(motors[index].encoder->encoder_index) );
@@ -198,34 +218,39 @@ void motor_translation_angular_v_pid_calc_apply(){
             target_angular               = rotation_pid.output;             // 目标旋转角度
             break;
         case CUBE_DISTANCE_POSITION:
-            translation_forward_target_x = 0.0f;
-            translation_left_target_x = 0.0f;
+            translation_forward_target_x = translation_forward_pid.output;  // 目标平移距离
+            translation_left_target_x = translation_left_pid.output; // 目标平移距离
             target_angular = 0; // TODO
             break;
         case CUBE_ANGLE_POSITION_LEFT:
         case CUBE_ANGLE_POSITION_RIGHT:
-            translation_forward_target_x = 0.0f; 
-            translation_left_target_x = 0.0f;
-            target_angular = 0; // TODO
+            translation_forward_v_pid.output = 0.0f; // 推箱子时不需要前进
+            translation_left_v_pid.output = 30.0f;
+            angular_v_pid.output = 10.0f;
+            goto V_APPLY; // 直接跳转到V_APPLY
             break;
         case CUBE_PUSH:
+            translation_forward_pid.output = 30.0f; // 推箱子时前进30
+            translation_left_pid.output = 0.0f; // 推箱子时不需要左移
+            goto V_APPLY; // 直接跳转到V_APPLY
+            break;
         case LINE_BACK:
-            translation_forward_target_x = 0.0f; 
-            translation_left_target_x = 0.0f;
-            target_angular = 0; // TODO
+            translation_forward_v_pid.output = 0.0f; // 推箱子时不需要前进
+            translation_left_v_pid.output = 30.0f;
+            angular_v_pid.output = -10.0f;
+            goto V_APPLY; // 直接跳转到V_APPLY
             break;
         default:
             translation_forward_target_x = 0.0f; 
             translation_left_target_x = 0.0f;
             target_angular = 0; // TODO
     }
-    
     // 计算平移速度
     PID_calculate(&translation_forward_v_pid, translation_forward_target_x, 0.0f); // 目标平移速度
     PID_calculate(&translation_left_v_pid,    translation_left_target_x,    0.0f); // 目标平移速度
     // 计算角速度
     PID_calculate(&angular_v_pid, target_angular, 0.0f); // 目标角速度
-
+V_APPLY:
     // 计算电机速度
     motors[LEFT].set_speed    =   (int32) (-translation_forward_v_pid.output * COS_PI_D_6 + translation_left_v_pid.output * SIN_PI_D_6 - angular_v_pid.output); // 左侧电机速度需要加上角速度
     motors[RIGHT].set_speed   =   (int32) ( translation_forward_v_pid.output * COS_PI_D_6 + translation_left_v_pid.output * SIN_PI_D_6 - angular_v_pid.output); // 右侧电机速度需要加上角速度
@@ -242,7 +267,7 @@ void motor_rotation_translation_pid_calc_apply(){
             {
                 case Normal:
                 case Cross:
-                    translation_forward_pid.output = 70;
+                    translation_forward_pid.output = 90;
                     translation_left_pid.output = 0;
                     break;
                 case Zebra:
@@ -250,17 +275,23 @@ void motor_rotation_translation_pid_calc_apply(){
                     // translation_left_pid.output = 0;
                     break;
                 default:
-                    translation_forward_pid.output = 60;
+                    translation_forward_pid.output = 80;
                     translation_left_pid.output = 0;
                     break;
             }
             // translation_forward_pid.output = 60;
             // translation_left_pid.output = 0;
+            if(image_result.offset > 70){
+                image_result.offset = 70; // 限制偏移量
+            }else if (image_result.offset < -70){
+                image_result.offset = -70; // 限制偏移量
+            }
             PID_calculate(&rotation_pid, image_result.offset, 0);
             return;
         case CUBE_DISTANCE_POSITION:
-            translation_forward_pid.output = 0.0f;
-            translation_left_pid.output  = 0.0f;
+            translation_forward_pid.output = (22000.0 - (float)cube_info.p_count) / 1000.0;
+            translation_left_pid.output  =   (cube_info.x_center - 160)/ 4.0;
+            return;
             break;
         case CUBE_ANGLE_POSITION_LEFT:
         case CUBE_ANGLE_POSITION_RIGHT:
@@ -282,18 +313,85 @@ uint64 pit_count = 0;
 
 void motion_control_pid_callback(){
     pit_count++;
-    if(pit_count % 4 == 0){
+    if(pit_count % 4 == 0 && motor_rotation_translation_pid_calc_flag){
         // 最外环  offset -> x
         motor_rotation_translation_pid_calc_apply();
     }
-    if(pit_count % 2 == 0){
+    if(pit_count % 2 == 0 && motor_translation_angular_v_pid_calc_flag){
         // 中间环控制 x -> v
         motor_translation_angular_v_pid_calc_apply();
     }
     // 最内环控制 电机速度稳定控制 target_speed -> pwm_duty_plus
-    motor_speed_pid_calc_apply();
+    if(motor_speed_pid_calc_flag){
+        motor_speed_pid_calc_apply();
+    }
 }
 
 void motion_control_pid_pit_init(){
-    pit_ms_init(PIT_CH1, 2); // 10ms周期
+    // 打开PID运算flag
+    motor_rotation_translation_pid_calc_flag = 1; // 外环PID
+    motor_translation_angular_v_pid_calc_flag = 1; // 中环PID
+    motor_speed_pid_calc_flag = 1; // 内环PID
+    // 启动PID定时器
+    pit_ms_init(MOTOR_PID_PIT, MOTOR_PID_PIT_TIME);
+}
+
+// 该函数为阻塞函数，不宜放在PIT中
+void motion_mode_calc(){
+    switch(motion_control.motion_mode){
+        case LINE_FOLLOW:
+            // 巡线模式下，判断是否看到了箱子
+            if(cube_info.state == CUBE_INSIDE_VIEW){
+                // 先停车
+                // motor_all_stop();
+                motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+                motion_control.motion_mode = CUBE_DISTANCE_POSITION; // 进入立方体距离定位模式
+                // while(1);
+            }
+            break;
+        case CUBE_DISTANCE_POSITION:
+            // 立方体距离定位模式下，判断是否看到了箱子
+            if(cube_info.state == CUBE_OUTSIDE_VIEW){
+                // 没有看到箱子，回到巡线模式
+                motion_control.motion_mode = LINE_FOLLOW;
+                return;
+            }
+            if(abs(cube_info.x_center - 160) < 20 && fabs(22000.0 - (float)cube_info.p_count) < 2000.0){
+                // 如果箱子在视野中心附近，进入立方体识别模式
+                motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+                motion_control.motion_mode = CUBE_IDENTIFY;
+            }
+            break;
+        case CUBE_IDENTIFY:
+            // 立方体识别模式下，判断是否看到了箱子
+            if(cube_info.state == CUBE_OUTSIDE_VIEW){
+                // 没有看到箱子，回到巡线模式
+                motion_control.motion_mode = LINE_FOLLOW;
+                return;
+            }
+            motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+            motion_control.motion_mode = CUBE_ANGLE_POSITION_LEFT; // 进入立方体角度定位模式
+            break;
+        case CUBE_ANGLE_POSITION_LEFT:
+        case CUBE_ANGLE_POSITION_RIGHT:
+            system_delay_ms(3000);
+            motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+            motion_control.motion_mode = CUBE_PUSH; // 进入推箱子模式
+            break;
+        case CUBE_PUSH:
+            system_delay_ms(3000);
+            motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+            motion_control.motion_mode = LINE_BACK; // 进入返回模式
+            break;
+        case LINE_BACK:
+            system_delay_ms(4000);
+            motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+            motion_control.motion_mode = LINE_FOLLOW; // 回到巡线模式
+            break;
+        default:
+            // 如果进入了未知模式，回到巡线模式
+            motion_control.motion_mode = LINE_FOLLOW;
+            break;
+            
+    }
 }

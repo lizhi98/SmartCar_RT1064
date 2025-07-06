@@ -111,7 +111,7 @@ void menu_init(void){
     menu_sort();  // 按照index排序，使得数组的下标和index一致
     screen_full(RGB565_BLACK);  // 清屏
 }
-
+/*
 void menu_animation_block_jump_item(MenuItemIndex item_from,MenuItemIndex item_to, uint16 item_from_length,uint16 item_to_length){
     // 首先计算item在屏幕的起始y坐标
     uint16 item_from_ys = (item_from - menu_pages[menu_items[item_from].current_page_index].start_index + 1u) * MENU_ITEM_WIDTH;
@@ -185,3 +185,4 @@ void menu_animation_test(){
         t = t_next;
     }
 }
+*/

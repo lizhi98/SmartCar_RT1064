@@ -49,7 +49,7 @@ void rt1064_uart_init_wait()
 
 void rt1064_uart_send_cube_info(void)
 {
-    sprintf((char *)&rt1064_uart_write_buffer[0], "s:%1d,xf:%4u,yf:%4u\n", cube_info.exist, cube_info.x_center, cube_info.y_center);
+    sprintf((char *)&rt1064_uart_write_buffer[0], "s:%1d,xf:%4u,yf:%4u,p:%6d\n", cube_info.exist, cube_info.x_center, cube_info.y_center, cube_info.pixel_count);
     rt1064_uart_write_buffer[RT1064_CUBE_DATA_LENGTH - 1] = 0;    // 确保\0存在
     user_uart_putchar(RT1064_BUFFER_HEAD);                        // 发送帧头
     user_uart_write_string((char *)&rt1064_uart_write_buffer[0]); // 发送数据

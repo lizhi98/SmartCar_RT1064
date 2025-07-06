@@ -55,6 +55,8 @@
         "openmv.h": "c",
         "zf_device_scc8660.h": "c",
         "zf_common_function.h": "c",
-        "seekfree_assistant.h": "c"
+        "seekfree_assistant.h": "c",
+        "motion_control_new.h": "c",
+        "ffconf.h": "c"
     }
 }

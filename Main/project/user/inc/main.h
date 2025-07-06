@@ -21,6 +21,6 @@ extern uint32 image_process_time_start;
 extern uint32 image_process_time;
 extern uint8 zebra_valid_flag;
 
-void push_box();
+// void push_box();
 
 #endif

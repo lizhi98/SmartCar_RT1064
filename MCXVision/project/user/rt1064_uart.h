@@ -13,7 +13,7 @@
 #define RT1064_UART_INIT_WAKE_DATA          0x01
 
 #define RT1064_UART_WRITE_BUFFER_SIZE       64 // 发送缓冲区大小
-#define RT1064_CUBE_DATA_LENGTH             21
+#define RT1064_CUBE_DATA_LENGTH             30
 
 extern uint8 rt1064_uart_read_buffer[RT1064_UART_READ_BUFFER_SIZE]; // 接收缓冲区
 extern vuint8 rt1064_uart_read_buffer_index;// 接收缓冲区索引

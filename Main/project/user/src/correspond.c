@@ -103,10 +103,11 @@ void correspond_host_cmd_pit_call(void){
 void correspond_send_info_to_host(){
 #if CORRESPOND_SEND_INFO_MODE == 1
     sprintf(wifi_uart_send_buffer_temp, 
-        "%d,%d,%d   %d,%d,%d\n",
+        "%d,%d,%d   %d,%d,%d   %d,%d,%d\n",
         motors[LEFT].current_speed, motors[RIGHT].current_speed, motors[REAR].current_speed,  // 左右后电机速度
         // image_result.offset,  image_process_time,// 图像
-        motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty  // 电机实时PWM
+        motors[LEFT].pwm_duty,motors[RIGHT].pwm_duty,motors[REAR].pwm_duty,  // 电机实时PWM
+        motors[LEFT].set_speed, motors[RIGHT].set_speed, motors[REAR].set_speed  // 电机目标速度
     );
 #elif CORRESPOND_SEND_INFO_MODE == 2
     sprintf(wifi_uart_send_buffer_temp, 

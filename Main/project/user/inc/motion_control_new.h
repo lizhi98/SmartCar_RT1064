@@ -27,6 +27,9 @@
 #define MOTOR_ENCODER_PIT           PIT_CH2
 #define MOTOR_ENCODER_PIT_TIME      2
 
+#define MOTOR_PID_PIT               PIT_CH1
+#define MOTOR_PID_PIT_TIME          2
+
 typedef enum _MotorIndex
 {
     LEFT,
@@ -73,7 +76,7 @@ typedef struct _MotionControl
 }MotionControl;
 
 // 编码器获取值滤波
-#define WINDOW_SIZE 7  // 滑动窗口大小
+#define WINDOW_SIZE 5  // 滑动窗口大小
 // 移动平均滤波
 typedef struct _MovingAverageFilter{
     int16 buffer[WINDOW_SIZE];
@@ -84,12 +87,16 @@ typedef struct _MovingAverageFilter{
 extern MotionControl motion_control;
 extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 
+extern uint8 motor_rotation_translation_pid_calc_flag;
+extern uint8 motor_translation_angular_v_pid_calc_flag;
+extern uint8 motor_speed_pid_calc_flag;
+
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);
 void motor_plus_duty(MotorIndex index, int32 delta_duty);
 
 void motor_run_with_speed(MotorIndex index, int32 speed);
-void motor_unpower(MotorIndex index);
+void motor_all_unpower(void);
 void motor_all_stop(void);
 void motor_all_init(void);
 
@@ -103,5 +110,7 @@ void encoder_all_init(void);
 void motion_control_pid_callback(void);
 
 void motion_control_pid_pit_init(void);
+
+void motion_mode_calc();
 
 #endif

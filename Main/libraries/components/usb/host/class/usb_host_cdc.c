@@ -35,7 +35,7 @@ static void USB_HostCdcClearOutHaltCallback(void *param, usb_host_transfer_t *tr
     cdcInstance->controlTransfer = NULL;
     if (cdcInstance->outCallbackFn != NULL)
     {
-        /* callback to application¬¥‚ïù√Æthe callback function is initialized in USB_HostCdcDataSend */
+        /* callback to application´╝îthe callback function is initialized in USB_HostCdcDataSend */
         cdcInstance->outCallbackFn(cdcInstance->outCallbackParam, cdcInstance->stallDataBuffer,
                                    cdcInstance->stallDataLength, kStatus_USB_TransferStall);
     }
@@ -155,7 +155,7 @@ void USB_HostCdcDataOutPipeCallback(void *param, usb_host_transfer_t *transfer, 
 #endif
     if (cdcInstance->outCallbackFn != NULL)
     {
-        /* callback to application¬¥‚ïù√Æthe callback function is initialized in USB_HostCdcDataSend */
+        /* callback to application´╝îthe callback function is initialized in USB_HostCdcDataSend */
         cdcInstance->outCallbackFn(cdcInstance->outCallbackParam, transfer->transferBuffer, transfer->transferSofar,
                                    status);
     }

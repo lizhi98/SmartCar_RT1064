@@ -18,7 +18,7 @@
 // WIRELESS CONFIG
 #define WIFI_SSID                               "Koishi_SmartCar"
 #define WIFI_PASS                               "KOISHI123"
-#define HOST_IP                                 "192.168.110.70"
+#define HOST_IP                                 "192.168.110.73"
 
 // WIFI SPI CONFIG
 #define WIFI_SPI_CONNECT_MODE                   "UDP"
@@ -31,7 +31,7 @@
 #define WIFI_UART_READ_BUFFER_HEAD              "[["
 #define WIFI_UART_READ_BUFFER_HEAD_SIZE         2
 
-#define WIFI_UART_SEND_BUFFER_TEMP_SIZE         64
+#define WIFI_UART_SEND_BUFFER_TEMP_SIZE         128
 #define CORRESPOND_SEND_INFO_MODE               1 // 1-发送电机速度，offset，PWM 2-发送陀螺仪数据
 
 // UART CONFIG
