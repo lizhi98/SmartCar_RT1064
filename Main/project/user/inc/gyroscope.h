@@ -4,9 +4,10 @@
 #include "stdlib.h"
 
 #include "icm42688.h"
+#include "zf_device_imu660ra.h"
 #include "zf_driver_pit.h"
 
-#define GYROSCOPE_PIT PIT_CH0
+#define GYROSCOPE_PIT      PIT_CH0
 #define GYROSCOPE_PIT_TIME 1
 
 typedef struct _GyroscopeResult{

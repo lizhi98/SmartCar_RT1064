@@ -1,188 +1,157 @@
-#include <stdlib.h>
 #include "zf_driver_delay.h"
-
+#include "string.h"
 #include "menu.h"
+#include "motion_control_new.h"
+#include "mt_image.h"
+#include "gyroscope.h"
+
+char * cube_picture_class_name[] = {
+    "数字"  // 会显示具体数字
+    "扳手",
+    "电烙铁",
+    "电钻",
+    "卷尺",
+    "螺丝刀",
+    "钳子",
+    "示波器",
+    "万用表",
+    "打印机",
+    "键盘",
+    "手机",
+    "鼠标",
+    "头戴式耳机",
+    "显示器",
+    "音响",
+};
 
 
-MenuPageIndex current_page_index = MAIN_PAGE;  // 当前页面索引
+uint16 cube_info_page_id = 0; // 立方体信息页面ID
+uint16 cube_info_table_id = 0; // 立方体信息表格ID
 
-// flag
-uint8 menu_fresh_finish_flag = 0;  // 刷新标志位
+uint16          cube_info_list_next_index = 0;
+CubeFaceInfo    cube_info_list[CUBE_INFO_PAGE_LIST_SIZE] = {0}; // 立方体信息列表，初始为空
 
-MenuItem menu_items[] = {
-    // ========================================= MENU PAGE =================================================
-    {   .index = MAIN_START_ONLY,               .type = FUNCTION_MENU_ITEM,         .name = "Start Only", 
-        .current_page_index = MAIN_PAGE,
-        .data = {
-            .function_menu_item_data = {.function_pointer = NULL}  // TODO: add function pointer
-        }
-    },
-    {   .index = MAIN_START_WITH_INFO,          .type = FUNCTION_MENU_ITEM,         .name = "Start With Info", 
-        .current_page_index = MAIN_PAGE,
-        .data = {
-            .function_menu_item_data = {.function_pointer = NULL}  // TODO: add function pointer
-        } 
-    },
-    {   .index = MAIN_PARAMETER_ADJUST,         .type = PARENT_MENU_ITEM,           .name = "Parameter Adjust", 
-        .current_page_index = MAIN_PAGE,
-        .data = {
-            .parent_menu_item_data = {.child_page_index = PARAMETER_ADJUST_CLASS_CHOOSE_PAGE}
-        }
-    },
-    // ============================= PARAMETER_ADJUST_CLASS_CHOOSE_PAGE ====================================
-    {   .index = PARAMETER_ADJUST_PID,          .type = PARENT_MENU_ITEM,           .name = "PID", 
-        .current_page_index = PARAMETER_ADJUST_CLASS_CHOOSE_PAGE,
-        .data = {
-            .parent_menu_item_data = {.child_page_index = PID_PAGE}
-        }
-    },
-    {   .index = PARAMETER_ADJUST_SPEED,        .type = PARENT_MENU_ITEM,           .name = "Speed", 
-        .current_page_index = PARAMETER_ADJUST_CLASS_CHOOSE_PAGE,
-        .data = {
-            .parent_menu_item_data = {.child_page_index = SPEED_PAGE}
-        }
-    },
-    // ======================================== PID_PAGE ==================================================
-    {   .index = PID_ADJUST_KP,                 .type = PARAMETER_MENU_ITEM,        .name = "Kp", 
-        .current_page_index = PID_PAGE,
-        .data = {
-            .parameter_menu_item_data = {.parameter_type = FLOAT_E, .parameter_pointer = NULL, .step_value_pointer = NULL}  // TODO: add parameter pointer and step value pointer
-        }
-    },
-    {   .index = PID_ADJUST_KI,                 .type = PARAMETER_MENU_ITEM,        .name = "Ki", 
-        .current_page_index = PID_PAGE,
-        .data = {
-            .parameter_menu_item_data = {.parameter_type = FLOAT_E, .parameter_pointer = NULL, .step_value_pointer = NULL}  // TODO: add parameter pointer and step value pointer
-        }
-    },
-    {   .index = PID_ADJUST_KD,                 .type = PARAMETER_MENU_ITEM,        .name = "Kd", 
-        .current_page_index = PID_PAGE,
-        .data = {
-            .parameter_menu_item_data = {.parameter_type = FLOAT_E, .parameter_pointer = NULL, .step_value_pointer = NULL}  // TODO: add parameter pointer and step value pointer
-        }
-    },
-    // ======================================== SPEED_PAGE ==================================================
-    {   .index = SPEED,                         .type = PARAMETER_MENU_ITEM,        .name = "Speed", 
-        .current_page_index = SPEED_PAGE,
-        .data = {
-            .parameter_menu_item_data = {.parameter_type = INT32_E, .parameter_pointer = NULL, .step_value_pointer = NULL}  // TODO: add parameter pointer and step value pointer
-        }
-    },
+// 调试信息显示
+uint16 debug_info_page_id = 0; // 调试信息页面ID
+uint16 debug_info_table_id = 0; // 调试信息表格ID
+
+// 图像显示
+uint16 image_page_id = 0; // 图像显示页面ID
+uint16 image_image_id = 0; // 图像显示组件ID
+
+void menu_init(void) {
+    memset(cube_info_list, 0, sizeof(cube_info_list)); // 初始化立方体信息列表为全0
+    // 创建页面和容器
+    cube_info_page_id  = ips200pro_page_create("箱子显示");  // 创建立方体信息显示页面
+    debug_info_page_id = ips200pro_page_create("调试信息");  // 创建调试信息显示页面
+    image_page_id      = ips200pro_page_create("图像显示");   // 创建图像显示页面
     
-};
+    uint16 cube_info_container_id  = ips200pro_container_create(0, 0, 240, 300);  // 创建容器组件
+    uint16 debug_info_container_id = ips200pro_container_create(0, 0, 240, 300); // 创建调试信息容器组件
+    uint16 image_container_id      = ips200pro_container_create(0, 0, 240, 300); // 创建图像显示容器组件
 
-MenuPage menu_pages[] = {
-    {   .index = MAIN_PAGE,                             .name = "Main Menu",
-        .start_index = MAIN_START_ONLY,                 .end_index = MAIN_PARAMETER_ADJUST,     .parent_page_index = NULL,
-        .current_index_pointer = MAIN_START_ONLY
-    },
-    {   .index = PARAMETER_ADJUST_CLASS_CHOOSE_PAGE,    .name = "Parameter Adjust",
-        .start_index = PARAMETER_ADJUST_PID,            .end_index = PARAMETER_ADJUST_SPEED,    .parent_page_index = MAIN_PAGE,
-        .current_index_pointer = PARAMETER_ADJUST_PID
-    },
-    {   .index = PID_PAGE,                              .name = "PID",
-        .start_index = PID_ADJUST_KP,                   .end_index = PID_ADJUST_KD,             .parent_page_index = PARAMETER_ADJUST_CLASS_CHOOSE_PAGE,
-        .current_index_pointer = PID_ADJUST_KP
-    },
-    {   .index = SPEED_PAGE,                            .name = "Speed",                        .parent_page_index = PARAMETER_ADJUST_CLASS_CHOOSE_PAGE,
-        .start_index = SPEED,                           .end_index = SPEED, 
-        .current_index_pointer = SPEED
-    },
-};
+    ips200pro_container_radius(cube_info_container_id, 2, 10);  // 设置容器边线宽度为1，圆角半径为10
+    ips200pro_container_radius(debug_info_container_id, 2, 10); // 设置调试信息容器边线宽度为1，圆角半径为10
+    ips200pro_container_radius(image_container_id, 2, 10);     // 设置图像显示容器边线宽度为1，圆角半径为10
+    
+    ips200pro_set_parent(cube_info_container_id,  cube_info_page_id);   // 将容器设置为立方体信息页面的父组件
+    ips200pro_set_parent(debug_info_container_id, debug_info_page_id); // 将调试信息容器设置为调试信息页面的父组件
 
-int menu_item_compare(const void *a, const void *b) {
-    const MenuItem *item_a = (const MenuItem *)a;
-    const MenuItem *item_b = (const MenuItem *)b;
-    return item_a->index - item_b->index;
+    // 创建表格组件
+    cube_info_table_id  = ips200pro_table_create(0, 0, CUBE_INFO_PAGE_LIST_SIZE, 2); // 创建立方体信息显示表格组件
+    debug_info_table_id = ips200pro_table_create(0, 0, 12, 2); // 创建调试信息表格组件
+    image_image_id = ips200pro_image_create(0, 0, 188, 120); // 创建图像显示组件
+
+    ips200pro_set_parent(cube_info_table_id,  cube_info_container_id); // 将立方体信息表格设置为立方体信息容器的子组件
+    ips200pro_set_parent(debug_info_table_id, debug_info_container_id); // 将调试信息表格设置为调试信息容器的子组件
+    ips200pro_set_parent(image_image_id, image_container_id); // 将图像显示组件设置为图像显示容器的子组件
+
+    // 设置表格宽度
+    ips200pro_table_set_col_width(cube_info_table_id,  1, 80);  // 设置第一列宽度为80
+    ips200pro_table_set_col_width(cube_info_table_id,  2, 140); // 设置第二列宽度为140
+    ips200pro_table_set_col_width(debug_info_table_id, 1, 80);  // 设置第一列宽度为50
+    ips200pro_table_set_col_width(debug_info_table_id, 2, 140); // 设置第二列宽度为150
 }
 
-int menu_page_compare(const void *a, const void *b) {
-    const MenuPage *page_a = (const MenuPage *)a;
-    const MenuPage *page_b = (const MenuPage *)b;
-    return page_a->index - page_b->index;
-}
-
-void menu_sort(void){
-    qsort(menu_items, sizeof(menu_items)/sizeof(MenuItem), sizeof(MenuItem), menu_item_compare);
-    qsort(menu_pages, sizeof(menu_pages)/sizeof(MenuPage), sizeof(MenuPage), menu_page_compare);
-}
-
-void menu_init(void){
-    menu_sort();  // 按照index排序，使得数组的下标和index一致
-    screen_full(RGB565_BLACK);  // 清屏
-}
 /*
-void menu_animation_block_jump_item(MenuItemIndex item_from,MenuItemIndex item_to, uint16 item_from_length,uint16 item_to_length){
-    // 首先计算item在屏幕的起始y坐标
-    uint16 item_from_ys = (item_from - menu_pages[menu_items[item_from].current_page_index].start_index + 1u) * MENU_ITEM_WIDTH;
-    uint16 item_to_ys   = (item_to -   menu_pages[menu_items[item_to]  .current_page_index].start_index + 1u) * MENU_ITEM_WIDTH;
-    // 设置显示颜色
-    ips200_set_color(RGB565_WHITE, RGB565_BLACK);  // 这是正常显示的颜色
-    if(item_from == item_to){
-        // 画一个白色方块
-        ips200_draw_region(0,item_from_ys, item_from_length, item_from_ys + MENU_ITEM_WIDTH, RGB565_WHITE);
-        // 然后反转菜单文字颜色
-        ips200_set_color(RGB565_BLACK, RGB565_WHITE);  // 这是反转显示的颜色
-        ips200_show_string(0, item_from_ys, menu_items[item_from].name);
-        return;
-    }
-
-    int16  item_d_y = item_to_ys        - item_from_ys;  // y坐标差值
-    int16  item_d_x = item_to_length    - item_from_length;  // x坐标差值
-    // 定义循环次数，在该循环次数内完成补间动画
-    uint16 loop_times = 30;  // 循环次数
-
-    double k = 0.0;
-    for(uint16 time = 0; time <= loop_times; time++){
-        double k_next = 1.0 - pow(1 - (double) time / (loop_times * 1.0) , 3.0);
-        system_delay_ms(30);  // 延时
-        ips200_draw_region(0, item_from_ys + k * item_d_y,      item_from_length + k * item_d_x,        item_from_ys + k * item_d_y + MENU_ITEM_WIDTH,      RGB565_BLACK); // 擦除
-
-        ips200_set_color(RGB565_WHITE, RGB565_BLACK);  // 这是正常显示的颜色
-        ips200_show_string(0, item_from_ys, menu_items[item_from].name);
-        ips200_show_string(0, item_to_ys,   menu_items[item_to].name);
-
-        ips200_draw_region(0, item_from_ys + k_next * item_d_y, item_from_length + k_next * item_d_x,   item_from_ys + k_next * item_d_y + MENU_ITEM_WIDTH, RGB565_WHITE); // 画出新的区域
-
-        ips200_set_color(RGB565_BLACK, RGB565_BLACK);  // 这是反转显示的颜色
-        ips200_show_string(0, item_from_ys + k_next * item_d_y, menu_items[item_to].name);  // 显示新的菜单项
-
-        k = k_next;
-    }
-
-}
-
-void menu_fresh(MenuFreshMode mode){
-    if(menu_fresh_finish_flag == 1) return;  // 如果不需要刷新，则不刷新
-    switch(mode){
-        case MENU_FRESH_FULL:
-            screen_full(RGB565_BLACK);  // 清屏
-            
-
-            break;
-        case MENU_FRESH_POINTER:
-            break;
-        default:
-            break;
-    }
-}
-
-void menu_key_pressed_event_handler(key_index_enum key){
-    
-}
-
-void menu_animation_test(){
-    screen_clear();  // 清屏
-    system_delay_ms(1000);  // 延时1s
-    ips200_draw_region(0, 0, 100, 30, RGB565_WHITE);  // 画区域测试
-    uint8 step = 30 / 30;
-    double t = 0.0;
-    for(uint8 time = 0; time <= 50; time++) {
-        double t_next = 1.0 - pow(1 - (float) time / 50.0 , 3.0);
-        system_delay_ms(20);  // 延时
-        ips200_draw_region(0, t * 200, 100, t_next * 200, RGB565_BLACK);  // 画区域测试
-        ips200_draw_region(0, t_next * 200, 100, t_next * 200 + 30, RGB565_WHITE);  // 画区域测试
-        t = t_next;
-    }
-}
+    * @brief 添加下一个立方体的信息
+    * @param class 立方体信息类别
+    * @param number 若立方体为标数字的立方体，则此参数为具体数字
+    * @note 如果列表已满，则不添加
 */
+void cube_info_add(CubeFaceInfoClass class, uint8 number){
+    if (cube_info_list_next_index >= CUBE_INFO_PAGE_LIST_SIZE) {
+        return; // 列表已满
+    }
+    cube_info_list[cube_info_list_next_index].valid  = 1; // 设置为有效
+    cube_info_list[cube_info_list_next_index].class  = class; // 设置立方体类别
+    cube_info_list[cube_info_list_next_index].number = number; // 设置数字
+    cube_info_list_next_index++;
+}
+
+/*
+    * @brief 刷新立方体信息表格
+    * @note 将立方体信息表格中的内容刷新为当前的立方体信息列表
+    *       立方体类别显示在第一列，数字或类别名称显示在第二列
+    *       第一行是标题行，从第二行开始显示立方体信息
+*/
+void cube_info_table_flash(){
+    if (cube_info_table_id == 0) {
+        return; // 如果表格ID为0，说明没有初始化，则不进行刷新
+    }
+    for (uint16 i = 0; i < cube_info_list_next_index; i++) {
+        // 判断信息是否为有效信息
+        if (cube_info_list[i].valid == 0) {
+            // 显示为空
+            ips200pro_table_cell_printf(cube_info_table_id, i + 1, 1, " "); // 显示无效信息
+            ips200pro_table_cell_printf(cube_info_table_id, i + 1, 2, " "); // 显示无效信息
+            continue; // 继续
+        }
+        ips200pro_table_cell_printf(cube_info_table_id, i + 1, 1, "%u", i + 1); // 显示立方体类别
+        // 判断是否为数字
+        if (cube_info_list[i].class == CUBE_INFO_CLASS_NUMBER) {
+            ips200pro_table_cell_printf(cube_info_table_id, i + 1, 2, "%u", cube_info_list[i].number); // 显示数字
+        } else {
+            ips200pro_table_cell_printf(cube_info_table_id, i + 1, 2, "%s", cube_picture_class_name[cube_info_list[i].class]); // 显示类别名称
+        }
+    }
+}
+
+void change_page_to_debug_info() {
+    ips200pro_page_switch(debug_info_page_id, PAGE_ANIM_ON); // 切换到指定页面
+}
+
+void change_page_to_cube_info() {
+    ips200pro_page_switch(cube_info_page_id, PAGE_ANIM_ON); // 切换到指定页面
+}
+
+void debug_info_table_flash() {
+    if (debug_info_table_id == 0) {
+        return; // 如果表格ID为0，说明没有初始化，则不进行刷新
+    }
+    ips200pro_table_cell_printf(debug_info_table_id, 1, 1, "速度"); // 第一行标题
+    ips200pro_table_cell_printf(debug_info_table_id, 1, 2, "%3d %3d %3d", motors[0].current_speed, motors[1].current_speed, motors[2].current_speed); // 显示电机速度
+    ips200pro_table_cell_printf(debug_info_page_id,  2, 1, "占空比%%");
+    ips200pro_table_cell_printf(debug_info_page_id,  2, 2, "%3d %3d %3d", motors[0].pwm_duty / 100, motors[1].pwm_duty / 100, motors[2].pwm_duty / 100);
+    ips200pro_table_cell_printf(debug_info_page_id,  3, 1, "Offset");
+    ips200pro_table_cell_printf(debug_info_page_id,  3, 2, "%f", image_result.offset);
+    ips200pro_table_cell_printf(debug_info_page_id,  4, 1, "陀螺仪");
+    ips200pro_table_cell_printf(debug_info_page_id,  4, 2, "%6.1f %5.0f", gyroscope_result.gyro_z, gyroscope_result.angle_z); // 显示陀螺仪数据);
+    ips200pro_table_cell_printf(debug_info_page_id,  5, 1, "图像时间");
+    ips200pro_table_cell_printf(debug_info_page_id,  5, 2, "w:%u p:%u", image_process_wait_next_time, image_process_time);
+    ips200pro_table_cell_printf(debug_info_page_id,  6, 1, "赛道元素");
+    ips200pro_table_cell_printf(debug_info_page_id,  6, 2, "%u", image_result.element_type); // 显示赛道元素类型
+    ips200pro_table_cell_printf(debug_info_page_id,  7, 1, "运动模式");
+    ips200pro_table_cell_printf(debug_info_page_id,  7, 2, "%u", motion_control.motion_mode); // 显示运动模式
+}
+
+void image_show_flash() {
+    if (image_page_id == 0) {
+        return; // 如果页面ID为0，说明没有初始化，则不进行刷新
+    }
+    ips200pro_image_display(image_image_id, mt9v03x_image[0], 188, 120, IMAGE_GRAYSCALE, otsu_threshold); // 显示图像
+}
+
+void change_page_to_image(void){
+    ips200pro_page_switch(image_page_id, PAGE_ANIM_ON); // 切换到图像显示页面
+}

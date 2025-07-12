@@ -35,6 +35,7 @@
                 "d:\\Code\\SmartCarProgram_RT1064\\Main\\libraries\\zf_driver",
                 "d:\\Code\\SmartCarProgram_RT1064\\Main\\libraries\\zf_device",
                 "d:\\Code\\SmartCarProgram_RT1064\\Main\\libraries\\zf_components",
+                "D:\\Program Files\\Keil_v5\\ARM\\ARMCLANG\\include\\libcxx\\__thread\\support",
                 "D:\\Program Files\\Keil_v5\\ARM\\ARMCLANG\\include",
                 "D:\\Program Files\\Keil_v5\\ARM\\ARMCLANG\\include\\arm_linux",
                 "D:\\Program Files\\Keil_v5\\ARM\\ARMCLANG\\include\\arm_linux_compat",

@@ -3,104 +3,60 @@
 
 #include "math.h"
 
-#include <zf_device_key.h>
-#include <screen.h>
+#include "zf_device_key.h"
+#include "screen.h"
 
-#define MENU_ITEM_WIDTH  20u
+// 立方体信息显示菜单页面
 
-// =============================== INDEX ===============================
-typedef enum _MenuPageIndex{
-    MAIN_PAGE,
-    PARAMETER_ADJUST_CLASS_CHOOSE_PAGE,
-    PID_PAGE,
-    SPEED_PAGE
-}MenuPageIndex;
+#define CUBE_INFO_PAGE_LIST_SIZE 12 // 立方体信息页面列表大小
 
-typedef enum _MenuItemIndex{
-    // 主菜单菜单项目索引
-    MAIN_START_ONLY,
-    MAIN_START_WITH_INFO,
-    MAIN_PARAMETER_ADJUST,
-    // 调参菜单菜单项目索引
-    PARAMETER_ADJUST_PID,
-    PARAMETER_ADJUST_SPEED,
-    // PID菜单菜单项目索引
-    PID_ADJUST_KP,
-    PID_ADJUST_KI,
-    PID_ADJUST_KD,
-    // SPEED菜单菜单项目索引
-    SPEED,
-}MenuItemIndex;
+typedef enum _CubeFaceInfoClass {
+    CUBE_INFO_CLASS_NUMBER = 0, // 数字
+    CUBE_INFO_CLASS_WRENCH, // 扳手
+    CUBE_INFO_CLASS_SOLDERING_IRON, // 电烙铁
+    CUBE_INFO_CLASS_DRILL, // 电钻
+    CUBE_INFO_CLASS_TAPE_MEASURE, // 卷尺
+    CUBE_INFO_CLASS_SCREWDRIVER, // 螺丝刀
+    CUBE_INFO_CLASS_PLIERS, // 钳子
+    CUBE_INFO_CLASS_OSCILLOSCOPE, // 示波器
+    CUBE_INFO_CLASS_MULTIMETER, // 万用表
+    CUBE_INFO_CLASS_PRINTER, // 打印机
+    CUBE_INFO_CLASS_KEYBOARD, // 键盘
+    CUBE_INFO_CLASS_PHONE, // 手机
+    CUBE_INFO_CLASS_MOUSE, // 鼠标
+    CUBE_INFO_CLASS_HEADSET, // 头戴式耳机
+    CUBE_INFO_CLASS_MONITOR, // 显示器
+    CUBE_INFO_CLASS_SPEAKER // 音响
+} CubeFaceInfoClass;
 
-// =============================== MENU PAGE ===============================
-typedef struct _MenuPage{
-    MenuPageIndex index;                    // 菜单页面索引
-    char * name;                            // 菜单页面名称
-    MenuItemIndex start_index;              // 页面第一个菜单索引
-    MenuItemIndex end_index;                // 页面最后一个菜单索引
-    MenuPageIndex parent_page_index;         // 父页面索引
-    MenuItemIndex current_index_pointer;    // 页面当前菜单索引
-}MenuPage;
+typedef struct _CubeFaceInfo {
+    uint8 valid; // 是否有效 1：有效 0：无效
+    CubeFaceInfoClass class; // 立方体类别
+    uint8 number; // 数字
+} CubeFaceInfo;
 
-// =============================== MENU ITEM ===============================
-typedef enum _MenuItemType{
-    PARENT_MENU_ITEM,     // 父菜单项，即包含子菜单的菜单项目
-    PARAMETER_MENU_ITEM,  // 参数菜单项，即参数调整的菜单项目
-    FUNCTION_MENU_ITEM,   // 功能菜单项，即功能性的菜单项目
-}MenuItemType;
+extern uint16 cube_info_page_id;  // 立方体信息页面ID
+extern uint16 cube_info_table_id; // 立方体信息表格ID
 
-// 参数类型
-typedef enum _ParameterType{
-    INT32_E,        // 整数类型
-    FLOAT_E,        // 浮点数类型
-    DOUBLE_E,       // 双精度浮点数类型
-    UINT8_E,        // 无符号8位整数类型
-}ParameterType;
+extern uint16       cube_info_list_next_index; // 立方体信息列表下一个索引
+extern CubeFaceInfo cube_info_list[CUBE_INFO_PAGE_LIST_SIZE];
 
-// 要放在菜单数据union里的各个菜单类型的菜单数据结构体
-typedef struct _ParentMenuItemData{
-    MenuPageIndex child_page_index;     // 子页面索引
-}ParentMenuItemData;
-typedef struct _ParameterMenuItemData{
-    ParameterType parameter_type;       // 参数类型
-    void * parameter_pointer;           // 参数指针
-    void * step_value_pointer;          // 步长值指针
-}ParameterMenuItemData;
-typedef struct _FunctionMenuItemData{
-    void * function_pointer;            // 函数指针
-}FunctionMenuItemData;
+// 调试信息显示
+extern uint16 debug_info_page_id; // 调试信息页面ID
+extern uint16 debug_info_table_id; // 调试信息表格ID
 
-typedef union _MenuItemData{
-    ParentMenuItemData      parent_menu_item_data;          // 父菜单项数据
-    ParameterMenuItemData   parameter_menu_item_data;       // 参数菜单项数据
-    FunctionMenuItemData    function_menu_item_data;        // 功能菜单项数据
-}MenuItemData;
+// 图像显示
+extern uint16 image_page_id; // 图像显示页面ID
+extern uint16 image_image_id; // 图像显示组件ID
 
-typedef struct _MenuItem{
-    MenuItemIndex index;  // 菜单项目索引
-    MenuItemType  type;   // 菜单项目类型
-    char *        name;   // 菜单项目(显示)名称
-    MenuPageIndex current_page_index; // 所在菜单页面索引
-    MenuItemData  data;   // 菜单项目数据
-}MenuItem;
+void menu_init(void); // 菜单初始化
+void cube_info_add(CubeFaceInfoClass class, uint8 number);
+void cube_info_table_flash(void); // 刷新立方体信息表格
+void debug_info_table_flash(void); // 刷新调试信息表格
+void image_show_flash(void);
 
-// =============================== MENU FRESH ===============================
-typedef enum _MenuFreshMode{
-    MENU_FRESH_FULL,     // 全屏刷新
-    MENU_FRESH_POINTER,  // 仅刷新指针
-}MenuFreshMode;
-
-extern MenuPageIndex current_page_index;  // 当前页面索引
-
-void menu_sort(void);
-void menu_init(void);
-
-void menu_fresh(MenuFreshMode mode);
-
-void menu_animation_block_jump_item(MenuItemIndex item_from,MenuItemIndex item_to, uint16 item_from_length,uint16 item_to_length);
-
-void menu_animation_test(void);
-
-// void menu_key_pressed_event_handler(key_index_enum key);
+void change_page_to_debug_info(void);
+void change_page_to_cube_info(void);
+void change_page_to_image(void);
 
 #endif

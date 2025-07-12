@@ -17,8 +17,8 @@
 #include "OpenMV.h"
 
 // 图像处理时间记录
-extern uint32 image_process_time_start;
 extern uint32 image_process_time;
+extern uint32 image_process_wait_next_time;
 extern uint8 zebra_valid_flag;
 
 // void push_box();

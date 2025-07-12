@@ -57,6 +57,8 @@
         "zf_common_function.h": "c",
         "seekfree_assistant.h": "c",
         "motion_control_new.h": "c",
-        "ffconf.h": "c"
+        "ffconf.h": "c",
+        "zf_device_ips200pro.h": "c",
+        "zf_device_imu660ra.h": "c"
     }
 }
