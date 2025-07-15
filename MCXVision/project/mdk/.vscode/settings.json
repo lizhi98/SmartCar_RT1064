@@ -2,6 +2,8 @@
     "files.associations": {
         "zf_device_ips200.h": "c",
         "zf_common_headfile.h": "c",
-        "locale": "c"
+        "locale": "c",
+        "rt1064_uart.h": "c",
+        "zf_driver_uart.h": "c"
     }
 }

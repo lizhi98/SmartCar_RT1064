@@ -10,7 +10,7 @@
 #include "zf_device_ips200.h"
 
 #define MCX_UART_N                      UART_4
-#define MCX_UART_BAUD                   115200
+#define MCX_UART_BAUD                   9600
 #define MCX_UART_TX                     UART4_TX_C16
 #define MCX_UART_RX                     UART4_RX_C17
 

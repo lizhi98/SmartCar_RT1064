@@ -59,6 +59,7 @@
         "motion_control_new.h": "c",
         "ffconf.h": "c",
         "zf_device_ips200pro.h": "c",
-        "zf_device_imu660ra.h": "c"
+        "zf_device_imu660ra.h": "c",
+        "stdint.h": "c"
     }
 }

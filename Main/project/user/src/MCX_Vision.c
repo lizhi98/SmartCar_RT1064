@@ -64,9 +64,9 @@ uint8 mcx_init_wait(void) {
 }
 
 void mcx_receive_data_callback(void) {
+    uart_query_byte(MCX_UART_N, (uint8 *)&mcx_uart_interrupt_data_temp);                    // 读取串口数据
     if (! mcx_init_flag || mcx_data_recv_finish_flag) return;
     // 现在可以接收数据了
-    uart_query_byte(MCX_UART_N, (uint8 *)&mcx_uart_interrupt_data_temp);                    // 读取串口数据
 
     if(mcx_uart_interrupt_data_temp == MCX_BUFFER_HEAD){ // 判断数据头
         fifo_clear(&mcx_uart_fifo); // 清空FIFO

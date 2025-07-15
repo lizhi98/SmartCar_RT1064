@@ -5,35 +5,11 @@
 
 #include "zf_device_key.h"
 #include "screen.h"
+#include "OpenMV.h"
 
 // 立方体信息显示菜单页面
 
 #define CUBE_INFO_PAGE_LIST_SIZE 12 // 立方体信息页面列表大小
-
-typedef enum _CubeFaceInfoClass {
-    CUBE_INFO_CLASS_NUMBER = 0, // 数字
-    CUBE_INFO_CLASS_WRENCH, // 扳手
-    CUBE_INFO_CLASS_SOLDERING_IRON, // 电烙铁
-    CUBE_INFO_CLASS_DRILL, // 电钻
-    CUBE_INFO_CLASS_TAPE_MEASURE, // 卷尺
-    CUBE_INFO_CLASS_SCREWDRIVER, // 螺丝刀
-    CUBE_INFO_CLASS_PLIERS, // 钳子
-    CUBE_INFO_CLASS_OSCILLOSCOPE, // 示波器
-    CUBE_INFO_CLASS_MULTIMETER, // 万用表
-    CUBE_INFO_CLASS_PRINTER, // 打印机
-    CUBE_INFO_CLASS_KEYBOARD, // 键盘
-    CUBE_INFO_CLASS_PHONE, // 手机
-    CUBE_INFO_CLASS_MOUSE, // 鼠标
-    CUBE_INFO_CLASS_HEADSET, // 头戴式耳机
-    CUBE_INFO_CLASS_MONITOR, // 显示器
-    CUBE_INFO_CLASS_SPEAKER // 音响
-} CubeFaceInfoClass;
-
-typedef struct _CubeFaceInfo {
-    uint8 valid; // 是否有效 1：有效 0：无效
-    CubeFaceInfoClass class; // 立方体类别
-    uint8 number; // 数字
-} CubeFaceInfo;
 
 extern uint16 cube_info_page_id;  // 立方体信息页面ID
 extern uint16 cube_info_table_id; // 立方体信息表格ID

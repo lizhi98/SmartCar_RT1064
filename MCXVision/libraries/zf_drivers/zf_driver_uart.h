@@ -38,7 +38,7 @@
 
 #define USER_USART                  LPUART5
 #define USER_USART_NUM              5u
-#define USER_USART_BAUDRATE         115200u
+#define USER_USART_BAUDRATE         9600u
 
 void user_uart_init(void);
 void user_uart_putchar(char c);

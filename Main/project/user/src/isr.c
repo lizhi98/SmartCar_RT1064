@@ -34,6 +34,7 @@ void PIT_IRQHandler(void)
     if(pit_flag_get(PIT_CH3))
     {
         mcx_cube_data_handle_pit_call();
+        art_cube_data_handle_pit_call();
         // correspond_host_cmd_pit_call();
         pit_flag_clear(PIT_CH3);
     }
@@ -49,6 +50,7 @@ void LPUART1_IRQHandler(void)
     #if DEBUG_UART_USE_INTERRUPT                        // 如果开启 debug 串口中断
         debug_interrupr_handler();                      // 调用 debug 串口接收处理函数 数据会被 debug 环形缓冲区读取
     #endif                                              // 如果修改了 DEBUG_UART_INDEX 那这段代码需要放到对应的串口中断去
+        art_receive_data_callback(); // 调用 OpenART 接收数据回调函数
     }
 
     LPUART_ClearStatusFlags(LPUART1, kLPUART_RxOverrunFlag);    // 不允许删除

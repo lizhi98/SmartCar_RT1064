@@ -5,26 +5,6 @@
 #include "mt_image.h"
 #include "gyroscope.h"
 
-char * cube_picture_class_name[] = {
-    "数字"  // 会显示具体数字
-    "扳手",
-    "电烙铁",
-    "电钻",
-    "卷尺",
-    "螺丝刀",
-    "钳子",
-    "示波器",
-    "万用表",
-    "打印机",
-    "键盘",
-    "手机",
-    "鼠标",
-    "头戴式耳机",
-    "显示器",
-    "音响",
-};
-
-
 uint16 cube_info_page_id = 0; // 立方体信息页面ID
 uint16 cube_info_table_id = 0; // 立方体信息表格ID
 
@@ -34,6 +14,7 @@ CubeFaceInfo    cube_info_list[CUBE_INFO_PAGE_LIST_SIZE] = {0}; // 立方体信�
 // 调试信息显示
 uint16 debug_info_page_id = 0; // 调试信息页面ID
 uint16 debug_info_table_id = 0; // 调试信息表格ID
+uint8  debug_info_page_heading_setted = 0; // 是否设置了调试信息页面标题
 
 // 图像显示
 uint16 image_page_id = 0; // 图像显示页面ID
@@ -73,7 +54,7 @@ void menu_init(void) {
     ips200pro_table_set_col_width(debug_info_table_id, 2, 140); // 设置第二列宽度为150
 }
 
-/*
+/**
     * @brief 添加下一个立方体的信息
     * @param class 立方体信息类别
     * @param number 若立方体为标数字的立方体，则此参数为具体数字
@@ -89,12 +70,12 @@ void cube_info_add(CubeFaceInfoClass class, uint8 number){
     cube_info_list_next_index++;
 }
 
-/*
-    * @brief 刷新立方体信息表格
-    * @note 将立方体信息表格中的内容刷新为当前的立方体信息列表
-    *       立方体类别显示在第一列，数字或类别名称显示在第二列
-    *       第一行是标题行，从第二行开始显示立方体信息
-*/
+/**
+ * @brief 刷新立方体信息表格
+ * @note 将立方体信息表格中的内容刷新为当前的立方体信息列表
+ *       立方体类别显示在第一列，数字或类别名称显示在第二列
+ *       第一行是标题行，从第二行开始显示立方体信息
+ */
 void cube_info_table_flash(){
     if (cube_info_table_id == 0) {
         return; // 如果表格ID为0，说明没有初始化，则不进行刷新
@@ -109,7 +90,7 @@ void cube_info_table_flash(){
         }
         ips200pro_table_cell_printf(cube_info_table_id, i + 1, 1, "%u", i + 1); // 显示立方体类别
         // 判断是否为数字
-        if (cube_info_list[i].class == CUBE_INFO_CLASS_NUMBER) {
+        if (cube_info_list[i].class == number) {
             ips200pro_table_cell_printf(cube_info_table_id, i + 1, 2, "%u", cube_info_list[i].number); // 显示数字
         } else {
             ips200pro_table_cell_printf(cube_info_table_id, i + 1, 2, "%s", cube_picture_class_name[cube_info_list[i].class]); // 显示类别名称
@@ -129,27 +110,33 @@ void debug_info_table_flash() {
     if (debug_info_table_id == 0) {
         return; // 如果表格ID为0，说明没有初始化，则不进行刷新
     }
-    ips200pro_table_cell_printf(debug_info_table_id, 1, 1, "速度"); // 第一行标题
+    if (!debug_info_page_heading_setted){
+        ips200pro_table_cell_printf(debug_info_table_id, 1, 1, "速度");
+        ips200pro_table_cell_printf(debug_info_page_id,  2, 1, "占空比%%");
+        ips200pro_table_cell_printf(debug_info_page_id,  3, 1, "Offset");
+        ips200pro_table_cell_printf(debug_info_page_id,  4, 1, "陀螺仪");
+        ips200pro_table_cell_printf(debug_info_page_id,  5, 1, "图像时间");
+        ips200pro_table_cell_printf(debug_info_page_id,  6, 1, "赛道元素");
+        ips200pro_table_cell_printf(debug_info_page_id,  7, 1, "运动模式");
+        ips200pro_table_cell_printf(debug_info_page_id,  8, 1, "ART");
+        ips200pro_table_cell_printf(debug_info_page_id,  9, 1, "MCX");
+        debug_info_page_heading_setted = 1; // 设置了标题
+    }
     ips200pro_table_cell_printf(debug_info_table_id, 1, 2, "%3d %3d %3d", motors[0].current_speed, motors[1].current_speed, motors[2].current_speed); // 显示电机速度
-    ips200pro_table_cell_printf(debug_info_page_id,  2, 1, "占空比%%");
     ips200pro_table_cell_printf(debug_info_page_id,  2, 2, "%3d %3d %3d", motors[0].pwm_duty / 100, motors[1].pwm_duty / 100, motors[2].pwm_duty / 100);
-    ips200pro_table_cell_printf(debug_info_page_id,  3, 1, "Offset");
     ips200pro_table_cell_printf(debug_info_page_id,  3, 2, "%f", image_result.offset);
-    ips200pro_table_cell_printf(debug_info_page_id,  4, 1, "陀螺仪");
     ips200pro_table_cell_printf(debug_info_page_id,  4, 2, "%6.1f %5.0f", gyroscope_result.gyro_z, gyroscope_result.angle_z); // 显示陀螺仪数据);
-    ips200pro_table_cell_printf(debug_info_page_id,  5, 1, "图像时间");
     ips200pro_table_cell_printf(debug_info_page_id,  5, 2, "w:%u p:%u", image_process_wait_next_time, image_process_time);
-    ips200pro_table_cell_printf(debug_info_page_id,  6, 1, "赛道元素");
     ips200pro_table_cell_printf(debug_info_page_id,  6, 2, "%u", image_result.element_type); // 显示赛道元素类型
-    ips200pro_table_cell_printf(debug_info_page_id,  7, 1, "运动模式");
     ips200pro_table_cell_printf(debug_info_page_id,  7, 2, "%u", motion_control.motion_mode); // 显示运动模式
+    ips200pro_table_cell_printf(debug_info_page_id,  8, 2, "%s %u", get_name_of_cube_class(current_cube_face_info.class), current_cube_face_info.number); // 显示 OpenART 接收数据计数
 }
 
 void image_show_flash() {
     if (image_page_id == 0) {
         return; // 如果页面ID为0，说明没有初始化，则不进行刷新
     }
-    ips200pro_image_display(image_image_id, mt9v03x_image[0], 188, 120, IMAGE_GRAYSCALE, otsu_threshold); // 显示图像
+    ips200pro_image_display(image_image_id, mt9v03x_image[0], 188, 120, IMAGE_GRAYSCALE, 0); // 显示图像
 }
 
 void change_page_to_image(void){
