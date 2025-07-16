@@ -48,7 +48,6 @@ int main(void)
 #ifdef CUBE_DEBUG
         ips200_show_scc8660(scc8660_image_buff);
         if (cube_info.exist) {
-            // ips200_full(RGB565_WHITE);
             int xc = cube_info.x_center;
             int yc = cube_info.y_center;
             int x1 = cube_info.x_min;

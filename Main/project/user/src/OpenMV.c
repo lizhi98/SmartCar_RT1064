@@ -40,20 +40,17 @@ uint8        art_data_buffer[ART_DATA_LENGTH];
 
 vuint8       art_uart_interrupt_data_temp = 0; // 中断接收的单字节数据缓存
 
-/*
-* 函数简介     art模块UART通信初始化函数
-* 参数说明     void
-* 返回参数     0:成功 1:失败
-* 使用示例     art_init();
-* 备注信息     初始化art的串口,fifo和接收中断
+/**
+ * 函数简介     art模块UART通信初始化函数
+ * 参数说明     void
+ * 返回参数     0:成功 1:失败
+ * 使用示例     art_init();
+ * 备注信息     初始化art的串口,fifo和接收中断
 */
 uint8 art_init(void) {
     // 初始化UART
     uart_init(ART_UART_N,ART_UART_BAUD,ART_UART_TX,ART_UART_RX);
-    // 初始化FIFO
-    // if(fifo_init(&art_uart_fifo, FIFO_DATA_8BIT, art_uart_fifo_buffer, ART_READ_BUFFER_LEN) != FIFO_SUCCESS) {
-    //     return 1; // FIFO初始化失败
-    // }
+
     art_init_flag = 1; // 设置初始化标志位
     return 0;
 }

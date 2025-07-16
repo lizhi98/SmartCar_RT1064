@@ -5,6 +5,8 @@
 #include "mt_image.h"
 #include "gyroscope.h"
 
+uint16 current_page_id = 0; // 当前页面ID
+
 uint16 cube_info_page_id = 0; // 立方体信息页面ID
 uint16 cube_info_table_id = 0; // 立方体信息表格ID
 
@@ -52,6 +54,8 @@ void menu_init(void) {
     ips200pro_table_set_col_width(cube_info_table_id,  2, 140); // 设置第二列宽度为140
     ips200pro_table_set_col_width(debug_info_table_id, 1, 80);  // 设置第一列宽度为50
     ips200pro_table_set_col_width(debug_info_table_id, 2, 140); // 设置第二列宽度为150
+
+    current_page_id = image_image_id; // 设置当前页面为图像显示
 }
 
 /**
@@ -100,14 +104,16 @@ void cube_info_table_flash(){
 
 void change_page_to_debug_info() {
     ips200pro_page_switch(debug_info_page_id, PAGE_ANIM_ON); // 切换到指定页面
+    current_page_id = debug_info_page_id; // 设置当前页面为调试信息页面
 }
 
 void change_page_to_cube_info() {
     ips200pro_page_switch(cube_info_page_id, PAGE_ANIM_ON); // 切换到指定页面
+    current_page_id = cube_info_page_id; // 设置当前页面为立方体信息页面
 }
 
 void debug_info_table_flash() {
-    if (debug_info_table_id == 0) {
+    if (debug_info_table_id == 0 || current_page_id != debug_info_page_id) {
         return; // 如果表格ID为0，说明没有初始化，则不进行刷新
     }
     if (!debug_info_page_heading_setted){
@@ -130,10 +136,11 @@ void debug_info_table_flash() {
     ips200pro_table_cell_printf(debug_info_page_id,  6, 2, "%u", image_result.element_type); // 显示赛道元素类型
     ips200pro_table_cell_printf(debug_info_page_id,  7, 2, "%u", motion_control.motion_mode); // 显示运动模式
     ips200pro_table_cell_printf(debug_info_page_id,  8, 2, "%s %u", get_name_of_cube_class(current_cube_face_info.class), current_cube_face_info.number); // 显示 OpenART 接收数据计数
+    ips200pro_table_cell_printf(debug_info_page_id,  9, 2, "%u p:%u", cube_info.state, cube_info.p_count); // 显示 MCX_Vision 接收到的立方体大小(像素数量)
 }
 
 void image_show_flash() {
-    if (image_page_id == 0) {
+    if (image_page_id == 0 || current_page_id != image_page_id) {
         return; // 如果页面ID为0，说明没有初始化，则不进行刷新
     }
     ips200pro_image_display(image_image_id, mt9v03x_image[0], 188, 120, IMAGE_GRAYSCALE, 0); // 显示图像

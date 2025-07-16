@@ -1,8 +1,6 @@
 #include "zf_common_headfile.h"
 
 #include "main.h"
-
-
 // // 斑马线有效标志
 uint8 zebra_valid_flag = 0;
 
@@ -45,13 +43,14 @@ int main(void)
     // 初始化时间变量
     uint32 image_process_end_time = 0;
     uint32 image_process_start_time = 0;
+    uint32 page_flash_count = 0;
     while (1)
     {
         if(motion_control.motion_mode == LINE_FOLLOW){
             if(mt9v03x_finish_flag){
                 image_process_start_time = timer_get(GPT_TIM_1); // 获取图像处理开始时间
                 image_process_wait_next_time = image_process_start_time - image_process_end_time;
-                // process_image(mt9v03x_image); // 处理图像
+                process_image(mt9v03x_image); // 处理图像
                 image_process_end_time = timer_get(GPT_TIM_1); // 获取图像处理结束时间
                 image_process_time = image_process_end_time - image_process_start_time; // 计算图像处理时间
                 // seekfree_assistant_camera_send(); // 发送图像到上位机
@@ -59,7 +58,11 @@ int main(void)
                 mt9v03x_finish_flag = 0; // 清除图像采集完成标志位
             }
         }
-        debug_info_table_flash();
+        if (page_flash_count++ >= 1000000) { // 每1000000次循环刷新一次页面
+            page_flash_count = 0; // 重置计数器
+            debug_info_table_flash();
+            cube_info_table_flash();
+        }
         motion_mode_calc();
         // ips200_show_int(0, 40, i++, 5); // 显示计数
         // correspond_send_info_to_host(); // 发送信息到上位机

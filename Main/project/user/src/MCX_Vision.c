@@ -11,7 +11,7 @@ CubeInfo cube_info ={
     .state = CUBE_OUTSIDE_VIEW,
     .x_center = 0,
     .y_center = 0,
-    .p_count = 0
+    .p_count = 0,
 };
 
 // MCX_Vision 数据缓冲和标志位
