@@ -435,11 +435,6 @@
               <FilePath>..\user\src\MCX_Vision.c</FilePath>
             </File>
             <File>
-              <FileName>OpenMV.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\user\src\OpenMV.c</FilePath>
-            </File>
-            <File>
               <FileName>motion_control.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\user\src\motion_control.c</FilePath>
@@ -453,6 +448,16 @@
               <FileName>pid_control.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\user\src\pid_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>OpenART.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\OpenART.c</FilePath>
+            </File>
+            <File>
+              <FileName>grayscale.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\src\grayscale.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -510,11 +515,6 @@
               <FilePath>..\user\inc\MCX_Vision.h</FilePath>
             </File>
             <File>
-              <FileName>OpenMV.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\user\inc\OpenMV.h</FilePath>
-            </File>
-            <File>
               <FileName>motion_control.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\inc\motion_control.h</FilePath>
@@ -528,6 +528,16 @@
               <FileName>pid_control.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\inc\pid_control.h</FilePath>
+            </File>
+            <File>
+              <FileName>OpenART.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\OpenART.h</FilePath>
+            </File>
+            <File>
+              <FileName>grayscale.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\inc\grayscale.h</FilePath>
             </File>
           </Files>
         </Group>

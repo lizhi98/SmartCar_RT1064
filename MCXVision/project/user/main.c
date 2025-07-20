@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 
-#define CUBE_DEBUG
+// #define CUBE_DEBUG
 
 #define LED_WHITE(x)    gpio_set_level(gpio_led_white,  (uint8)x)
 

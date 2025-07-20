@@ -13,7 +13,6 @@
 
 #include "motion_control_new.h"
 #include "gyroscope.h"
-#include "main.h"
 
 // WIRELESS CONFIG
 #define WIFI_SSID                               "Koishi_SmartCar"

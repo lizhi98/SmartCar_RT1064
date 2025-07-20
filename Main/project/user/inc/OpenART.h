@@ -23,6 +23,11 @@
 #define ART_BUFFER_TAIL                 ']'
 #define ART_DATA_LENGTH                 24
 
+typedef enum _CubePushDir{
+    CUBE_PUSH_DIR_LEFT,
+    CUBE_PUSH_DIR_RIGHT,
+} CubePushDir;
+
 typedef enum _CubeFaceInfoClass {
     electrodrill,       // 电钻
     headphones,         // 头戴式耳机
@@ -63,5 +68,7 @@ void art_receive_data_interrupt_enable();
 void art_receive_data_interrupt_disable();
 void art_cube_data_handle_pit_call();
 void art_uart_data_handle_pit_init();
+
+CubePushDir get_cube_push_dir(CubeFaceInfoClass class, uint8 number);
 
 #endif

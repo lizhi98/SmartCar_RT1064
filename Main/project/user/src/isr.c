@@ -2,6 +2,13 @@
 #include "zf_common_debug.h"
 #include "isr.h"
 
+#include "motion_control_new.h"
+#include "gyroscope.h"
+#include "correspond.h"
+#include "MCX_Vision.h"
+#include "OpenART.h"
+#include "grayscale.h"
+
 void CSI_IRQHandler(void)
 {
     CSI_DriverIRQHandler();     // 调用SDK自带的中断函数 这个函数最后会调用我们设置的回调函数
@@ -13,7 +20,7 @@ void PIT_IRQHandler(void)
     if(pit_flag_get(PIT_CH0))
     {
         gyroscope_pit_callback();
-
+        grayscale_read();
         pit_flag_clear(PIT_CH0);
     }
     
@@ -33,6 +40,7 @@ void PIT_IRQHandler(void)
     
     if(pit_flag_get(PIT_CH3))
     {
+        key_scanner(); // 扫描按键
         mcx_cube_data_handle_pit_call();
         art_cube_data_handle_pit_call();
         // correspond_host_cmd_pit_call();

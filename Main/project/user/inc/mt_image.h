@@ -35,6 +35,8 @@
 
 typedef uint8 (*Image)[REAL_WIDTH];
 
+extern uint8 image_buffer[HEIGHT][REAL_WIDTH];
+
 typedef enum ElementType_t {
     Zebra,
     CurveLeft,
@@ -75,7 +77,7 @@ extern uint8 otsu_threshold;
 #define OTSU_THRESHOLD_DELTA 4
 
 #define EMPTY 0
-#define ROAD 1
+#define ROAD 255
 #define BOUND 2
 #define MID_LINE 3
 #define BOUND_APP 4

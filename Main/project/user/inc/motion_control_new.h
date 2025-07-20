@@ -10,8 +10,11 @@
 #include "main.h"
 #include "mt_image.h"
 #include "MCX_Vision.h"
-#include "OpenMV.h"
+#include "OpenART.h"
 #include "pid_control.h"
+#include "menu.h"
+#include "gyroscope.h"
+#include "grayscale.h"
 
 #define MOTOR_H_PI      3.14159
 #define COS_PI_D_6      0.86603
@@ -29,6 +32,8 @@
 
 #define MOTOR_PID_PIT               PIT_CH1
 #define MOTOR_PID_PIT_TIME          2
+
+#define IMAGE_IDENTIFY_WAIT_TIME    3000 // 立方体识别等待时间，单位ms
 
 typedef enum _MotorIndex
 {
@@ -62,10 +67,10 @@ typedef enum _MotionMode{
     LINE_FOLLOW,
     CUBE_DISTANCE_POSITION,
     CUBE_IDENTIFY,
-    CUBE_ANGLE_POSITION_LEFT,
-    CUBE_ANGLE_POSITION_RIGHT,
+    CUBE_ANGLE_POSITION,
     CUBE_PUSH,
-    LINE_BACK,
+    LINE_POSITION_BACK,
+    LINE_ANGLE_BACK,
 }MotionMode;
 
 typedef struct _MotionControl
@@ -73,6 +78,7 @@ typedef struct _MotionControl
     volatile MotionMode  motion_mode;
     volatile MotionMode  last_motion_mode;
     volatile float       line_gyro_angle_z;
+    volatile float       target_gyro_angle_z; // 目标陀螺仪角度
 }MotionControl;
 
 // 编码器获取值滤波
@@ -90,6 +96,8 @@ extern Motor motors[MOTOR_INDEX_MAX_PLUS_ONE];
 extern uint8 motor_rotation_translation_pid_calc_flag;
 extern uint8 motor_translation_angular_v_pid_calc_flag;
 extern uint8 motor_speed_pid_calc_flag;
+
+extern CubePushDir cube_push_dir;
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);

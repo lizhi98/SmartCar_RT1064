@@ -60,6 +60,13 @@
         "ffconf.h": "c",
         "zf_device_ips200pro.h": "c",
         "zf_device_imu660ra.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "pid_control.h": "c",
+        "openart.h": "c",
+        "grayscale.h": "c",
+        "zf_device_config.h": "c",
+        "new": "c",
+        "string": "c",
+        "variant": "c"
     }
 }

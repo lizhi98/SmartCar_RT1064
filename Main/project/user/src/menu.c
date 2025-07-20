@@ -4,11 +4,15 @@
 #include "motion_control_new.h"
 #include "mt_image.h"
 #include "gyroscope.h"
+#include "grayscale.h"
 
 uint16 current_page_id = 0; // 当前页面ID
 
+// 立方体信息显示
 uint16 cube_info_page_id = 0; // 立方体信息页面ID
 uint16 cube_info_table_id = 0; // 立方体信息表格ID
+uint8  cube_info_table_selected_row = 1; // 立方体信息表格选中行
+// uint8  cube_info_table_selected_col = 1; // 立方体信息表格选中列
 
 uint16          cube_info_list_next_index = 0;
 CubeFaceInfo    cube_info_list[CUBE_INFO_PAGE_LIST_SIZE] = {0}; // 立方体信息列表，初始为空
@@ -103,13 +107,18 @@ void cube_info_table_flash(){
 }
 
 void change_page_to_debug_info() {
-    ips200pro_page_switch(debug_info_page_id, PAGE_ANIM_ON); // 切换到指定页面
+    ips200pro_page_switch(debug_info_page_id, PAGE_ANIM_OFF); // 切换到指定页面
     current_page_id = debug_info_page_id; // 设置当前页面为调试信息页面
 }
 
 void change_page_to_cube_info() {
-    ips200pro_page_switch(cube_info_page_id, PAGE_ANIM_ON); // 切换到指定页面
+    ips200pro_page_switch(cube_info_page_id, PAGE_ANIM_OFF); // 切换到指定页面
     current_page_id = cube_info_page_id; // 设置当前页面为立方体信息页面
+}
+
+void change_page_to_image(void){
+    ips200pro_page_switch(image_page_id, PAGE_ANIM_OFF); // 切换到图像显示页面
+    current_page_id = image_page_id; // 设置当前页面为图像显示页面
 }
 
 void debug_info_table_flash() {
@@ -126,6 +135,7 @@ void debug_info_table_flash() {
         ips200pro_table_cell_printf(debug_info_page_id,  7, 1, "运动模式");
         ips200pro_table_cell_printf(debug_info_page_id,  8, 1, "ART");
         ips200pro_table_cell_printf(debug_info_page_id,  9, 1, "MCX");
+        ips200pro_table_cell_printf(debug_info_page_id, 10, 1, "灰度");
         debug_info_page_heading_setted = 1; // 设置了标题
     }
     ips200pro_table_cell_printf(debug_info_table_id, 1, 2, "%3d %3d %3d", motors[0].current_speed, motors[1].current_speed, motors[2].current_speed); // 显示电机速度
@@ -136,16 +146,49 @@ void debug_info_table_flash() {
     ips200pro_table_cell_printf(debug_info_page_id,  6, 2, "%u", image_result.element_type); // 显示赛道元素类型
     ips200pro_table_cell_printf(debug_info_page_id,  7, 2, "%u", motion_control.motion_mode); // 显示运动模式
     ips200pro_table_cell_printf(debug_info_page_id,  8, 2, "%s %u", get_name_of_cube_class(current_cube_face_info.class), current_cube_face_info.number); // 显示 OpenART 接收数据计数
-    ips200pro_table_cell_printf(debug_info_page_id,  9, 2, "%u p:%u", cube_info.state, cube_info.p_count); // 显示 MCX_Vision 接收到的立方体大小(像素数量)
+    ips200pro_table_cell_printf(debug_info_page_id,  9, 2, "%u %u %u", cube_info.state, cube_info.p_count, mcx_data_time); // 显示 MCX_Vision 接收到的立方体大小(像素数量)
+    ips200pro_table_cell_printf(debug_info_page_id, 10, 2, "%u", grayscale_data); // 显示灰度传感器数据
 }
 
 void image_show_flash() {
     if (image_page_id == 0 || current_page_id != image_page_id) {
         return; // 如果页面ID为0，说明没有初始化，则不进行刷新
     }
-    ips200pro_image_display(image_image_id, mt9v03x_image[0], 188, 120, IMAGE_GRAYSCALE, 0); // 显示图像
+    ips200pro_image_display(image_image_id, image_buffer, 188, 120, IMAGE_GRAYSCALE, 0); // 显示图像
 }
 
-void change_page_to_image(void){
-    ips200pro_page_switch(image_page_id, PAGE_ANIM_ON); // 切换到图像显示页面
+void key_change_page(key_index_enum key_n) {
+    if (key_get_state(key_n) != KEY_RELEASE) {
+        // 按顺序切换页面
+        if (current_page_id == image_page_id) {
+            change_page_to_debug_info(); // 切换到调试信息页面
+        } else if (current_page_id == debug_info_page_id) {
+            change_page_to_cube_info(); // 切换到立方体信息页面
+        } else {
+            change_page_to_image(); // 切换到图像显示页面
+        }
+        // 复原按键状态
+        key_clear_state(key_n); // 清除按键状态
+    }
+}
+
+void key_select_next_table_row(key_index_enum key_change) {
+    if (key_get_state(key_change) != KEY_RELEASE){
+        if (current_page_id == cube_info_page_id) {
+            if (cube_info_table_selected_row > CUBE_INFO_PAGE_LIST_SIZE || cube_info_table_selected_row <= 0) {
+                cube_info_table_selected_row = 1; // 回到第一行
+            }
+            ips200pro_table_select(cube_info_table_id, cube_info_table_selected_row, 1); // 设置选中行
+            cube_info_table_selected_row++;
+        } 
+        // else if (current_page_id == debug_info_page_id) {
+        //     debug_info_table_selected_row++;
+        //     if (debug_info_table_selected_row >= 12) {
+        //         debug_info_table_selected_row = 1; // 回到第一行
+        //     }
+        //     ips200pro_table_select(debug_info_table_id, debug_info_table_selected_row, 0x00); // 设置选中行
+        // }
+        // 复原按键状态
+        key_clear_state(key_change); // 清除按键状态
+    }
 }

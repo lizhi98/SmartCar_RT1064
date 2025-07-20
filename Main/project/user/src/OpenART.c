@@ -1,4 +1,4 @@
-#include "OpenMV.h"
+#include "OpenART.h"
 
 vuint8 art_init_flag = 0; // art模块初始化标志位
 vuint8 art_data_recv_finish_flag = 0; // art模块数据接收完成标志位
@@ -104,3 +104,23 @@ void art_uart_data_handle_pit_init(){
     pit_ms_init(PIT_CH3, 400); // art_Vision 定时器初始化
 }
 
+CubePushDir get_cube_push_dir(CubeFaceInfoClass class, uint8 number) {
+    CubePushDir dir = CUBE_PUSH_DIR_LEFT; // 默认推箱子方向为左
+    // 根据类别和数字获取推箱子方向
+    if (class == number) {
+        if (number % 2 != 0) {
+            dir = CUBE_PUSH_DIR_LEFT; // 奇数数字向左推
+        } else {
+            dir = CUBE_PUSH_DIR_RIGHT; // 偶数数字向右推
+        }
+    } else {
+        if (class == mouse   || class == keyboard || class == monitor || class == headphones ||
+            class == speaker || class == printer  || class == mobile_phone
+        ) {
+            dir = CUBE_PUSH_DIR_LEFT; // 电子外设向左推
+        } else {
+            dir = CUBE_PUSH_DIR_RIGHT; // 常用工具向右推
+        }
+    }
+    return dir; // 返回推箱子方向
+}

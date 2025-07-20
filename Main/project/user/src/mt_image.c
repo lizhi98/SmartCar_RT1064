@@ -34,6 +34,7 @@ uint8 image_buffer[HEIGHT][REAL_WIDTH] = { 0 };
 
 void process_image(Image image) {
     memcpy(image_buffer, image, sizeof (uint8) * REAL_WIDTH * HEIGHT);
+    mt9v03x_finish_flag = 0;
     if (otsu_counter) {
         otsu_counter --;
     }
@@ -85,7 +86,7 @@ uint8 otsu_calc_threshold(Image image, uint8 min, uint8 max) {
 void otsu_binarize_image(Image image, uint8 threshould) {
     for (uint8 i = 0; i < HEIGHT; i ++)
         for (uint8 j = 0; j < WIDTH; j ++)
-            image[i][j] = image[i][j] > threshould;
+            image[i][j] = image[i][j] > threshould ? 255 : 0;
 }
 
 const uint8 STD_WIDTH[HEIGHT] = {

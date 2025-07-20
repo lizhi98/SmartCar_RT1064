@@ -1,5 +1,7 @@
 #include "correspond.h"
 
+#include "main.h"
+
 // WIFI_UART数据接收缓冲区
 uint8 wifi_uart_read_buffer_temp[WIFI_UART_READ_BUFFER_TEMP_SIZE] = {0};
 char  host_cmd_recv_temp[HOST_CMD_SIZE_PLUS_ONE]                  = {0};

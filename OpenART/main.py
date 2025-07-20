@@ -15,7 +15,7 @@ clock = time.clock()
 # 定义分类模型和数字识别模型标签文件的路径
 model_object_path = '/sd/model_object_2.tflite' # 定义分类模型的路径
 label_object_path = '/sd/label_object.txt' # 定义分类标签的路径
-model_number_path = '/sd/model_number_1.tflite' # 定义数字识别模型的路径
+model_number_path = '/sd/model_number_7.tflite' # 定义数字识别模型的路径
 label_number_path = '/sd/label_number.txt' # 定义数字识别标签的路径
 
 # 先加载分类模型和数字识别模型的标签
@@ -25,7 +25,7 @@ model_object = tf.load(model_object_path, load_to_fb=True) # 加载分类模型
 model_number = tf.load(model_number_path, load_to_fb=True) # 加载数字识别模型
 
 # 延时5秒，等待RT1064
-time.sleep(5)
+# time.sleep(5)
 
 # 打开串口
 uart_rt1064 = UART(2, baudrate=9600)
@@ -80,14 +80,14 @@ while True:
     object_results = classify(model_object, img_area, labels=labels_object)
     first_result_object = object_results[0]
     serial.set_object_result(first_result_object)
-    # print('=' * 20)
-    # print_results(object_results, n=5)
+    print('=' * 20)
+    print_results(object_results, n=5)
 
     if first_result_object[0] == 'number':
         number_results = classify(model_number, img_area, labels=labels_number)
         serial.set_number_result(number_results[0])
-        # print('-' * 20)
-        # print_results(number_results, n=3)
+        print('-' * 20)
+        print_results(number_results, n=3)
     else:
         serial.set_number_placeholder()
 

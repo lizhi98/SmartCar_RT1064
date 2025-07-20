@@ -95,6 +95,13 @@ uint8 motor_rotation_translation_pid_calc_flag = 0;
 uint8 motor_translation_angular_v_pid_calc_flag = 0;
 uint8 motor_speed_pid_calc_flag = 0;
 
+uint32 image_identify_wait_start_time; // 立方体识别等待开始时间
+uint8  image_identify_wait_flag = 0; // 立方体识别等待标志位
+
+CubePushDir cube_push_dir = CUBE_PUSH_DIR_LEFT; // 立方体推方向
+
+uint8  motion_control_target_angle_z_setted_flag = 0; // 立方体角度定位目标角度设置标志位
+
 // 启动所有电机PWM通道输出，占空比为0
 void motor_all_init(void){
     for(int i = 0; i < MOTOR_INDEX_MAX_PLUS_ONE; i++){
@@ -208,48 +215,48 @@ void motor_speed_pid_calc_apply(){
 // 中间环控制 x -> v
 void motor_translation_angular_v_pid_calc_apply(){
     // translation
-    float translation_forward_target_x = 0.0f, translation_left_target_x = 0.0f;
-    float target_angular = 0.0f;
-    // 分情况获取target
-    switch(motion_control.motion_mode){
-        case LINE_FOLLOW:
-            translation_forward_target_x = translation_forward_pid.output;  // 目标平移距离
-            translation_left_target_x    = translation_left_pid.output;     // 目标平移距离
-            target_angular               = rotation_pid.output;             // 目标旋转角度
-            break;
-        case CUBE_DISTANCE_POSITION:
-            translation_forward_target_x = translation_forward_pid.output;  // 目标平移距离
-            translation_left_target_x = translation_left_pid.output; // 目标平移距离
-            target_angular = 0; // TODO
-            break;
-        case CUBE_ANGLE_POSITION_LEFT:
-        case CUBE_ANGLE_POSITION_RIGHT:
-            translation_forward_v_pid.output = 0.0f; // 推箱子时不需要前进
-            translation_left_v_pid.output = 30.0f;
-            angular_v_pid.output = 10.0f;
-            goto V_APPLY; // 直接跳转到V_APPLY
-            break;
-        case CUBE_PUSH:
-            translation_forward_pid.output = 30.0f; // 推箱子时前进30
-            translation_left_pid.output = 0.0f; // 推箱子时不需要左移
-            goto V_APPLY; // 直接跳转到V_APPLY
-            break;
-        case LINE_BACK:
-            translation_forward_v_pid.output = 0.0f; // 推箱子时不需要前进
-            translation_left_v_pid.output = 30.0f;
-            angular_v_pid.output = -10.0f;
-            goto V_APPLY; // 直接跳转到V_APPLY
-            break;
-        default:
-            translation_forward_target_x = 0.0f; 
-            translation_left_target_x = 0.0f;
-            target_angular = 0; // TODO
-    }
+    // float translation_forward_target_x = 0.0f, translation_left_target_x = 0.0f;
+    // float target_angular = 0.0f;
+    // // 分情况获取target
+    // switch(motion_control.motion_mode){
+    //     case LINE_FOLLOW:
+    //     case CUBE_DISTANCE_POSITION:
+    //     case CUBE_ANGLE_POSITION:
+    //         translation_forward_target_x = translation_forward_pid.output;  // 目标平移距离
+    //         translation_left_target_x    = translation_left_pid.output;     // 目标平移距离
+    //         target_angular               = rotation_pid.output;             // 目标旋转角度
+    //         break;
+    //     case CUBE_IDENTIFY:
+    //         translation_forward_v_pid.output = 0.0f; // 立方体识别时不需要前进
+    //         translation_left_v_pid.output = 0.0f; // 立方体识别时不需要左移
+    //         angular_v_pid.output = 0.0f; // 立方体识别时不需要旋转
+    //         goto V_APPLY; // 直接跳转到V_APPLY
+    //         break;
+    //     case CUBE_PUSH:
+    //         translation_forward_pid.output = 30.0f; // 推箱子时前进30
+    //         translation_left_pid.output = 0.0f; // 推箱子时不需要左移
+    //         goto V_APPLY; // 直接跳转到V_APPLY
+    //         break;
+    //     case LINE_POSITION_BACK:
+    //         translation_forward_v_pid.output = 0.0f; // 推箱子时不需要前进
+    //         translation_left_v_pid.output = 30.0f;
+    //         angular_v_pid.output = -10.0f;
+    //         goto V_APPLY; // 直接跳转到V_APPLY
+    //         break;
+    //     default:
+    //         translation_forward_target_x = 0.0f; 
+    //         translation_left_target_x = 0.0f;
+    //         target_angular = 0; // TODO
+    // }
     // 计算平移速度
-    PID_calculate(&translation_forward_v_pid, translation_forward_target_x, 0.0f); // 目标平移速度
-    PID_calculate(&translation_left_v_pid,    translation_left_target_x,    0.0f); // 目标平移速度
+    // PID_calculate(&translation_forward_v_pid, translation_forward_target_x, 0.0f); // 目标平移速度
+    // PID_calculate(&translation_left_v_pid,    translation_left_target_x,    0.0f); // 目标平移速度
+    // // 计算角速度
+    // PID_calculate(&angular_v_pid, target_angular, 0.0f); // 目标角速度
+    PID_calculate(&translation_forward_v_pid, translation_forward_pid.output, 0.0f); // 目标平移速度
+    PID_calculate(&translation_left_v_pid,    translation_left_pid.output,    0.0f); // 目标平移速度
     // 计算角速度
-    PID_calculate(&angular_v_pid, target_angular, 0.0f); // 目标角速度
+    PID_calculate(&angular_v_pid, rotation_pid.output, 0.0f); // 目标角速度
 V_APPLY:
     // 计算电机速度
     motors[LEFT].set_speed    =   (int32) (-translation_forward_v_pid.output * COS_PI_D_6 + translation_left_v_pid.output * SIN_PI_D_6 - angular_v_pid.output); // 左侧电机速度需要加上角速度
@@ -267,15 +274,15 @@ void motor_rotation_translation_pid_calc_apply(){
             {
                 case Normal:
                 case Cross:
-                    translation_forward_pid.output = 90;
+                    translation_forward_pid.output = 80;
                     translation_left_pid.output = 0;
                     break;
                 case Zebra:
-                    // translation_forward_pid.output = 0;
-                    // translation_left_pid.output = 0;
+                    translation_forward_pid.output = 0;
+                    translation_left_pid.output = 0;
                     break;
                 default:
-                    translation_forward_pid.output = 80;
+                    translation_forward_pid.output = 70;
                     translation_left_pid.output = 0;
                     break;
             }
@@ -288,25 +295,56 @@ void motor_rotation_translation_pid_calc_apply(){
             }
             PID_calculate(&rotation_pid, image_result.offset, 0);
             return;
+            break;
+        case CUBE_IDENTIFY:
+            // 立方体识别模式下，静止
+            translation_forward_pid.output = 0.0f;
+            translation_left_pid.output = 0.0f;
+            rotation_pid.output = 0.0f;
+            break;
         case CUBE_DISTANCE_POSITION:
-            translation_forward_pid.output = (22000.0 - (float)cube_info.p_count) / 1000.0;
-            translation_left_pid.output  =   (cube_info.x_center - 160)/ 4.0;
+            translation_forward_pid.output  = 1.0 * (20000.0 - cube_info.p_count) / 1000.0;
+            translation_left_pid.output     = (cube_info.x_center - 160) / 4.0;
+            // if(image_result.offset > 70){
+            //     image_result.offset = 70; // 限制偏移量
+            // }else if (image_result.offset < -70){
+            //     image_result.offset = -70; // 限制偏移量
+            // }
+            // PID_calculate(&rotation_pid, image_result.offset, 0);
+            rotation_pid.output = 0.0f; // 立方体距离定位模式下不需要旋转
             return;
             break;
-        case CUBE_ANGLE_POSITION_LEFT:
-        case CUBE_ANGLE_POSITION_RIGHT:
-            translation_forward_pid.output = 0.0f;
-            translation_left_pid.output  = 0.0f;
-            return;
+        case CUBE_ANGLE_POSITION:
+            if (motion_control.target_gyro_angle_z - gyroscope_result.angle_z > 0) {
+                // 顺时针旋转
+                translation_left_pid.output = 15.0f; // 左侧移动
+            } else {
+                translation_left_pid.output = -15.0f; // 右侧移动
+            }
+            translation_forward_pid.output = 0.0f; // 目标前进速度为0
+            rotation_pid.output = motion_control.target_gyro_angle_z - gyroscope_result.angle_z; // 自转
+            break;
         case CUBE_PUSH:
-        case LINE_BACK:
-            translation_forward_pid.output = 0.0f;
-            translation_left_pid.output  = 0.0f;
-            return;
+            translation_forward_pid.output = 30.0f; // 推箱子时前进30
+            translation_left_pid.output = 0.0f; // 推箱子时不需要左移
+            if (cube_info.state == CUBE_INSIDE_VIEW) {
+                rotation_pid.output = cube_info.x_center - CUBE_RIGHT_CENTER_X; // 推箱子时自转角度为箱子中心到右侧中心的偏移量
+            }
+            break;
+        case LINE_POSITION_BACK:
+            translation_forward_pid.output = -30.0f; // 后退30
+            break;
+        case LINE_ANGLE_BACK:
+            rotation_pid.output = motion_control.line_gyro_angle_z - gyroscope_result.angle_z; // 自转
+            break;
         default:
             translation_forward_pid.output = 0.0f;
             translation_left_pid.output  = 0.0f;
+            rotation_pid.output = 0.0f; // 默认不动
     }
+    // rotation_pid.output = 20.0f; // 自转 顺时针旋转为正
+    // translation_forward_pid.output = 0.0f;
+    // translation_left_pid.output  = 0.0f;
 }
 
 uint64 pit_count = 0;
@@ -341,7 +379,7 @@ void motion_mode_calc(){
     switch(motion_control.motion_mode){
         case LINE_FOLLOW:
             // 巡线模式下，判断是否看到了箱子
-            if(cube_info.state == CUBE_INSIDE_VIEW){
+            if (cube_info.state == CUBE_INSIDE_VIEW) {
                 // 先停车
                 // motor_all_stop();
                 motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
@@ -351,12 +389,12 @@ void motion_mode_calc(){
             break;
         case CUBE_DISTANCE_POSITION:
             // 立方体距离定位模式下，判断是否看到了箱子
-            if(cube_info.state == CUBE_OUTSIDE_VIEW){
+            if (cube_info.state == CUBE_OUTSIDE_VIEW) {
                 // 没有看到箱子，回到巡线模式
                 motion_control.motion_mode = LINE_FOLLOW;
                 return;
             }
-            if(abs(cube_info.x_center - 160) < 20 && fabs(22000.0 - (float)cube_info.p_count) < 2000.0){
+            if (abs(cube_info.x_center - 160) < 20 && abs(20000 - cube_info.p_count) < 1500) {
                 // 如果箱子在视野中心附近，进入立方体识别模式
                 motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
                 motion_control.motion_mode = CUBE_IDENTIFY;
@@ -364,29 +402,72 @@ void motion_mode_calc(){
             break;
         case CUBE_IDENTIFY:
             // 立方体识别模式下，判断是否看到了箱子
-            if(cube_info.state == CUBE_OUTSIDE_VIEW){
+            if (cube_info.state == CUBE_OUTSIDE_VIEW) {
                 // 没有看到箱子，回到巡线模式
+                image_identify_wait_flag = 0; // 重置等待标志
                 motion_control.motion_mode = LINE_FOLLOW;
                 return;
             }
-            motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
-            motion_control.motion_mode = CUBE_ANGLE_POSITION_LEFT; // 进入立方体角度定位模式
+            // 识别等待
+            if (!image_identify_wait_flag){
+                image_identify_wait_start_time = timer_get(GPT_TIM_1); // 获取等待开始时间
+                image_identify_wait_flag = 1; // 设置等待标志
+            } else {
+                if (timer_get(GPT_TIM_1) - image_identify_wait_start_time >= IMAGE_IDENTIFY_WAIT_TIME) {
+                    // 等待超过设定时间，首先添加识别结果
+                    cube_info_add(current_cube_face_info.class, current_cube_face_info.number);
+                    // 然后根据识别结果决定推离方向
+                    cube_push_dir = get_cube_push_dir(current_cube_face_info.class, current_cube_face_info.number);
+                    motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+                    image_identify_wait_flag = 0; // 重置等待标志
+                    motion_control.motion_mode = CUBE_ANGLE_POSITION; // 进入立方体角度定位模式
+                }
+            }
             break;
-        case CUBE_ANGLE_POSITION_LEFT:
-        case CUBE_ANGLE_POSITION_RIGHT:
-            system_delay_ms(3000);
-            motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
-            motion_control.motion_mode = CUBE_PUSH; // 进入推箱子模式
+        case CUBE_ANGLE_POSITION:
+            // 先记录赛道的角度
+            motion_control.line_gyro_angle_z = gyroscope_result.angle_z;
+            if (!motion_control_target_angle_z_setted_flag) {
+                if (cube_push_dir == CUBE_PUSH_DIR_LEFT) {
+                // 如果推离方向是左侧，应该绕到箱子右侧
+                    motion_control.target_gyro_angle_z = motion_control.line_gyro_angle_z - 90.0f; // 目标角度为当前角度减90度
+                } else if (cube_push_dir == CUBE_PUSH_DIR_RIGHT) {
+                    // 如果推离方向是右侧，应该绕到箱子左侧
+                    motion_control.target_gyro_angle_z = motion_control.line_gyro_angle_z + 90.0f; // 目标角度为当前角度加90度
+                }
+                motion_control_target_angle_z_setted_flag = 1; // 设置目标角度标志位
+            } else {
+                // 如果目标角度已经设置过了，判断角度定位完成标志
+                if (fabs(motion_control.target_gyro_angle_z - gyroscope_result.angle_z) < 5.0f) {
+                    motion_control_target_angle_z_setted_flag = 0; // 重置标志位
+                    // 角度定位完成，进入推箱子模式
+                    motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+                    motion_control.motion_mode = CUBE_PUSH; // 进入推箱子模式
+                }
+            }
             break;
         case CUBE_PUSH:
-            system_delay_ms(3000);
-            motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
-            motion_control.motion_mode = LINE_BACK; // 进入返回模式
+            // 推箱子模式下，判断是否出赛道
+            if (grayscale_data == GRAY_OUT_TRACK) {
+                motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+                motion_control.motion_mode = LINE_POSITION_BACK; // 出赛道，进入返回赛道模式
+                return;
+            }
             break;
-        case LINE_BACK:
-            system_delay_ms(4000);
-            motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
-            motion_control.motion_mode = LINE_FOLLOW; // 回到巡线模式
+        case LINE_POSITION_BACK:
+            // 返回赛道模式下，判断是否回到赛道
+            if (grayscale_data == GRAY_IN_TRACK) {
+                motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+                motion_control.motion_mode = LINE_ANGLE_BACK; // 回到巡线模式
+            }
+            break;
+        case LINE_ANGLE_BACK:
+            // 返回赛道模式下，判断是否回到赛道
+            if (fabs(gyroscope_result.angle_z - motion_control.line_gyro_angle_z) < 5.0f) {
+                // 如果回到赛道，回到巡线模式
+                motion_control.last_motion_mode = motion_control.motion_mode; // 记录上一个模式
+                motion_control.motion_mode = LINE_FOLLOW; // 回到巡线模式
+            }
             break;
         default:
             // 如果进入了未知模式，回到巡线模式

@@ -231,4 +231,28 @@
 //     motion_control.motion_mode = LINE_FOLLOW;
 // }
 
+// #include "zf_common_headfile.h"
 
+// #include "main.h"
+
+// // 斑马线有效标志
+// uint8 zebra_valid_flag = 0;
+
+// uint32 image_process_time = 0; // 图像处理时间
+// uint32 image_process_wait_next_time = 0; // 图像等待处理时间
+
+// int main(void)
+// {
+//     clock_init(SYSTEM_CLOCK_600M);
+//     system_delay_ms(1000);
+//     pwm_init(PWM2_MODULE0_CHB_C7, 17000, 2000);         // PWM 初始化
+//     gpio_init(C6, GPO, 0, GPO_PUSH_PULL); // GPIO 初始化
+//     // system_delay_ms(5000); // 延时等待 PWM 初始化完成
+//     // pwm_set_duty(PWM2_MODULE0_CHB_C7, 0); // 设置 PWM 占空比
+//     while(1) {
+//         // system_delay_ms(2000); 
+//         // pwm_set_duty(PWM2_MODULE1_CHA_C8, 5000); // 设置 PWM 占空比
+//         // system_delay_ms(2000); 
+//         // pwm_set_duty(PWM2_MODULE1_CHA_C8, 10000); // 设置 PWM 占空比
+//     }
+// }
