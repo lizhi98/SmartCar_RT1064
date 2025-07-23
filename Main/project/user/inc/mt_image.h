@@ -18,11 +18,11 @@
 #define PI 3.14159265
 #endif
 
-#ifndef max
-#define max(a, b) ((a) > (b) ? (a) : (b)) 
+#ifndef MAX
+#define MAX(_a, _b) ((_a) > (_b) ? (_a) : (_b))
 #endif
-#ifndef min
-#define min(a, b) ((a) < (b) ? (a) : (b))
+#ifndef MIN
+#define MIN(_a, _b) ((_a) < (_b) ? (_a) : (_b))
 #endif
 
 #define HEIGHT 120
@@ -62,7 +62,7 @@ typedef struct {
 } ImageResult;
 
 void process_image(Image image);
-uint8 otsu_calc_threshold(Image image, uint8 min, uint8 max);
+uint8 otsu_calc_threshold(Image image, uint8 MIN, uint8 MAX);
 void otsu_binarize_image(Image image, uint8 threshould);
 void search(Image image);
 

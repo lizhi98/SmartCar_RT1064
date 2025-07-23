@@ -274,7 +274,7 @@ void motor_rotation_translation_pid_calc_apply(){
             {
                 case Normal:
                 case Cross:
-                    translation_forward_pid.output = 80;
+                    translation_forward_pid.output = param_straight_pid_output;
                     translation_left_pid.output = 0;
                     break;
                 case Zebra:
@@ -282,7 +282,7 @@ void motor_rotation_translation_pid_calc_apply(){
                     translation_left_pid.output = 0;
                     break;
                 default:
-                    translation_forward_pid.output = 70;
+                    translation_forward_pid.output = param_curve_pid_output;
                     translation_left_pid.output = 0;
                     break;
             }

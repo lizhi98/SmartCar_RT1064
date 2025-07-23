@@ -59,7 +59,7 @@ typedef struct _Motor
     volatile int32               pwm_duty;
     volatile int32               current_speed;
     volatile int32               set_speed;
-             PID     *           pid_controller;
+             PID *               pid_controller;
 } Motor;
 
 // MOTION MODE

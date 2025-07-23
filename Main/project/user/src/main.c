@@ -80,6 +80,7 @@ int main(void)
         }
         key_change_page(KEY_1); // 按键1切换页面
         key_select_next_table_row(KEY_2); // 按键2选择下一个表格行
+
         motion_mode_calc();
         // ips200_show_int(0, 40, i++, 5); // 显示计数
         // correspond_send_info_to_host(); // 发送信息到上位机

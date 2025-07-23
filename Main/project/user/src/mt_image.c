@@ -1,4 +1,5 @@
 #include "mt_image.h"
+#include "zf_device_mt9v03x.h"
 
 #include <math.h>
 #include <stdbool.h>
