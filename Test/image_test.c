@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     char *prev_data = argv[2];
     char *ctrl = argv[3];
 
-    FILE* fp_data = fopen(filename, "r");
+    FILE *fp_data = fopen(filename, "r");
     if (! fp_data) return 1;
     uint8 image[HEIGHT][REAL_WIDTH];
     for (uint8 i = 0; i < HEIGHT; i ++)
