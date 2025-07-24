@@ -474,7 +474,7 @@ void search(Image image) {
             if (image[y - 1][xl] != EMPTY) {
                 if (++ up_count == LP_UP_COUNT_MAX) {
                     if (xl < X_LP_CORNER_L_MIN) goto loop_cancel;
-                    xc = max((int16) xl - LP_UP_COUNT_MAX - X_LP_CORNER_L_OFFSET, X_MIN);
+                    xc = MAX((int16) xl - LP_UP_COUNT_MAX - X_LP_CORNER_L_OFFSET, X_MIN);
                     y_start = yc = y = y0;
                     SET_IMG(xc, yc, SPECIAL);
                     break;
@@ -522,7 +522,7 @@ void search(Image image) {
             if (image[y - 1][xr] != EMPTY) {
                 if (++ up_count == LP_UP_COUNT_MAX) {
                     if (xr > X_LP_CORNER_R_MAX) goto loop_cancel;
-                    xc = min(xr + X_LP_CORNER_R_OFFSET, X_MAX);
+                    xc = MIN(xr + X_LP_CORNER_R_OFFSET, X_MAX);
                     y_start = yc = y;
                     SET_IMG(xc, yc, SPECIAL);
                     break;
@@ -620,7 +620,7 @@ void search(Image image) {
     }
     cross_app:
     // Append the cross bound
-    uint8 y0 = max(y_start, y - Y_XR_M_HEIGHT - Y_XR_M_OFFSET);
+    uint8 y0 = MAX(y_start, y - Y_XR_M_HEIGHT - Y_XR_M_OFFSET);
     uint8 y1 = y - Y_XR_M_OFFSET;
     ml = (double) (xls[y1] - xls[y0]) / (y1 - y0);
     mr = (double) (xrs[y1] - xrs[y0]) / (y1 - y0);

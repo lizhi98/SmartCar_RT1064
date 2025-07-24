@@ -36,16 +36,19 @@ extern uint16 current_page_id; // 当前页面ID
 
 void menu_init(void); // 菜单初始化
 void cube_info_add(CubeFaceInfoClass class, uint8 number);
-void cube_info_table_flash(void); // 刷新立方体信息表格
+void cube_info_table_refresh(void); // 刷新立方体信息表格
 void debug_info_table_refresh(void); // 刷新调试信息表格
 void image_show_refresh(void);
+void param_table_refresh(void); // 刷新调参表格
 
 void change_page_to_debug_info(void);
 void change_page_to_cube_info(void);
 void change_page_to_image(void);
 void change_page_to_param(void);
 
-void key_change_page(key_index_enum key_n); // 按键切换页面
-void key_select_next_table_row(key_index_enum key_change); // 按键选择下一个表格行
+void key_change_page(key_index_enum key); // 按键切换页面
+void key_select_next_table_row(key_index_enum key); // 按键选择下一个表格行
+void key_adjust_param(key_index_enum key_plus, key_index_enum key_minus); // 按键调整参数
+void key_switch_motor(key_index_enum key); // 按键切换电机开关状态
 
 #endif

@@ -24,7 +24,7 @@
 
 // MOTOR PWM
 #define MOTOR_PWM_FREQUENCY         17000
-#define MOTOR_PWM_DUTY_MAX          7000
+#define MOTOR_PWM_DUTY_MAX          4000
 
 // ENCODER
 #define MOTOR_ENCODER_PIT           PIT_CH2
@@ -98,6 +98,8 @@ extern uint8 motor_translation_angular_v_pid_calc_flag;
 extern uint8 motor_speed_pid_calc_flag;
 
 extern CubePushDir cube_push_dir;
+
+extern uint8 motor_enable_flag; // 电机使能标志位
 
 // Motor PWM Control
 void motor_set_duty(MotorIndex index, int32 duty);

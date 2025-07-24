@@ -28,41 +28,41 @@ uint16 image_image_id = 0; // 图像显示组件ID
 // 调参
 uint16 param_page_id = 0; // 参数页面ID
 uint16 param_table_id = 0; // 参数表格ID
-uint8 param_table_selected_row = 1; // 参数表格选中行
+uint8 param_table_selected_row = 0; // 参数表格选中行
 
-typedef struct {
+typedef struct Param {
     const char *name;   // 参数名称
 
-    enum {
+    enum ParamType {
         U8_PARAM,
         U16_PARAM,
         F32_PARAM,
         F64_PARAM,
     } type;
 
-    union {
-        struct {
+    union ParamInner {
+        struct U8Param {
             uint8 *value;
             uint8 min;
             uint8 max;
             uint8 step;
         } u8_param;
 
-        struct {
+        struct U16Param {
             uint16 *value;
             uint16 min;
             uint16 max;
             uint16 step;
         } u16_param;
 
-        struct {
+        struct F32Param {
             float *value;
             float min;
             float max;
             float step;
         } f32_param;
 
-        struct {
+        struct F64Param {
             double *value;
             double min;
             double max;
@@ -145,7 +145,7 @@ void cube_info_add(CubeFaceInfoClass class, uint8 number) {
  *       立方体类别显示在第一列，数字或类别名称显示在第二列
  *       第一行是标题行，从第二行开始显示立方体信息
  */
-void cube_info_table_flash() {
+void cube_info_table_refresh() {
     if (cube_info_table_id == 0) {
         return; // 如果表格ID为0，说明没有初始化，则不进行刷新
     }
@@ -212,7 +212,7 @@ void debug_info_table_refresh() {
     ips200pro_table_cell_printf(debug_info_page_id,  6, 2, "%u", image_result.element_type); // 显示赛道元素类型
     ips200pro_table_cell_printf(debug_info_page_id,  7, 2, "%u", motion_control.motion_mode); // 显示运动模式
     ips200pro_table_cell_printf(debug_info_page_id,  8, 2, "%s %u", get_name_of_cube_class(current_cube_face_info.class), current_cube_face_info.number); // 显示 OpenART 接收数据计数
-    ips200pro_table_cell_printf(debug_info_page_id,  9, 2, "%u %u %u", cube_info.state, cube_info.p_count, mcx_data_time); // 显示 MCX_Vision 接收到的立方体大小(像素数量)
+    ips200pro_table_cell_printf(debug_info_page_id,  9, 2, "%u %u %u", cube_info.state, cube_info.x_length, mcx_data_time); // 显示 MCX_Vision 接收到的立方体大小(像素数量)
     ips200pro_table_cell_printf(debug_info_page_id, 10, 2, "%u", grayscale_data); // 显示灰度传感器数据
 }
 
@@ -266,11 +266,20 @@ void key_select_next_table_row(key_index_enum key) {
 
     if (current_page_id == cube_info_page_id) {
         if (cube_info_table_selected_row ++ == CUBE_INFO_PAGE_LIST_SIZE) cube_info_table_selected_row = 1;
-        ips200pro_table_select(cube_info_table_id, cube_info_table_selected_row, 1); // 设置选中行
+        ips200pro_table_select(cube_info_table_id, cube_info_table_selected_row, 1); // 选中下一行的表头
     } else if (current_page_id == param_page_id) {
         if (param_table_selected_row ++ == param_count) param_table_selected_row = 1;
-        ips200pro_table_select(param_table_id, param_table_selected_row, 1); // 设置选中行
+        ips200pro_table_select(param_table_id, param_table_selected_row, 2); // 选中下一行的数值
     }
+
+    // 清除按键状态
+    key_clear_state(key);
+}
+
+void key_switch_motor(key_index_enum key) {
+    if (key_get_state(key) == KEY_RELEASE) return;
+
+    motor_enable_flag = !motor_enable_flag; // 切换电机使能状态
 
     // 清除按键状态
     key_clear_state(key);
@@ -308,4 +317,8 @@ void key_adjust_param(key_index_enum key_plus, key_index_enum key_minus) {
             CLAMP(*p_param->param.f64_param.value, p_param->param.f64_param.min, p_param->param.f64_param.max);
             break;
     }
+    
+     // 清除按键状态
+    key_clear_state(key_plus);
+    key_clear_state(key_minus);
 }

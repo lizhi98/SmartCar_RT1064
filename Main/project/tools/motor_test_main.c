@@ -245,14 +245,15 @@
 // {
 //     clock_init(SYSTEM_CLOCK_600M);
 //     system_delay_ms(1000);
-//     pwm_init(PWM2_MODULE0_CHB_C7, 17000, 2000);         // PWM 初始化
-//     gpio_init(C6, GPO, 0, GPO_PUSH_PULL); // GPIO 初始化
+//     pwm_init(PWM2_MODULE2_CHB_C11, 17000, 2000);         // PWM 初始化
+//     gpio_init(C10, GPO, 0, GPO_PUSH_PULL); // GPIO 初始化
 //     // system_delay_ms(5000); // 延时等待 PWM 初始化完成
-//     // pwm_set_duty(PWM2_MODULE0_CHB_C7, 0); // 设置 PWM 占空比
+//     // pwm_set_duty(    PWM2_MODULE0_CHB_C7, 0); // 设置 PWM 占空比
+// 		// 左 0 顺时针
+// 		// 右 0 顺时针
+// 		// 后 0 顺时针
 //     while(1) {
-//         // system_delay_ms(2000); 
-//         // pwm_set_duty(PWM2_MODULE1_CHA_C8, 5000); // 设置 PWM 占空比
-//         // system_delay_ms(2000); 
-//         // pwm_set_duty(PWM2_MODULE1_CHA_C8, 10000); // 设置 PWM 占空比
+//         // system_delay_ms(5000); 
+//         // gpio_toggle_level(C6); // 切换 GPIO 电平
 //     }
 // }

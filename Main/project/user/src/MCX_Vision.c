@@ -112,7 +112,7 @@ void mcx_cube_data_handle_pit_call(){
             // 计算数据接收时间
             mcx_data_time = timer_get(GPT_TIM_1) - mcx_last_data_time; // 计算数据接收时间
             // 解析数据
-            sscanf((char *)&mcx_data_buffer[0],"s:%d,xf:%d,yf:%d,p:%d\n",&cube_info.state,&cube_info.x_center,&cube_info.y_center,&cube_info.p_count); // 解析数据
+            sscanf((char *)&mcx_data_buffer[0],"s:%d,xf:%u,yf:%u,p:%d,l:%d\n",&cube_info.state,&cube_info.x_center,&cube_info.y_center,&cube_info.p_count,&cube_info.x_length); // 解析数据
             mcx_last_data_time = timer_get(GPT_TIM_1); // 记录最后一次数据接收时间
         }else{
             mcx_data_length = MCX_DATA_LENGTH - 1; // 重置数据长度,防止fifo_read_buffer修改length

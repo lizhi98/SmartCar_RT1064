@@ -20,7 +20,7 @@
 #define MCX_READ_BUFFER_LEN             64
 #define MCX_BUFFER_HEAD                 0xFE
 #define MCX_BUFFER_TAIL                 0xEF
-#define MCX_DATA_LENGTH                 30
+#define MCX_DATA_LENGTH                 37
 
 typedef enum _CubeDetectionState{
     CUBE_OUTSIDE_VIEW,
@@ -32,10 +32,10 @@ typedef struct _CubeInfo{
     uint16 x_center;
     uint16 y_center;
     uint32 p_count;
+    uint16 x_length;
 } CubeInfo;
 
 extern CubeInfo cube_info;
-
 
 uint8 mcx_init_wait(void);
 void  mcx_receive_data_callback(void);

@@ -102,6 +102,8 @@ CubePushDir cube_push_dir = CUBE_PUSH_DIR_LEFT; // 立方体推方向
 
 uint8  motion_control_target_angle_z_setted_flag = 0; // 立方体角度定位目标角度设置标志位
 
+uint8 motor_enable_flag = 0; // 电机使能标志位
+
 // 启动所有电机PWM通道输出，占空比为0
 void motor_all_init(void){
     for(int i = 0; i < MOTOR_INDEX_MAX_PLUS_ONE; i++){
@@ -208,7 +210,11 @@ void motor_speed_pid_calc_apply(){
                     (float)motors[index].set_speed, 
                     (float)motors[index].current_speed);
         // 输出到电机
-        motor_plus_duty(index, (int32)(motors[index].pid_controller->output));
+        if (motor_enable_flag) {
+            motor_plus_duty(index, (int32)(motors[index].pid_controller->output));
+        } else {
+            motor_set_duty(index, 0); // 如果电机使能标志位为0，则停止电机
+        }
     }
 }
 
