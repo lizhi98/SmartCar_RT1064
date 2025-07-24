@@ -105,8 +105,8 @@ uint8  motion_control_target_angle_z_setted_flag = 0; // 立方体角度定位�
 uint8 motor_enable_flag = 0; // 电机使能标志位
 
 // 启动所有电机PWM通道输出，占空比为0
-void motor_all_init(void){
-    for(int i = 0; i < MOTOR_INDEX_MAX_PLUS_ONE; i++){
+void motor_all_init(void) {
+    for(int i = 0; i < MOTOR_INDEX_MAX_PLUS_ONE; i++) {
         PID_clean(  motors[i].pid_controller);
         pwm_init(   motors[i].pwm_channel_pin,     MOTOR_PWM_FREQUENCY,    0);
         gpio_init(  motors[i].gpio_dir_pin,        GPO,                    1,     GPO_PUSH_PULL);
@@ -114,14 +114,14 @@ void motor_all_init(void){
 }
 
 // 设置电机PWM通道输出占空比
-void motor_set_duty(MotorIndex index, int32 duty){
+void motor_set_duty(MotorIndex index, int32 duty) {
     // 占空比限幅
-    if(abs(duty) > MOTOR_PWM_DUTY_MAX){
+    if (abs(duty) > MOTOR_PWM_DUTY_MAX) {
         (duty > 0) ? (duty = MOTOR_PWM_DUTY_MAX) : (duty = -MOTOR_PWM_DUTY_MAX);
     }
-    if(duty > 0){
+    if (duty > 0) {
         gpio_set_level(motors[index].gpio_dir_pin, 1);
-    }else if(duty < 0){
+    }else if (duty < 0) {
         gpio_set_level(motors[index].gpio_dir_pin, 0);
     }
     pwm_set_duty(motors[index].pwm_channel_pin,    abs(duty));
@@ -129,34 +129,34 @@ void motor_set_duty(MotorIndex index, int32 duty){
     motors[index].pwm_duty = duty;
 }
 
-void motor_plus_duty(MotorIndex index, int32 delta_duty){
-    if(motors[index].pid_controller->error_zero_count >= 300){
+void motor_plus_duty(MotorIndex index, int32 delta_duty) {
+    if (motors[index].pid_controller->error_zero_count >= 300) {
         motor_set_duty(index, 0);
     }
     motor_set_duty(index, motors[index].pwm_duty + delta_duty);
 }
 
-void motor_run_with_speed(MotorIndex index, int32 speed){
+void motor_run_with_speed(MotorIndex index, int32 speed) {
     motors[index].set_speed = speed;
 }
-void motor_all_unpower(){
+void motor_all_unpower() {
     // 停止所有PID运算
     motor_rotation_translation_pid_calc_flag = 0; // 外环PID
     motor_translation_angular_v_pid_calc_flag = 0; // 中环PID
     motor_speed_pid_calc_flag = 0; // 内环PID
     // 停止所有电机动力
-    for(MotorIndex index = 0; index < MOTOR_INDEX_MAX_PLUS_ONE; index ++){
+    for(MotorIndex index = 0; index < MOTOR_INDEX_MAX_PLUS_ONE; index ++) {
         motor_set_duty(index,0);
     }
 }
-void motor_all_stop(void){
+void motor_all_stop(void) {
     // return ;
     // 停止外环和中环PID运算
     motor_rotation_translation_pid_calc_flag = 0; // 外环PID
     motor_translation_angular_v_pid_calc_flag = 0; // 中环PID
     // system_delay_ms(10); // 等待一段时间，确保电机停止
     // 设置速度为0
-    for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE; index ++){
+    for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE; index ++) {
         motors[index].set_speed = 0;
     }
 }
@@ -181,7 +181,7 @@ int16 MAF_Update(MovingAverageFilter *filter, int16 new_value) {
 }
 
 // Motor encoder
-void encoder_all_init(){
+void encoder_all_init() {
     encoder_quad_init(encoder_left.encoder_index,   encoder_left.encoder_channel_1,     encoder_left.encoder_channel_2);
     encoder_quad_init(encoder_right.encoder_index,  encoder_right.encoder_channel_1,    encoder_right.encoder_channel_2);
     encoder_quad_init(encoder_rear.encoder_index,   encoder_rear.encoder_channel_1,     encoder_rear.encoder_channel_2);
@@ -189,12 +189,12 @@ void encoder_all_init(){
     MAF_Init(&encoder_filter[RIGHT]);
     MAF_Init(&encoder_filter[REAR]);
 }
-void motor_encoder_pit_init(void){
+void motor_encoder_pit_init(void) {
     pit_ms_init(MOTOR_ENCODER_PIT,MOTOR_ENCODER_PIT_TIME);
 }
-void motor_encoder_pit_callback(void){
+void motor_encoder_pit_callback(void) {
     // 获取正交编码器的速度
-    for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++){
+    for(MotorIndex index = 0;index < MOTOR_INDEX_MAX_PLUS_ONE;index ++) {
         // 获取速度
         motors[index].current_speed = MAF_Update( &encoder_filter[index], encoder_get_speed(motors[index].encoder->encoder_index) );
         // 清除计数
@@ -203,8 +203,8 @@ void motor_encoder_pit_callback(void){
 }
 
 // 最内环控制 电机速度稳定控制 target_speed -> pwm_duty_plus
-void motor_speed_pid_calc_apply(){
-    for(MotorIndex index = 0; index < MOTOR_INDEX_MAX_PLUS_ONE; index++){
+void motor_speed_pid_calc_apply() {
+    for(MotorIndex index = 0; index < MOTOR_INDEX_MAX_PLUS_ONE; index++) {
         // PID计算
         PID_calculate(motors[index].pid_controller,
                     (float)motors[index].set_speed, 
@@ -219,12 +219,12 @@ void motor_speed_pid_calc_apply(){
 }
 
 // 中间环控制 x -> v
-void motor_translation_angular_v_pid_calc_apply(){
+void motor_translation_angular_v_pid_calc_apply() {
     // translation
     // float translation_forward_target_x = 0.0f, translation_left_target_x = 0.0f;
     // float target_angular = 0.0f;
     // // 分情况获取target
-    // switch(motion_control.motion_mode){
+    // switch(motion_control.motion_mode) {
     //     case LINE_FOLLOW:
     //     case CUBE_DISTANCE_POSITION:
     //     case CUBE_ANGLE_POSITION:
@@ -271,7 +271,7 @@ V_APPLY:
 }
 
 // 最外环  offset -> x
-void motor_rotation_translation_pid_calc_apply(){
+void motor_rotation_translation_pid_calc_apply() {
     switch (motion_control.motion_mode)
     {
         case LINE_FOLLOW:
@@ -294,9 +294,9 @@ void motor_rotation_translation_pid_calc_apply(){
             }
             // translation_forward_pid.output = 60;
             // translation_left_pid.output = 0;
-            if(image_result.offset > 70){
+            if (image_result.offset > 70) {
                 image_result.offset = 70; // 限制偏移量
-            }else if (image_result.offset < -70){
+            }else if (image_result.offset < -70) {
                 image_result.offset = -70; // 限制偏移量
             }
             PID_calculate(&rotation_pid, image_result.offset, 0);
@@ -311,9 +311,9 @@ void motor_rotation_translation_pid_calc_apply(){
         case CUBE_DISTANCE_POSITION:
             translation_forward_pid.output  = 1.0 * (20000.0 - cube_info.p_count) / 1000.0;
             translation_left_pid.output     = (cube_info.x_center - 160) / 4.0;
-            // if(image_result.offset > 70){
+            // if (image_result.offset > 70) {
             //     image_result.offset = 70; // 限制偏移量
-            // }else if (image_result.offset < -70){
+            // }else if (image_result.offset < -70) {
             //     image_result.offset = -70; // 限制偏移量
             // }
             // PID_calculate(&rotation_pid, image_result.offset, 0);
@@ -355,23 +355,23 @@ void motor_rotation_translation_pid_calc_apply(){
 
 uint64 pit_count = 0;
 
-void motion_control_pid_callback(){
+void motion_control_pid_callback() {
     pit_count++;
-    if(pit_count % 4 == 0 && motor_rotation_translation_pid_calc_flag){
+    if (pit_count % 4 == 0 && motor_rotation_translation_pid_calc_flag) {
         // 最外环  offset -> x
         motor_rotation_translation_pid_calc_apply();
     }
-    if(pit_count % 2 == 0 && motor_translation_angular_v_pid_calc_flag){
+    if (pit_count % 2 == 0 && motor_translation_angular_v_pid_calc_flag) {
         // 中间环控制 x -> v
         motor_translation_angular_v_pid_calc_apply();
     }
     // 最内环控制 电机速度稳定控制 target_speed -> pwm_duty_plus
-    if(motor_speed_pid_calc_flag){
+    if (motor_speed_pid_calc_flag) {
         motor_speed_pid_calc_apply();
     }
 }
 
-void motion_control_pid_pit_init(){
+void motion_control_pid_pit_init() {
     // 打开PID运算flag
     motor_rotation_translation_pid_calc_flag = 1; // 外环PID
     motor_translation_angular_v_pid_calc_flag = 1; // 中环PID
@@ -381,8 +381,8 @@ void motion_control_pid_pit_init(){
 }
 
 // 该函数为阻塞函数，不宜放在PIT中
-void motion_mode_calc(){
-    switch(motion_control.motion_mode){
+void motion_mode_calc() {
+    switch(motion_control.motion_mode) {
         case LINE_FOLLOW:
             // 巡线模式下，判断是否看到了箱子
             if (cube_info.state == CUBE_INSIDE_VIEW) {
@@ -415,7 +415,7 @@ void motion_mode_calc(){
                 return;
             }
             // 识别等待
-            if (!image_identify_wait_flag){
+            if (!image_identify_wait_flag) {
                 image_identify_wait_start_time = timer_get(GPT_TIM_1); // 获取等待开始时间
                 image_identify_wait_flag = 1; // 设置等待标志
             } else {

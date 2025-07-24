@@ -34,8 +34,6 @@ uint8 image_buffer[HEIGHT][REAL_WIDTH] = { 0 };
 #endif
 
 void process_image(Image image) {
-    memcpy(image_buffer, image, sizeof (uint8) * REAL_WIDTH * HEIGHT);
-    mt9v03x_finish_flag = 0;
     if (otsu_counter) {
         otsu_counter --;
     }

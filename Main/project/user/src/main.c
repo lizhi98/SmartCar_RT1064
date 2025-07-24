@@ -60,18 +60,18 @@ int main(void)
     uint32 image_process_end_time = 0;
     uint32 image_process_start_time = 0;
     uint32 page_refresh_count = 0;
-    while (1)
-    {
-        if(motion_control.motion_mode == LINE_FOLLOW){
-            if(mt9v03x_finish_flag){
+    while (1) {
+        if (motion_control.motion_mode == LINE_FOLLOW) {
+            if (mt9v03x_finish_flag) {
+                mt9v03x_finish_flag = 0;
                 image_process_start_time = timer_get(GPT_TIM_1); // 获取图像处理开始时间
                 image_process_wait_next_time = image_process_start_time - image_process_end_time;
+                memcpy(image_buffer, mt9v03x_image, sizeof(uint8) * REAL_WIDTH * HEIGHT); // 复制图像到缓冲区
                 process_image(mt9v03x_image); // 处理图像
                 image_process_end_time = timer_get(GPT_TIM_1); // 获取图像处理结束时间
                 image_process_time = image_process_end_time - image_process_start_time; // 计算图像处理时间
                 // seekfree_assistant_camera_send(); // 发送图像到上位机
                 image_show_refresh(); // 刷新图像显示
-                // mt9v03x_finish_flag = 0; // 清除图像采集完成标志位,--已在图像处理中完成重置标志位--
             }
         }
         if (page_refresh_count++ >= 800000) { // 每800000次循环运行一次
@@ -88,7 +88,7 @@ int main(void)
             key_adjust_param(KEY_3, KEY_4); // 按键3,4调整参数
         }
         else {
-            key_switch_motor(KEY_4);
+            key_switch_motor(KEY_4); // 按键4切换电机开关
         }
 
         motion_mode_calc();

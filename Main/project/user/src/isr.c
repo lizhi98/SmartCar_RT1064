@@ -17,28 +17,28 @@ void CSI_IRQHandler(void)
 
 void PIT_IRQHandler(void)
 {
-    if(pit_flag_get(PIT_CH0))
+    if (pit_flag_get(PIT_CH0))
     {
         gyroscope_pit_callback();
         grayscale_read();
         pit_flag_clear(PIT_CH0);
     }
     
-    if(pit_flag_get(PIT_CH1))
+    if (pit_flag_get(PIT_CH1))
     {
         motion_control_pid_callback();
 
         pit_flag_clear(PIT_CH1);
     }
     
-    if(pit_flag_get(PIT_CH2))
+    if (pit_flag_get(PIT_CH2))
     {
         motor_encoder_pit_callback();
         // motor_pid_pit_call();
         pit_flag_clear(PIT_CH2);
     }
     
-    if(pit_flag_get(PIT_CH3))
+    if (pit_flag_get(PIT_CH3))
     {
         key_scanner(); // 扫描按键
         mcx_cube_data_handle_pit_call();
@@ -52,7 +52,7 @@ void PIT_IRQHandler(void)
 
 void LPUART1_IRQHandler(void)
 {
-    if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART1))
+    if (kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART1))
     {
         // 接收中断
     #if DEBUG_UART_USE_INTERRUPT                        // 如果开启 debug 串口中断
@@ -66,7 +66,7 @@ void LPUART1_IRQHandler(void)
 
 void LPUART2_IRQHandler(void)
 {
-    if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART2))
+    if (kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART2))
     {
         // 接收中断
         
@@ -77,7 +77,7 @@ void LPUART2_IRQHandler(void)
 
 void LPUART3_IRQHandler(void)
 {
-    if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART3))
+    if (kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART3))
     {
         // 接收中断
         
@@ -88,7 +88,7 @@ void LPUART3_IRQHandler(void)
 
 void LPUART4_IRQHandler(void)
 {
-    if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART4))
+    if (kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART4))
     {
         // 接收中断 
         flexio_camera_uart_handler();
@@ -101,7 +101,7 @@ void LPUART4_IRQHandler(void)
 
 void LPUART5_IRQHandler(void)
 {
-    if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART5))
+    if (kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART5))
     {
         // 接收中断
         camera_uart_handler();
@@ -112,7 +112,7 @@ void LPUART5_IRQHandler(void)
 
 void LPUART6_IRQHandler(void)
 {
-    if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART6))
+    if (kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART6))
     {
         // 接收中断
         
@@ -124,7 +124,7 @@ void LPUART6_IRQHandler(void)
 
 void LPUART8_IRQHandler(void)
 {
-    if(kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART8))
+    if (kLPUART_RxDataRegFullFlag & LPUART_GetStatusFlags(LPUART8))
     {
         // 接收中断
         wireless_module_uart_handler();
@@ -137,7 +137,7 @@ void LPUART8_IRQHandler(void)
 
 void GPIO1_Combined_0_15_IRQHandler(void)
 {
-    if(exti_flag_get(B0))
+    if (exti_flag_get(B0))
     {
         exti_flag_clear(B0);// 清除中断标志位
     }
@@ -148,7 +148,7 @@ void GPIO1_Combined_0_15_IRQHandler(void)
 void GPIO1_Combined_16_31_IRQHandler(void)
 {
     wireless_module_spi_handler();
-    if(exti_flag_get(B16))
+    if (exti_flag_get(B16))
     {
         exti_flag_clear(B16); // 清除中断标志位
     }
@@ -160,7 +160,7 @@ void GPIO2_Combined_0_15_IRQHandler(void)
 {
     flexio_camera_vsync_handler();
     
-    if(exti_flag_get(C0))
+    if (exti_flag_get(C0))
     {
         exti_flag_clear(C0);// 清除中断标志位
     }
@@ -173,7 +173,7 @@ void GPIO2_Combined_16_31_IRQHandler(void)
     tof_module_exti_handler();
     // -----------------* ToF INT 更新中断 预置中断处理函数 *-----------------
     
-    if(exti_flag_get(C16))
+    if (exti_flag_get(C16))
     {
         exti_flag_clear(C16); // 清除中断标志位
     }
@@ -186,7 +186,7 @@ void GPIO2_Combined_16_31_IRQHandler(void)
 void GPIO3_Combined_0_15_IRQHandler(void)
 {
 
-    if(exti_flag_get(D4))
+    if (exti_flag_get(D4))
     {
         exti_flag_clear(D4);// 清除中断标志位
     }
