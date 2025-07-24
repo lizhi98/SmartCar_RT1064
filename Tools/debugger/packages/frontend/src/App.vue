@@ -269,7 +269,8 @@ const element = ref<ElementDisplay | null>(null)
 const progressEl = useTemplateRef('progress')
 const progressIndex = ref<number | null>(null)
 useEventListener('mousemove', ev => {
-  const rect = progressEl.value!.getBoundingClientRect()
+  if (! progressEl.value) return
+  const rect = progressEl.value.getBoundingClientRect()
   const x = ev.clientX - rect.left
   const y = ev.clientY - rect.top
   const { width, height } = rect
