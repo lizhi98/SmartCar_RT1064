@@ -77,7 +77,7 @@ extern uint8 otsu_threshold;
 #define OTSU_THRESHOLD_DELTA 4
 
 #define EMPTY 0
-#define ROAD 255
+#define ROAD 1
 #define BOUND 2
 #define MID_LINE 3
 #define BOUND_APP 4
@@ -99,7 +99,7 @@ extern uint8 otsu_threshold;
 #define Y_MID_LINE_MIN 95
 #define X_CURVE_OFFSET 25
 #define DX_BD_MAX 5
-#define DX_BD_INV_MAX 4
+#define DX_BD_INV_MAX 5
 #define DX_M_MAX 2
 #define BD_LENGTH 85
 #define BD_NG_COUNT_MAX 3

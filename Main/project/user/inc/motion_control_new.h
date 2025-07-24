@@ -35,23 +35,20 @@
 
 #define IMAGE_IDENTIFY_WAIT_TIME    3000 // 立方体识别等待时间，单位ms
 
-typedef enum _MotorIndex
-{
+typedef enum _MotorIndex {
     LEFT,
     RIGHT,
     REAR,
     MOTOR_INDEX_MAX_PLUS_ONE,
 } MotorIndex;
 
-typedef struct _Encoder
-{
+typedef struct _Encoder {
     encoder_index_enum      encoder_index;
     encoder_channel1_enum   encoder_channel_1;
     encoder_channel2_enum   encoder_channel_2;
 } Encoder;
 
-typedef struct _Motor
-{
+typedef struct _Motor {
              MotorIndex          index;
              pwm_channel_enum    pwm_channel_pin;
              gpio_pin_enum       gpio_dir_pin;
@@ -63,7 +60,7 @@ typedef struct _Motor
 } Motor;
 
 // MOTION MODE
-typedef enum _MotionMode{
+typedef enum _MotionMode {
     LINE_FOLLOW,
     CUBE_DISTANCE_POSITION,
     CUBE_IDENTIFY,
@@ -71,15 +68,14 @@ typedef enum _MotionMode{
     CUBE_PUSH,
     LINE_POSITION_BACK,
     LINE_ANGLE_BACK,
-}MotionMode;
+} MotionMode;
 
-typedef struct _MotionControl
-{
+typedef struct _MotionControl {
     volatile MotionMode  motion_mode;
     volatile MotionMode  last_motion_mode;
     volatile float       line_gyro_angle_z;
     volatile float       target_gyro_angle_z; // 目标陀螺仪角度
-}MotionControl;
+} MotionControl;
 
 // 编码器获取值滤波
 #define WINDOW_SIZE 5  // 滑动窗口大小

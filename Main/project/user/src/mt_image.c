@@ -1,5 +1,4 @@
 #include "mt_image.h"
-#include "zf_device_mt9v03x.h"
 
 #include <math.h>
 #include <stdbool.h>
@@ -85,7 +84,7 @@ uint8 otsu_calc_threshold(Image image, uint8 min, uint8 max) {
 void otsu_binarize_image(Image image, uint8 threshould) {
     for (uint8 i = 0; i < HEIGHT; i ++)
         for (uint8 j = 0; j < WIDTH; j ++)
-            image[i][j] = image[i][j] > threshould ? 255 : 0;
+            image[i][j] = image[i][j] > threshould;
 }
 
 const uint8 STD_WIDTH[HEIGHT] = {
@@ -146,6 +145,7 @@ void search(Image image) {
     bool lost = false;
     int8 l_convex, r_convex;
     uint8 l_l, l_r, r_l, r_r;
+    uint8 l_l_cont = 0, r_r_cont = 0;
     int8 l_dx = 0, r_dx = 0;
     bool le_failed;
 
@@ -245,7 +245,7 @@ void search(Image image) {
             if (dx == DX_BD_MAX) { xl -= DX_BD_MAX; lost = true; break; }
         if (! dx && xl != X_MIN)
             for (; image[y][xl - 1] != EMPTY && xl > X_MIN; dx --, xl --)
-                if (dx == - DX_BD_INV_MAX) {
+                if (dx == - DX_BD_INV_MAX + l_l_cont) {
                     xl += DX_BD_INV_MAX;
                     if (! le_failed && image[y - 1][xl] == EMPTY) {
                         uint8 xc = xl, yc = y;
@@ -309,8 +309,14 @@ void search(Image image) {
             SET_IMG(xl, y, BOUND);
 
             dx = xl - xls[y + 1];
-            if (dx > 0) l_r ++;
-            else l_l ++;
+            if (dx > 0) {
+                l_r ++;
+                l_l_cont = 0;
+            }
+            else {
+                l_l ++;
+                l_l_cont ++;
+            }
             l_convex += limit(dx - l_dx, CONVEX_LIMIT);
             if (l_convex >= CV_CONVEX && prev_el_normal) {
                 el = image_result.element_type = CurveRight;
@@ -352,7 +358,7 @@ void search(Image image) {
             if (dx == - DX_BD_MAX) { xr += DX_BD_MAX; lost = true; break; }
         if (! dx && xr != X_MAX)
             for (; image[y][xr + 1] != EMPTY && xr < X_MAX; dx ++, xr ++)
-                if (dx == DX_BD_INV_MAX) {
+                if (dx == DX_BD_INV_MAX - r_r_cont) {
                     xr -= DX_BD_INV_MAX;
                     if (! le_failed && l_stop0 && image[y - 1][xr] == EMPTY) {
                         uint8 xc = xr, yc = y;
@@ -416,8 +422,14 @@ void search(Image image) {
             SET_IMG(xr, y, BOUND);
 
             dx = - xr + xrs[y + 1];
-            if (dx > 0) r_l ++;
-            else r_r ++;
+            if (dx > 0) {
+                r_l ++;
+                r_r_cont = 0;
+            }
+            else {
+                r_r ++;
+                r_r_cont ++;
+            }
             r_convex += limit(dx - r_dx, CONVEX_LIMIT);
             if (r_convex >= CV_CONVEX && prev_el_normal) {
                 el = image_result.element_type = CurveLeft;
