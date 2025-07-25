@@ -18,8 +18,10 @@ uint8 image_buffer[HEIGHT][REAL_WIDTH] = { 0 };
         image[y][x] = T; \
     } while (0)
     #define debug(...) printf(__VA_ARGS__)
+    bool param_enable_loop = true;
 #else
     #include <zf_common_font.h>
+    #include "menu.h"
     void SET_IMG(uint8 x, uint8 y, uint8 T) {
         uint16 color;
         if (T == MID_LINE) color = RGB565_YELLOW;
@@ -654,10 +656,10 @@ void search(Image image) {
     }
 
     if (el <= Normal) {
-        if (l_segs >= 3 && r_segs == 1) {
+        if (param_enable_loop && l_segs >= 3 && r_segs == 1) {
             el = image_result.element_type = LoopLeftBefore;
         }
-        else if (l_segs == 1 && r_segs >= 3) {
+        else if (param_enable_loop && l_segs == 1 && r_segs >= 3) {
             el = image_result.element_type = LoopRightBefore;
         }
         else if (l_segs >= 2 && r_segs >= 2) {

@@ -38,6 +38,7 @@ typedef struct Param {
         U16_PARAM,
         F32_PARAM,
         F64_PARAM,
+        BOOL_PARAM,
     } type;
 
     union ParamInner {
@@ -68,15 +69,23 @@ typedef struct Param {
             double max;
             double step;
         } f64_param;
+
+        struct BoolParam {
+            bool *value;
+        } bool_param;
+        
     } param;
 } Param;
 
 uint16 param_straight_pid_output = 80;
 uint16 param_curve_pid_output = 70;
+bool param_enable_loop = true;
+
 
 Param params[] = {
     { .name = "直道输出", .type = U16_PARAM, .param.u16_param = { .value = &param_straight_pid_output, .min = 70, .max = 130, .step = 5 } },
     { .name = "曲线输出", .type = U16_PARAM, .param.u16_param = { .value = &param_curve_pid_output, .min = 60, .max = 120, .step = 5 } },
+    { .name = "启用圆环", .type = BOOL_PARAM, .param.bool_param = { .value = &param_enable_loop } },
 };
 uint8 param_count = sizeof(params) / sizeof(Param);
 
@@ -233,6 +242,9 @@ void param_table_refresh() {
             case F64_PARAM:
                 ips200pro_table_cell_printf(param_table_id, i + 1, 2, "%.2f", *p_param->param.f64_param.value);
                 break;
+            case BOOL_PARAM:
+                ips200pro_table_cell_printf(param_table_id, i + 1, 2, "%s", *p_param->param.bool_param.value ? "True" : "False");
+                break;
         }
     }
 }
@@ -315,6 +327,9 @@ void key_adjust_param(key_index_enum key_plus, key_index_enum key_minus) {
         case F64_PARAM:
             *p_param->param.f64_param.value += sign * p_param->param.f64_param.step;
             CLAMP(*p_param->param.f64_param.value, p_param->param.f64_param.min, p_param->param.f64_param.max);
+            break;
+        case BOOL_PARAM:
+            *p_param->param.bool_param.value = ! *p_param->param.bool_param.value;
             break;
     }
     

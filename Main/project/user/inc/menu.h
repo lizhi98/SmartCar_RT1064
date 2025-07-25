@@ -28,8 +28,10 @@ extern uint16 image_image_id; // 图像显示组件ID
 // 调参
 extern uint16 param_page_id;
 extern uint16 param_table_id;
+
 extern uint16 param_straight_pid_output;
 extern uint16 param_curve_pid_output;
+extern bool param_enable_loop;
 
 // 当前页面ID
 extern uint16 current_page_id; // 当前页面ID
